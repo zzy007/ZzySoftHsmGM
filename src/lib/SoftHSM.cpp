@@ -72,11 +72,7 @@
 #include "P11Objects.h"
 #include "odd.h"
 
-#if defined(WITH_OPENSSL)
 #include "OSSLCryptoFactory.h"
-#else
-#include "BotanCryptoFactory.h"
-#endif
 
 #include <stdlib.h>
 #include <algorithm>
@@ -94,22 +90,17 @@
 
 std::unique_ptr<MutexFactory> MutexFactory::instance(nullptr);
 std::unique_ptr<SecureMemoryRegistry> SecureMemoryRegistry::instance(nullptr);
-#if defined(WITH_OPENSSL)
+
 std::unique_ptr<OSSLCryptoFactory> OSSLCryptoFactory::instance(nullptr);
-#else
-std::unique_ptr<BotanCryptoFactory> BotanCryptoFactory::instance(nullptr);
-#endif
+
 std::unique_ptr<SoftHSM> SoftHSM::instance(nullptr);
 
 #else
 
 std::auto_ptr<MutexFactory> MutexFactory::instance(NULL);
 std::auto_ptr<SecureMemoryRegistry> SecureMemoryRegistry::instance(NULL);
-#if defined(WITH_OPENSSL)
 std::auto_ptr<OSSLCryptoFactory> OSSLCryptoFactory::instance(NULL);
-#else
-std::auto_ptr<BotanCryptoFactory> BotanCryptoFactory::instance(NULL);
-#endif
+
 std::auto_ptr<SoftHSM> SoftHSM::instance(NULL);
 
 #endif
@@ -5330,6 +5321,7 @@ CK_RV SoftHSM::C_GenerateKeyPair
 		keyType = CKK_EC;
 		break;
 	case CKM_IBM_SM2_KEY_PAIR_GEN:
+		return CKR_TEMPLATE_INCONSISTENT;
 		// pkcs11.h: #define CKK_IBM_SM2 (0x80050002UL)
 		keyType = CKK_IBM_SM2;
 		break;
