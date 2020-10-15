@@ -1,0 +1,71 @@
+version: 2.6.0-{build}
+configuration: Release
+platform:
+- x86
+- x64
+init:
+- ps: >-
+    If ($env:Platform -Match "x86") {
+            $env:VCVARS_PLATFORM="x86"
+            $env:MSBUILD_PLATFORM="Win32"
+            $env:ENV_PLATFORM="x86"
+            $env:CONFIGURE_OPTIONS="disable-debug $env:ADDITIONAL_CONFIGURE_OPTIONS"
+    } Else {
+            $env:VCVARS_PLATFORM="amd64"
+            $env:MSBUILD_PLATFORM="x64"
+            $env:ENV_PLATFORM="x64"
+            $env:CONFIGURE_OPTIONS="enable-64bit disable-debug $env:ADDITIONAL_CONFIGURE_OPTIONS"
+    }
+
+
+    $CURRENT_DIR_PATH = (Get-Item -Path ".\" -Verbose).FullName
+
+    $env:BUILD_DIR = Join-Path $CURRENT_DIR_PATH build
+
+    $env:CRYPTO_PACKAGE= "$env:CRYPTO_PACKAGE_NAME-$env:ENV_PLATFORM.zip"
+
+    $env:CRYPTO_PACKAGE_PATH = Join-Path $env:BUILD_DIR "$env:CRYPTO_PACKAGE_NAME-$env:ENV_PLATFORM"
+
+    $env:CPPUNIT_VERSION_NAME = "CppUnit-1.13.2"
+
+    $env:CPPUNIT_PACKAGE_NAME = "cppunit-1.13.2"
+
+    $env:CPPUNIT_PACKAGE = "$env:CPPUNIT_PACKAGE_NAME-$env:ENV_PLATFORM.zip"
+
+    $env:PYTHON_PATH = Join-Path $env:BUILD_DIR python
+
+    $env:CPPUNIT_PATH = Join-Path $env:BUILD_DIR "$env:CPPUNIT_PACKAGE_NAME-$env:ENV_PLATFORM"
+
+    $env:PYTHON_EXE = Join-Path $env:PYTHON_PATH python.exe
+
+    $env:RELEASE_DIR=Join-Path $env:BUILD_DIR "SoftHSMv2-$env:ENV_PLATFORM"
+
+    $env:CONFIGURE_OPTIONS = "$env:CONFIGURE_OPTIONS with-crypto-backend=$env:CRYPTO_BACKEND with-$env:CRYPTO_BACKEND=$env:CRYPTO_PACKAGE_PATH\ with-cppunit=$env:CPPUNIT_PATH\"
+environment:
+  matrix:
+  - CRYPTO_BACKEND: botan
+    ADDITIONAL_CONFIGURE_OPTIONS: disable-eddsa disable-gost with-crypto-backend=botan
+  - CRYPTO_BACKEND: openssl
+    ADDITIONAL_CONFIGURE_OPTIONS: disable-eddsa disable-gost with-crypto-backend=openssl
+install:
+- cmd: vcpkg install sqlite3:x86-windows
+- cmd: vcpkg install openssl-windows:x64-windows
+- cmd: vcpkg install botan:x86-windows
+- cmd: vcpkg install cppunit:x86-windows
+- cmd: vcpkg install getopt-win32:x86-windows
+build_script:
+- cmd: vcpkg integrate install
+- cmd: cmake -DCMAKE_TOOLCHAIN_FILE=C:/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DWITH_CRYPTO_BACKEND=%CRYPTO_BACKEND% -DBUILD_TESTS=OFF -DDISABLE_NON_PAGED_MEMORY=ON -DENABLE_GOST=OFF .
+- cmd: msbuild softhsm2.sln /p:Configuration="Release" /p:Platform="Win32" /p:PlatformToolset=v140 /target:Build
+- cmd: IF "%ENV_PLATFORM%"=="x86" ( CD win32\Release ) ELSE ( CD win32\x64\Release)
+- cmd: cryptotest.exe
+- cmd: datamgrtest.exe
+- cmd: handlemgrtest.exe
+- cmd: objstoretest.exe
+- cmd: p11test.exe
+- cmd: sessionmgrtest.exe
+- cmd: slotmgrtest.exe
+test: off
+artifacts:
+- path: build/SoftHSMv2-$(Platform)
+  name: SoftHSMv2-$(PACKAGE_VERSION_NAME)-$(Platform)
