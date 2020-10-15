@@ -5657,18 +5657,9 @@ CK_RV SoftHSM::C_GenerateKeyPair
 			// pkcs11.h: #define CKK_IBM_SM2 (0x80050002UL)
 			keyType = CKK_IBM_SM2;
 			break;
-#ifdef WITH_GOST
-		case CKM_GOSTR3410_KEY_PAIR_GEN:
-			keyType = CKK_GOSTR3410;
-			break;
-#endif
-#ifdef WITH_EDDSA
-		case CKM_EC_EDWARDS_KEY_PAIR_GEN:
-			keyType = CKK_EC_EDWARDS;
-			break;
-#endif
 		default:
-			return CKR_MECHANISM_INVALID;
+			// return CKR_MECHANISM_INVALID;
+			return CKR_SESSION_HANDLE_INVALID;
 	}
 	CK_CERTIFICATE_TYPE dummy;
 
