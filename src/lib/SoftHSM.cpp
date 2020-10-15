@@ -2231,7 +2231,7 @@ CK_RV SoftHSM::AsymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 			isRSA = false;
 			break;
 		default:
-			return CKR_MECHANISM_INVALID;
+			return CKR_KEY_TYPE_INCONSISTENT;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -2239,7 +2239,7 @@ CK_RV SoftHSM::AsymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	if (!isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
+		if (asymCrypto == NULL) return CKR_HOST_MEMORY;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
