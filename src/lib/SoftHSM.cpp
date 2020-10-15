@@ -25,11 +25,10 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*****************************************************************************
- SoftHSM.cpp
-
- The implementation of the SoftHSM's main class
- *****************************************************************************/
+ /*****************************************************************************
+  SoftHSM.cpp
+  The implementation of the SoftHSM's main class
+  *****************************************************************************/
 
 #include "config.h"
 #include "log.h"
@@ -89,7 +88,7 @@
 #include <unistd.h>
 #endif
 
-// Initialise the one-and-only instance
+  // Initialise the one-and-only instance
 
 #ifdef HAVE_CXX11
 
@@ -117,109 +116,109 @@ std::auto_ptr<SoftHSM> SoftHSM::instance(NULL);
 
 static CK_RV newP11Object(CK_OBJECT_CLASS objClass, CK_KEY_TYPE keyType, CK_CERTIFICATE_TYPE certType, P11Object **p11object)
 {
-	switch(objClass) {
-		case CKO_DATA:
-			*p11object = new P11DataObj();
-			break;
-		case CKO_CERTIFICATE:
-			if (certType == CKC_X_509)
-				*p11object = new P11X509CertificateObj();
-			else if (certType == CKC_OPENPGP)
-				*p11object = new P11OpenPGPPublicKeyObj();
-			else
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			break;
-		case CKO_PUBLIC_KEY:
-			if (keyType == CKK_RSA)
-				*p11object = new P11RSAPublicKeyObj();
-			else if (keyType == CKK_DSA)
-				*p11object = new P11DSAPublicKeyObj();
-			else if (keyType == CKK_EC)
-				*p11object = new P11ECPublicKeyObj();
-			else if (keyType == CKK_IBM_SM2)
-				*p11object = new P11SM2PublicKeyObj();
-			else if (keyType == CKK_DH)
-				*p11object = new P11DHPublicKeyObj();
-			else if (keyType == CKK_GOSTR3410)
-				*p11object = new P11GOSTPublicKeyObj();
-			else if (keyType == CKK_EC_EDWARDS)
-				*p11object = new P11EDPublicKeyObj();
-			else
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			break;
-		case CKO_PRIVATE_KEY:
-			// we need to know the type too
-			if (keyType == CKK_RSA)
-				*p11object = new P11RSAPrivateKeyObj();
-			else if (keyType == CKK_DSA)
-				*p11object = new P11DSAPrivateKeyObj();
-			else if (keyType == CKK_IBM_SM2)
-				*p11object = new P11SM2PrivateKeyObj();
-			else if (keyType == CKK_EC)
-				*p11object = new P11ECPrivateKeyObj();
-			else if (keyType == CKK_DH)
-				*p11object = new P11DHPrivateKeyObj();
-			else if (keyType == CKK_GOSTR3410)
-				*p11object = new P11GOSTPrivateKeyObj();
-			else if (keyType == CKK_EC_EDWARDS)
-				*p11object = new P11EDPrivateKeyObj();
-			else
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			break;
-		case CKO_SECRET_KEY:
-			if ((keyType == CKK_GENERIC_SECRET) ||
-			    (keyType == CKK_MD5_HMAC) ||
-			    (keyType == CKK_SHA_1_HMAC) ||
-			    (keyType == CKK_SHA224_HMAC) ||
-			    (keyType == CKK_SHA256_HMAC) ||
-			    (keyType == CKK_SHA384_HMAC) ||
-			    (keyType == CKK_SHA512_HMAC))
-			{
-				P11GenericSecretKeyObj* key = new P11GenericSecretKeyObj();
-				*p11object = key;
-				key->setKeyType(keyType);
-			}
-			else if (keyType == CKK_AES)
-			{
-				*p11object = new P11AESSecretKeyObj();
-			}
-			else if ((keyType == CKK_DES) ||
-				 (keyType == CKK_DES2) ||
-				 (keyType == CKK_DES3))
-			{
-				P11DESSecretKeyObj* key = new P11DESSecretKeyObj();
-				*p11object = key;
-				key->setKeyType(keyType);
-			}
-			else if (keyType == CKK_GOST28147)
-			{
-				*p11object = new P11GOSTSecretKeyObj();
-			}
-			else
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			break;
-		case CKO_DOMAIN_PARAMETERS:
-			if (keyType == CKK_DSA)
-				*p11object = new P11DSADomainObj();
-			else if (keyType == CKK_DH)
-				*p11object = new P11DHDomainObj();
-			else
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			break;
-		default:
-			return CKR_ATTRIBUTE_VALUE_INVALID; // invalid value for a valid argument
+	switch (objClass) {
+	case CKO_DATA:
+		*p11object = new P11DataObj();
+		break;
+	case CKO_CERTIFICATE:
+		if (certType == CKC_X_509)
+			*p11object = new P11X509CertificateObj();
+		else if (certType == CKC_OPENPGP)
+			*p11object = new P11OpenPGPPublicKeyObj();
+		else
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		break;
+	case CKO_PUBLIC_KEY:
+		if (keyType == CKK_RSA)
+			*p11object = new P11RSAPublicKeyObj();
+		else if (keyType == CKK_DSA)
+			*p11object = new P11DSAPublicKeyObj();
+		else if (keyType == CKK_EC)
+			*p11object = new P11ECPublicKeyObj();
+		else if (keyType == CKK_IBM_SM2)
+			*p11object = new P11SM2PublicKeyObj();
+		else if (keyType == CKK_DH)
+			*p11object = new P11DHPublicKeyObj();
+		else if (keyType == CKK_GOSTR3410)
+			*p11object = new P11GOSTPublicKeyObj();
+		else if (keyType == CKK_EC_EDWARDS)
+			*p11object = new P11EDPublicKeyObj();
+		else
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		break;
+	case CKO_PRIVATE_KEY:
+		// we need to know the type too
+		if (keyType == CKK_RSA)
+			*p11object = new P11RSAPrivateKeyObj();
+		else if (keyType == CKK_DSA)
+			*p11object = new P11DSAPrivateKeyObj();
+		else if (keyType == CKK_IBM_SM2)
+			*p11object = new P11SM2PrivateKeyObj();
+		else if (keyType == CKK_EC)
+			*p11object = new P11ECPrivateKeyObj();
+		else if (keyType == CKK_DH)
+			*p11object = new P11DHPrivateKeyObj();
+		else if (keyType == CKK_GOSTR3410)
+			*p11object = new P11GOSTPrivateKeyObj();
+		else if (keyType == CKK_EC_EDWARDS)
+			*p11object = new P11EDPrivateKeyObj();
+		else
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		break;
+	case CKO_SECRET_KEY:
+		if ((keyType == CKK_GENERIC_SECRET) ||
+			(keyType == CKK_MD5_HMAC) ||
+			(keyType == CKK_SHA_1_HMAC) ||
+			(keyType == CKK_SHA224_HMAC) ||
+			(keyType == CKK_SHA256_HMAC) ||
+			(keyType == CKK_SHA384_HMAC) ||
+			(keyType == CKK_SHA512_HMAC))
+		{
+			P11GenericSecretKeyObj* key = new P11GenericSecretKeyObj();
+			*p11object = key;
+			key->setKeyType(keyType);
+		}
+		else if (keyType == CKK_AES)
+		{
+			*p11object = new P11AESSecretKeyObj();
+		}
+		else if ((keyType == CKK_DES) ||
+			(keyType == CKK_DES2) ||
+			(keyType == CKK_DES3))
+		{
+			P11DESSecretKeyObj* key = new P11DESSecretKeyObj();
+			*p11object = key;
+			key->setKeyType(keyType);
+		}
+		else if (keyType == CKK_GOST28147)
+		{
+			*p11object = new P11GOSTSecretKeyObj();
+		}
+		else
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		break;
+	case CKO_DOMAIN_PARAMETERS:
+		if (keyType == CKK_DSA)
+			*p11object = new P11DSADomainObj();
+		else if (keyType == CKK_DH)
+			*p11object = new P11DHDomainObj();
+		else
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID; // invalid value for a valid argument
 	}
 	return CKR_OK;
 }
 
 static CK_RV extractObjectInformation(CK_ATTRIBUTE_PTR pTemplate,
-				      CK_ULONG ulCount,
-				      CK_OBJECT_CLASS &objClass,
-				      CK_KEY_TYPE &keyType,
-				      CK_CERTIFICATE_TYPE &certType,
-				      CK_BBOOL &isOnToken,
-				      CK_BBOOL &isPrivate,
-				      bool bImplicit)
+	CK_ULONG ulCount,
+	CK_OBJECT_CLASS &objClass,
+	CK_KEY_TYPE &keyType,
+	CK_CERTIFICATE_TYPE &certType,
+	CK_BBOOL &isOnToken,
+	CK_BBOOL &isPrivate,
+	bool bImplicit)
 {
 	bool bHasClass = false;
 	bool bHasKeyType = false;
@@ -231,42 +230,42 @@ static CK_RV extractObjectInformation(CK_ATTRIBUTE_PTR pTemplate,
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-				if (pTemplate[i].ulValueLen == sizeof(CK_OBJECT_CLASS))
-				{
-					objClass = *(CK_OBJECT_CLASS_PTR)pTemplate[i].pValue;
-					bHasClass = true;
-				}
-				break;
-			case CKA_KEY_TYPE:
-				if (pTemplate[i].ulValueLen == sizeof(CK_KEY_TYPE))
-				{
-					keyType = *(CK_KEY_TYPE*)pTemplate[i].pValue;
-					bHasKeyType = true;
-				}
-				break;
-			case CKA_CERTIFICATE_TYPE:
-				if (pTemplate[i].ulValueLen == sizeof(CK_CERTIFICATE_TYPE))
-				{
-					certType = *(CK_CERTIFICATE_TYPE*)pTemplate[i].pValue;
-					bHasCertType = true;
-				}
-				break;
-			case CKA_TOKEN:
-				if (pTemplate[i].ulValueLen == sizeof(CK_BBOOL))
-				{
-					isOnToken = *(CK_BBOOL*)pTemplate[i].pValue;
-				}
-				break;
-			case CKA_PRIVATE:
-				if (pTemplate[i].ulValueLen == sizeof(CK_BBOOL))
-				{
-					isPrivate = *(CK_BBOOL*)pTemplate[i].pValue;
-					bHasPrivate = true;
-				}
-				break;
-			default:
-				break;
+		case CKA_CLASS:
+			if (pTemplate[i].ulValueLen == sizeof(CK_OBJECT_CLASS))
+			{
+				objClass = *(CK_OBJECT_CLASS_PTR)pTemplate[i].pValue;
+				bHasClass = true;
+			}
+			break;
+		case CKA_KEY_TYPE:
+			if (pTemplate[i].ulValueLen == sizeof(CK_KEY_TYPE))
+			{
+				keyType = *(CK_KEY_TYPE*)pTemplate[i].pValue;
+				bHasKeyType = true;
+			}
+			break;
+		case CKA_CERTIFICATE_TYPE:
+			if (pTemplate[i].ulValueLen == sizeof(CK_CERTIFICATE_TYPE))
+			{
+				certType = *(CK_CERTIFICATE_TYPE*)pTemplate[i].pValue;
+				bHasCertType = true;
+			}
+			break;
+		case CKA_TOKEN:
+			if (pTemplate[i].ulValueLen == sizeof(CK_BBOOL))
+			{
+				isOnToken = *(CK_BBOOL*)pTemplate[i].pValue;
+			}
+			break;
+		case CKA_PRIVATE:
+			if (pTemplate[i].ulValueLen == sizeof(CK_BBOOL))
+			{
+				isPrivate = *(CK_BBOOL*)pTemplate[i].pValue;
+				bHasPrivate = true;
+			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -283,7 +282,7 @@ static CK_RV extractObjectInformation(CK_ATTRIBUTE_PTR pTemplate,
 	bool bKeyTypeRequired = (objClass == CKO_PUBLIC_KEY || objClass == CKO_PRIVATE_KEY || objClass == CKO_SECRET_KEY);
 	if (bKeyTypeRequired && !bHasKeyType)
 	{
-		 return CKR_TEMPLATE_INCOMPLETE;
+		return CKR_TEMPLATE_INCOMPLETE;
 	}
 
 	if (objClass == CKO_CERTIFICATE)
@@ -317,7 +316,7 @@ static CK_RV newP11Object(OSObject *object, P11Object **p11object)
 		keyType = object->getUnsignedLongValue(CKA_KEY_TYPE, CKK_IBM_SM2);
 	if (object->attributeExists(CKA_CERTIFICATE_TYPE))
 		certType = object->getUnsignedLongValue(CKA_CERTIFICATE_TYPE, CKC_X_509);
-	CK_RV rv = newP11Object(objClass,keyType,certType,p11object);
+	CK_RV rv = newP11Object(objClass, keyType, certType, p11object);
 	if (rv != CKR_OK)
 		return rv;
 	if (!(*p11object)->init(object))
@@ -328,7 +327,7 @@ static CK_RV newP11Object(OSObject *object, P11Object **p11object)
 #ifdef notyet
 static CK_ATTRIBUTE bsAttribute(CK_ATTRIBUTE_TYPE type, const ByteString &value)
 {
-	CK_ATTRIBUTE attr = {type, (CK_VOID_PTR)value.const_byte_str(), value.size() };
+	CK_ATTRIBUTE attr = { type, (CK_VOID_PTR)value.const_byte_str(), value.size() };
 	return attr;
 }
 #endif
@@ -353,7 +352,7 @@ SoftHSM* SoftHSM::i()
 	{
 		instance.reset(new SoftHSM());
 	}
-	else if(instance->detectFork())
+	else if (instance->detectFork())
 	{
 		if (Configuration::i()->getBool("library.reset_on_fork", false))
 		{
@@ -420,7 +419,7 @@ SoftHSM::~SoftHSM()
  Implementation of PKCS #11 functions
  *****************************************************************************/
 
-// PKCS #11 initialisation function
+ // PKCS #11 initialisation function
 CK_RV SoftHSM::C_Initialize(CK_VOID_PTR pInitArgs)
 {
 	CK_C_INITIALIZE_ARGS_PTR args;
@@ -453,12 +452,12 @@ CK_RV SoftHSM::C_Initialize(CK_VOID_PTR pInitArgs)
 
 		// Are we not supplied with mutex functions?
 		if
-		(
-			args->CreateMutex == NULL_PTR &&
-			args->DestroyMutex == NULL_PTR &&
-			args->LockMutex == NULL_PTR &&
-			args->UnlockMutex == NULL_PTR
-		)
+			(
+				args->CreateMutex == NULL_PTR &&
+				args->DestroyMutex == NULL_PTR &&
+				args->LockMutex == NULL_PTR &&
+				args->UnlockMutex == NULL_PTR
+				)
 		{
 			// Can we use our own mutex functions?
 			if (args->flags & CKF_OS_LOCKING_OK)
@@ -477,12 +476,12 @@ CK_RV SoftHSM::C_Initialize(CK_VOID_PTR pInitArgs)
 		{
 			// We must have all mutex functions
 			if
-			(
-				args->CreateMutex == NULL_PTR ||
-				args->DestroyMutex == NULL_PTR ||
-				args->LockMutex == NULL_PTR ||
-				args->UnlockMutex == NULL_PTR
-			)
+				(
+					args->CreateMutex == NULL_PTR ||
+					args->DestroyMutex == NULL_PTR ||
+					args->LockMutex == NULL_PTR ||
+					args->UnlockMutex == NULL_PTR
+					)
 			{
 				ERROR_MSG("Not all mutex functions are supplied");
 				return CKR_ARGUMENTS_BAD;
@@ -690,105 +689,105 @@ CK_RV SoftHSM::C_GetTokenInfo(CK_SLOT_ID slotID, CK_TOKEN_INFO_PTR pInfo)
 void SoftHSM::prepareSupportedMecahnisms(std::map<std::string, CK_MECHANISM_TYPE> &t)
 {
 #ifndef WITH_FIPS
-	t["CKM_MD5"]			= CKM_MD5;
+	t["CKM_MD5"] = CKM_MD5;
 #endif
-	t["CKM_IBM_SM3"]		= CKM_IBM_SM3;
-	t["CKM_SHA_1"]			= CKM_SHA_1;
-	t["CKM_SHA224"]			= CKM_SHA224;
-	t["CKM_SHA256"]			= CKM_SHA256;
-	t["CKM_SHA384"]			= CKM_SHA384;
-	t["CKM_SHA512"]			= CKM_SHA512;
+	t["CKM_IBM_SM3"] = CKM_IBM_SM3;
+	t["CKM_SHA_1"] = CKM_SHA_1;
+	t["CKM_SHA224"] = CKM_SHA224;
+	t["CKM_SHA256"] = CKM_SHA256;
+	t["CKM_SHA384"] = CKM_SHA384;
+	t["CKM_SHA512"] = CKM_SHA512;
 #ifndef WITH_FIPS
-	t["CKM_MD5_HMAC"]		= CKM_MD5_HMAC;
+	t["CKM_MD5_HMAC"] = CKM_MD5_HMAC;
 #endif
-	t["CKM_SHA_1_HMAC"]		= CKM_SHA_1_HMAC;
-	t["CKM_SHA224_HMAC"]		= CKM_SHA224_HMAC;
-	t["CKM_SHA256_HMAC"]		= CKM_SHA256_HMAC;
-	t["CKM_SHA384_HMAC"]		= CKM_SHA384_HMAC;
-	t["CKM_SHA512_HMAC"]		= CKM_SHA512_HMAC;
-	t["CKM_RSA_PKCS_KEY_PAIR_GEN"]	= CKM_RSA_PKCS_KEY_PAIR_GEN;
-	t["CKM_RSA_PKCS"]		= CKM_RSA_PKCS;
-	t["CKM_RSA_X_509"]		= CKM_RSA_X_509;
+	t["CKM_SHA_1_HMAC"] = CKM_SHA_1_HMAC;
+	t["CKM_SHA224_HMAC"] = CKM_SHA224_HMAC;
+	t["CKM_SHA256_HMAC"] = CKM_SHA256_HMAC;
+	t["CKM_SHA384_HMAC"] = CKM_SHA384_HMAC;
+	t["CKM_SHA512_HMAC"] = CKM_SHA512_HMAC;
+	t["CKM_RSA_PKCS_KEY_PAIR_GEN"] = CKM_RSA_PKCS_KEY_PAIR_GEN;
+	t["CKM_RSA_PKCS"] = CKM_RSA_PKCS;
+	t["CKM_RSA_X_509"] = CKM_RSA_X_509;
 #ifndef WITH_FIPS
-	t["CKM_MD5_RSA_PKCS"]		= CKM_MD5_RSA_PKCS;
+	t["CKM_MD5_RSA_PKCS"] = CKM_MD5_RSA_PKCS;
 #endif
-	t["CKM_SHA1_RSA_PKCS"]		= CKM_SHA1_RSA_PKCS;
-	t["CKM_RSA_PKCS_OAEP"]		= CKM_RSA_PKCS_OAEP;
-	t["CKM_SHA224_RSA_PKCS"]	= CKM_SHA224_RSA_PKCS;
-	t["CKM_SHA256_RSA_PKCS"]	= CKM_SHA256_RSA_PKCS;
-	t["CKM_SHA384_RSA_PKCS"]	= CKM_SHA384_RSA_PKCS;
-	t["CKM_SHA512_RSA_PKCS"]	= CKM_SHA512_RSA_PKCS;
+	t["CKM_SHA1_RSA_PKCS"] = CKM_SHA1_RSA_PKCS;
+	t["CKM_RSA_PKCS_OAEP"] = CKM_RSA_PKCS_OAEP;
+	t["CKM_SHA224_RSA_PKCS"] = CKM_SHA224_RSA_PKCS;
+	t["CKM_SHA256_RSA_PKCS"] = CKM_SHA256_RSA_PKCS;
+	t["CKM_SHA384_RSA_PKCS"] = CKM_SHA384_RSA_PKCS;
+	t["CKM_SHA512_RSA_PKCS"] = CKM_SHA512_RSA_PKCS;
 #ifdef WITH_RAW_PSS
-	t["CKM_RSA_PKCS_PSS"]		= CKM_RSA_PKCS_PSS;
+	t["CKM_RSA_PKCS_PSS"] = CKM_RSA_PKCS_PSS;
 #endif
-	t["CKM_SHA1_RSA_PKCS_PSS"]	= CKM_SHA1_RSA_PKCS_PSS;
-	t["CKM_SHA224_RSA_PKCS_PSS"]	= CKM_SHA224_RSA_PKCS_PSS;
-	t["CKM_SHA256_RSA_PKCS_PSS"]	= CKM_SHA256_RSA_PKCS_PSS;
-	t["CKM_SHA384_RSA_PKCS_PSS"]	= CKM_SHA384_RSA_PKCS_PSS;
-	t["CKM_SHA512_RSA_PKCS_PSS"]	= CKM_SHA512_RSA_PKCS_PSS;
-	t["CKM_GENERIC_SECRET_KEY_GEN"]	= CKM_GENERIC_SECRET_KEY_GEN;
+	t["CKM_SHA1_RSA_PKCS_PSS"] = CKM_SHA1_RSA_PKCS_PSS;
+	t["CKM_SHA224_RSA_PKCS_PSS"] = CKM_SHA224_RSA_PKCS_PSS;
+	t["CKM_SHA256_RSA_PKCS_PSS"] = CKM_SHA256_RSA_PKCS_PSS;
+	t["CKM_SHA384_RSA_PKCS_PSS"] = CKM_SHA384_RSA_PKCS_PSS;
+	t["CKM_SHA512_RSA_PKCS_PSS"] = CKM_SHA512_RSA_PKCS_PSS;
+	t["CKM_GENERIC_SECRET_KEY_GEN"] = CKM_GENERIC_SECRET_KEY_GEN;
 #ifndef WITH_FIPS
-	t["CKM_DES_KEY_GEN"]		= CKM_DES_KEY_GEN;
+	t["CKM_DES_KEY_GEN"] = CKM_DES_KEY_GEN;
 #endif
-	t["CKM_DES2_KEY_GEN"]		= CKM_DES2_KEY_GEN;
-	t["CKM_DES3_KEY_GEN"]		= CKM_DES3_KEY_GEN;
+	t["CKM_DES2_KEY_GEN"] = CKM_DES2_KEY_GEN;
+	t["CKM_DES3_KEY_GEN"] = CKM_DES3_KEY_GEN;
 #ifndef WITH_FIPS
-	t["CKM_DES_ECB"]		= CKM_DES_ECB;
-	t["CKM_DES_CBC"]		= CKM_DES_CBC;
-	t["CKM_DES_CBC_PAD"]		= CKM_DES_CBC_PAD;
-	t["CKM_DES_ECB_ENCRYPT_DATA"]	= CKM_DES_ECB_ENCRYPT_DATA;
-	t["CKM_DES_CBC_ENCRYPT_DATA"]	= CKM_DES_CBC_ENCRYPT_DATA;
+	t["CKM_DES_ECB"] = CKM_DES_ECB;
+	t["CKM_DES_CBC"] = CKM_DES_CBC;
+	t["CKM_DES_CBC_PAD"] = CKM_DES_CBC_PAD;
+	t["CKM_DES_ECB_ENCRYPT_DATA"] = CKM_DES_ECB_ENCRYPT_DATA;
+	t["CKM_DES_CBC_ENCRYPT_DATA"] = CKM_DES_CBC_ENCRYPT_DATA;
 #endif
-	t["CKM_DES3_ECB"]		= CKM_DES3_ECB;
-	t["CKM_DES3_CBC"]		= CKM_DES3_CBC;
-	t["CKM_DES3_CBC_PAD"]		= CKM_DES3_CBC_PAD;
-	t["CKM_DES3_ECB_ENCRYPT_DATA"]	= CKM_DES3_ECB_ENCRYPT_DATA;
-	t["CKM_DES3_CBC_ENCRYPT_DATA"]	= CKM_DES3_CBC_ENCRYPT_DATA;
-	t["CKM_DES3_CMAC"]		= CKM_DES3_CMAC;
-	t["CKM_AES_KEY_GEN"]		= CKM_AES_KEY_GEN;
-	t["CKM_AES_ECB"]		= CKM_AES_ECB;
-	t["CKM_AES_CBC"]		= CKM_AES_CBC;
-	t["CKM_AES_CBC_PAD"]		= CKM_AES_CBC_PAD;
-	t["CKM_AES_CTR"]		= CKM_AES_CTR;
-	t["CKM_AES_GCM"]		= CKM_AES_GCM;
-	t["CKM_AES_KEY_WRAP"]		= CKM_AES_KEY_WRAP;
+	t["CKM_DES3_ECB"] = CKM_DES3_ECB;
+	t["CKM_DES3_CBC"] = CKM_DES3_CBC;
+	t["CKM_DES3_CBC_PAD"] = CKM_DES3_CBC_PAD;
+	t["CKM_DES3_ECB_ENCRYPT_DATA"] = CKM_DES3_ECB_ENCRYPT_DATA;
+	t["CKM_DES3_CBC_ENCRYPT_DATA"] = CKM_DES3_CBC_ENCRYPT_DATA;
+	t["CKM_DES3_CMAC"] = CKM_DES3_CMAC;
+	t["CKM_AES_KEY_GEN"] = CKM_AES_KEY_GEN;
+	t["CKM_AES_ECB"] = CKM_AES_ECB;
+	t["CKM_AES_CBC"] = CKM_AES_CBC;
+	t["CKM_AES_CBC_PAD"] = CKM_AES_CBC_PAD;
+	t["CKM_AES_CTR"] = CKM_AES_CTR;
+	t["CKM_AES_GCM"] = CKM_AES_GCM;
+	t["CKM_AES_KEY_WRAP"] = CKM_AES_KEY_WRAP;
 #ifdef HAVE_AES_KEY_WRAP_PAD
-	t["CKM_AES_KEY_WRAP_PAD"]	= CKM_AES_KEY_WRAP_PAD;
+	t["CKM_AES_KEY_WRAP_PAD"] = CKM_AES_KEY_WRAP_PAD;
 #endif
-	t["CKM_AES_ECB_ENCRYPT_DATA"]	= CKM_AES_ECB_ENCRYPT_DATA;
-	t["CKM_AES_CBC_ENCRYPT_DATA"]	= CKM_AES_CBC_ENCRYPT_DATA;
-	t["CKM_AES_CMAC"]		= CKM_AES_CMAC;
-	t["CKM_DSA_PARAMETER_GEN"]	= CKM_DSA_PARAMETER_GEN;
-	t["CKM_DSA_KEY_PAIR_GEN"]	= CKM_DSA_KEY_PAIR_GEN;
-	t["CKM_DSA"]			= CKM_DSA;
-	t["CKM_DSA_SHA1"]		= CKM_DSA_SHA1;
-	t["CKM_DSA_SHA224"]		= CKM_DSA_SHA224;
-	t["CKM_DSA_SHA256"]		= CKM_DSA_SHA256;
-	t["CKM_DSA_SHA384"]		= CKM_DSA_SHA384;
-	t["CKM_DSA_SHA512"]		= CKM_DSA_SHA512;
-	t["CKM_DH_PKCS_KEY_PAIR_GEN"]	= CKM_DH_PKCS_KEY_PAIR_GEN;
-	t["CKM_DH_PKCS_PARAMETER_GEN"]	= CKM_DH_PKCS_PARAMETER_GEN;
-	t["CKM_DH_PKCS_DERIVE"]		= CKM_DH_PKCS_DERIVE;
+	t["CKM_AES_ECB_ENCRYPT_DATA"] = CKM_AES_ECB_ENCRYPT_DATA;
+	t["CKM_AES_CBC_ENCRYPT_DATA"] = CKM_AES_CBC_ENCRYPT_DATA;
+	t["CKM_AES_CMAC"] = CKM_AES_CMAC;
+	t["CKM_DSA_PARAMETER_GEN"] = CKM_DSA_PARAMETER_GEN;
+	t["CKM_DSA_KEY_PAIR_GEN"] = CKM_DSA_KEY_PAIR_GEN;
+	t["CKM_DSA"] = CKM_DSA;
+	t["CKM_DSA_SHA1"] = CKM_DSA_SHA1;
+	t["CKM_DSA_SHA224"] = CKM_DSA_SHA224;
+	t["CKM_DSA_SHA256"] = CKM_DSA_SHA256;
+	t["CKM_DSA_SHA384"] = CKM_DSA_SHA384;
+	t["CKM_DSA_SHA512"] = CKM_DSA_SHA512;
+	t["CKM_DH_PKCS_KEY_PAIR_GEN"] = CKM_DH_PKCS_KEY_PAIR_GEN;
+	t["CKM_DH_PKCS_PARAMETER_GEN"] = CKM_DH_PKCS_PARAMETER_GEN;
+	t["CKM_DH_PKCS_DERIVE"] = CKM_DH_PKCS_DERIVE;
 #ifdef WITH_ECC
-	t["CKM_EC_KEY_PAIR_GEN"]	= CKM_EC_KEY_PAIR_GEN;
-	t["CKM_ECDSA"]			= CKM_ECDSA;
+	t["CKM_EC_KEY_PAIR_GEN"] = CKM_EC_KEY_PAIR_GEN;
+	t["CKM_ECDSA"] = CKM_ECDSA;
 	t["CKM_IBM_SM2_KEY_PAIR_GEN"] = CKM_IBM_SM2_KEY_PAIR_GEN;
-	t["CKM_IBM_SM2_SM3"]	= CKM_IBM_SM2_SM3;
-	t["CKM_IBM_SM2"]		 = CKM_IBM_SM2;
+	t["CKM_IBM_SM2_SM3"] = CKM_IBM_SM2_SM3;
+	t["CKM_IBM_SM2"] = CKM_IBM_SM2;
 #endif
 #if defined(WITH_ECC) || defined(WITH_EDDSA)
-	t["CKM_ECDH1_DERIVE"]		= CKM_ECDH1_DERIVE;
+	t["CKM_ECDH1_DERIVE"] = CKM_ECDH1_DERIVE;
 #endif
 #ifdef WITH_GOST
-	t["CKM_GOSTR3411"]		= CKM_GOSTR3411;
-	t["CKM_GOSTR3411_HMAC"]		= CKM_GOSTR3411_HMAC;
-	t["CKM_GOSTR3410_KEY_PAIR_GEN"]	= CKM_GOSTR3410_KEY_PAIR_GEN;
-	t["CKM_GOSTR3410"]		= CKM_GOSTR3410;
+	t["CKM_GOSTR3411"] = CKM_GOSTR3411;
+	t["CKM_GOSTR3411_HMAC"] = CKM_GOSTR3411_HMAC;
+	t["CKM_GOSTR3410_KEY_PAIR_GEN"] = CKM_GOSTR3410_KEY_PAIR_GEN;
+	t["CKM_GOSTR3410"] = CKM_GOSTR3410;
 	t["CKM_GOSTR3410_WITH_GOSTR3411"] = CKM_GOSTR3410_WITH_GOSTR3411;
 #endif
 #ifdef WITH_EDDSA
 	t["CKM_EC_EDWARDS_KEY_PAIR_GEN"] = CKM_EC_EDWARDS_KEY_PAIR_GEN;
-	t["CKM_EDDSA"]			= CKM_EDDSA;
+	t["CKM_EDDSA"] = CKM_EDDSA;
 #endif
 
 	supportedMechanisms.clear();
@@ -828,8 +827,7 @@ void SoftHSM::prepareSupportedMecahnisms(std::map<std::string, CK_MECHANISM_TYPE
 				WARNING_MSG("Unknown mechanism provided: %s", token.c_str());
 			}
 			prev = pos + 1;
-		}
-		while (pos < mechs.length() && prev < mechs.length());
+		} while (pos < mechs.length() && prev < mechs.length());
 	}
 
 	nrSupportedMechanisms = supportedMechanisms.size();
@@ -919,7 +917,7 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 		return CKR_GENERAL_ERROR;
 	}
 	CryptoFactory::i()->recycleAsymmetricAlgorithm(ecdsa);
-	
+
 	AsymmetricAlgorithm* sm2 = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
 	if (sm2 != NULL)
 	{
@@ -935,142 +933,142 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 
 	switch (type)
 	{
-		case CKM_IBM_SM3:
-		case CKM_SHA_1:
-		case CKM_SHA224:
-		case CKM_SHA256:
-		case CKM_SHA512:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_DIGEST;
-			break;
-		case CKM_SHA_1_HMAC:
-			pInfo->ulMinKeySize = 20;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_SHA224_HMAC:
-			pInfo->ulMinKeySize = 28;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_SHA256_HMAC:
-			pInfo->ulMinKeySize = 32;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_SHA384_HMAC:
-			pInfo->ulMinKeySize = 48;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_SHA512_HMAC:
-			pInfo->ulMinKeySize = 64;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_RSA_PKCS_KEY_PAIR_GEN:
-			pInfo->ulMinKeySize = rsaMinSize;
-			pInfo->ulMaxKeySize = rsaMaxSize;
-			pInfo->flags = CKF_GENERATE_KEY_PAIR;
-			break;
-		case CKM_RSA_PKCS:
-			pInfo->ulMinKeySize = rsaMinSize;
-			pInfo->ulMaxKeySize = rsaMaxSize;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_ENCRYPT | CKF_DECRYPT | CKF_WRAP | CKF_UNWRAP;
-			break;
-		case CKM_RSA_X_509:
-			pInfo->ulMinKeySize = rsaMinSize;
-			pInfo->ulMaxKeySize = rsaMaxSize;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_ENCRYPT | CKF_DECRYPT;
-			break;
-		case CKM_SHA1_RSA_PKCS:
-		case CKM_SHA224_RSA_PKCS:
-		case CKM_SHA256_RSA_PKCS:
-		case CKM_SHA384_RSA_PKCS:
-		case CKM_SHA512_RSA_PKCS:
-		case CKM_SHA1_RSA_PKCS_PSS:
-		case CKM_SHA224_RSA_PKCS_PSS:
-		case CKM_SHA256_RSA_PKCS_PSS:
-		case CKM_SHA384_RSA_PKCS_PSS:
-		case CKM_SHA512_RSA_PKCS_PSS:
-			pInfo->ulMinKeySize = rsaMinSize;
-			pInfo->ulMaxKeySize = rsaMaxSize;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_RSA_PKCS_OAEP:
-			pInfo->ulMinKeySize = rsaMinSize;
-			pInfo->ulMaxKeySize = rsaMaxSize;
-			pInfo->flags = CKF_ENCRYPT | CKF_DECRYPT | CKF_WRAP | CKF_UNWRAP;
-			break;
-		case CKM_GENERIC_SECRET_KEY_GEN:
-			pInfo->ulMinKeySize = 1;
-			pInfo->ulMaxKeySize = 0x80000000;
-			pInfo->flags = CKF_GENERATE;
-			break;
-		case CKM_DES3_ECB_ENCRYPT_DATA:
-		case CKM_DES3_CBC_ENCRYPT_DATA:
-		case CKM_AES_ECB_ENCRYPT_DATA:
-		case CKM_AES_CBC_ENCRYPT_DATA:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_DERIVE;
-			break;
-		case CKM_AES_CMAC:
-			pInfo->ulMinKeySize = 16;
-			pInfo->ulMaxKeySize = 32;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_DSA_PARAMETER_GEN:
-			pInfo->ulMinKeySize = dsaMinSize;
-			pInfo->ulMaxKeySize = dsaMaxSize;
-			pInfo->flags = CKF_GENERATE;
-			break;
-		case CKM_DSA_KEY_PAIR_GEN:
-			pInfo->ulMinKeySize = dsaMinSize;
-			pInfo->ulMaxKeySize = dsaMaxSize;
-			pInfo->flags = CKF_GENERATE_KEY_PAIR;
-			break;
-		case CKM_DSA:
-		case CKM_DSA_SHA1:
-		case CKM_DSA_SHA224:
-		case CKM_DSA_SHA256:
-		case CKM_DSA_SHA384:
-		case CKM_DSA_SHA512:
-			pInfo->ulMinKeySize = dsaMinSize;
-			pInfo->ulMaxKeySize = dsaMaxSize;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
+	case CKM_IBM_SM3:
+	case CKM_SHA_1:
+	case CKM_SHA224:
+	case CKM_SHA256:
+	case CKM_SHA512:
+		// Key size is not in use
+		pInfo->ulMinKeySize = 0;
+		pInfo->ulMaxKeySize = 0;
+		pInfo->flags = CKF_DIGEST;
+		break;
+	case CKM_SHA_1_HMAC:
+		pInfo->ulMinKeySize = 20;
+		pInfo->ulMaxKeySize = 512;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_SHA224_HMAC:
+		pInfo->ulMinKeySize = 28;
+		pInfo->ulMaxKeySize = 512;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_SHA256_HMAC:
+		pInfo->ulMinKeySize = 32;
+		pInfo->ulMaxKeySize = 512;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_SHA384_HMAC:
+		pInfo->ulMinKeySize = 48;
+		pInfo->ulMaxKeySize = 512;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_SHA512_HMAC:
+		pInfo->ulMinKeySize = 64;
+		pInfo->ulMaxKeySize = 512;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_RSA_PKCS_KEY_PAIR_GEN:
+		pInfo->ulMinKeySize = rsaMinSize;
+		pInfo->ulMaxKeySize = rsaMaxSize;
+		pInfo->flags = CKF_GENERATE_KEY_PAIR;
+		break;
+	case CKM_RSA_PKCS:
+		pInfo->ulMinKeySize = rsaMinSize;
+		pInfo->ulMaxKeySize = rsaMaxSize;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_ENCRYPT | CKF_DECRYPT | CKF_WRAP | CKF_UNWRAP;
+		break;
+	case CKM_RSA_X_509:
+		pInfo->ulMinKeySize = rsaMinSize;
+		pInfo->ulMaxKeySize = rsaMaxSize;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_ENCRYPT | CKF_DECRYPT;
+		break;
+	case CKM_SHA1_RSA_PKCS:
+	case CKM_SHA224_RSA_PKCS:
+	case CKM_SHA256_RSA_PKCS:
+	case CKM_SHA384_RSA_PKCS:
+	case CKM_SHA512_RSA_PKCS:
+	case CKM_SHA1_RSA_PKCS_PSS:
+	case CKM_SHA224_RSA_PKCS_PSS:
+	case CKM_SHA256_RSA_PKCS_PSS:
+	case CKM_SHA384_RSA_PKCS_PSS:
+	case CKM_SHA512_RSA_PKCS_PSS:
+		pInfo->ulMinKeySize = rsaMinSize;
+		pInfo->ulMaxKeySize = rsaMaxSize;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_RSA_PKCS_OAEP:
+		pInfo->ulMinKeySize = rsaMinSize;
+		pInfo->ulMaxKeySize = rsaMaxSize;
+		pInfo->flags = CKF_ENCRYPT | CKF_DECRYPT | CKF_WRAP | CKF_UNWRAP;
+		break;
+	case CKM_GENERIC_SECRET_KEY_GEN:
+		pInfo->ulMinKeySize = 1;
+		pInfo->ulMaxKeySize = 0x80000000;
+		pInfo->flags = CKF_GENERATE;
+		break;
+	case CKM_DES3_ECB_ENCRYPT_DATA:
+	case CKM_DES3_CBC_ENCRYPT_DATA:
+	case CKM_AES_ECB_ENCRYPT_DATA:
+	case CKM_AES_CBC_ENCRYPT_DATA:
+		// Key size is not in use
+		pInfo->ulMinKeySize = 0;
+		pInfo->ulMaxKeySize = 0;
+		pInfo->flags = CKF_DERIVE;
+		break;
+	case CKM_AES_CMAC:
+		pInfo->ulMinKeySize = 16;
+		pInfo->ulMaxKeySize = 32;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
+	case CKM_DSA_PARAMETER_GEN:
+		pInfo->ulMinKeySize = dsaMinSize;
+		pInfo->ulMaxKeySize = dsaMaxSize;
+		pInfo->flags = CKF_GENERATE;
+		break;
+	case CKM_DSA_KEY_PAIR_GEN:
+		pInfo->ulMinKeySize = dsaMinSize;
+		pInfo->ulMaxKeySize = dsaMaxSize;
+		pInfo->flags = CKF_GENERATE_KEY_PAIR;
+		break;
+	case CKM_DSA:
+	case CKM_DSA_SHA1:
+	case CKM_DSA_SHA224:
+	case CKM_DSA_SHA256:
+	case CKM_DSA_SHA384:
+	case CKM_DSA_SHA512:
+		pInfo->ulMinKeySize = dsaMinSize;
+		pInfo->ulMaxKeySize = dsaMaxSize;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY;
+		break;
 
-		case CKM_EC_KEY_PAIR_GEN:
-			pInfo->ulMinKeySize = ecdsaMinSize;
-			pInfo->ulMaxKeySize = ecdsaMaxSize;
+	case CKM_EC_KEY_PAIR_GEN:
+		pInfo->ulMinKeySize = ecdsaMinSize;
+		pInfo->ulMaxKeySize = ecdsaMaxSize;
 #define CKF_EC_COMMOM	(CKF_EC_F_P | CKF_EC_NAMEDCURVE | CKF_EC_UNCOMPRESS)
-			pInfo->flags = CKF_GENERATE_KEY_PAIR | CKF_EC_COMMOM;
-			break;
-		case CKM_IBM_SM2_KEY_PAIR_GEN:
-			pInfo->ulMinKeySize = sm2MinSize;
-			pInfo->ulMaxKeySize = sm2MaxSize;
+		pInfo->flags = CKF_GENERATE_KEY_PAIR | CKF_EC_COMMOM;
+		break;
+	case CKM_IBM_SM2_KEY_PAIR_GEN:
+		pInfo->ulMinKeySize = sm2MinSize;
+		pInfo->ulMaxKeySize = sm2MaxSize;
 #define CKF_EC_COMMOM	(CKF_EC_F_P | CKF_EC_NAMEDCURVE | CKF_EC_UNCOMPRESS)
-			pInfo->flags = CKF_GENERATE_KEY_PAIR | CKF_EC_COMMOM;
-			break;
-		case CKM_IBM_SM2:
-			pInfo->ulMinKeySize = sm2MinSize;
-			pInfo->ulMaxKeySize = sm2MaxSize;
+		pInfo->flags = CKF_GENERATE_KEY_PAIR | CKF_EC_COMMOM;
+		break;
+	case CKM_IBM_SM2:
+		pInfo->ulMinKeySize = sm2MinSize;
+		pInfo->ulMaxKeySize = sm2MaxSize;
 #define CKF_EC_COMMOM	(CKF_EC_F_P | CKF_EC_NAMEDCURVE | CKF_EC_UNCOMPRESS)
-			pInfo->flags = CKF_GENERATE_KEY_PAIR | CKF_EC_COMMOM;
-			break;
-		case CKM_ECDSA:
-			pInfo->ulMinKeySize = ecdsaMinSize;
-			pInfo->ulMaxKeySize = ecdsaMaxSize;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_EC_COMMOM;
-			break;
-		default:
-			DEBUG_MSG("The selected mechanism is not supported");
-			return CKR_MECHANISM_INVALID;
-			break;
+		pInfo->flags = CKF_GENERATE_KEY_PAIR | CKF_EC_COMMOM;
+		break;
+	case CKM_ECDSA:
+		pInfo->ulMinKeySize = ecdsaMinSize;
+		pInfo->ulMaxKeySize = ecdsaMaxSize;
+		pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_EC_COMMOM;
+		break;
+	default:
+		DEBUG_MSG("The selected mechanism is not supported");
+		return CKR_SLOT_ID_INVALID;
+		break;
 	}
 
 	return CKR_OK;
@@ -1152,15 +1150,15 @@ CK_RV SoftHSM::C_SetPIN(CK_SESSION_HANDLE hSession, CK_UTF8CHAR_PTR pOldPin, CK_
 
 	switch (session->getState())
 	{
-		case CKS_RW_PUBLIC_SESSION:
-		case CKS_RW_USER_FUNCTIONS:
-			rv = token->setUserPIN(oldPIN, newPIN);
-			break;
-		case CKS_RW_SO_FUNCTIONS:
-			rv = token->setSOPIN(oldPIN, newPIN);
-			break;
-		default:
-			return CKR_SESSION_READ_ONLY;
+	case CKS_RW_PUBLIC_SESSION:
+	case CKS_RW_USER_FUNCTIONS:
+		rv = token->setUserPIN(oldPIN, newPIN);
+		break;
+	case CKS_RW_SO_FUNCTIONS:
+		rv = token->setSOPIN(oldPIN, newPIN);
+		break;
+	default:
+		return CKR_SESSION_READ_ONLY;
 	}
 
 	return rv;
@@ -1180,7 +1178,7 @@ CK_RV SoftHSM::C_OpenSession(CK_SLOT_ID slotID, CK_FLAGS flags, CK_VOID_PTR pApp
 	// Get a pointer to the session object and store it in the handle manager.
 	Session* session = sessionManager->getSession(*phSession);
 	if (session == NULL) return CKR_SESSION_HANDLE_INVALID;
-	*phSession = handleManager->addSession(slotID,session);
+	*phSession = handleManager->addSession(slotID, session);
 
 	return CKR_OK;
 }
@@ -1288,27 +1286,27 @@ CK_RV SoftHSM::C_Login(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType, CK_UTF
 
 	switch (userType)
 	{
-		case CKU_SO:
-			// There cannot exist a R/O session on this slot
-			if (sessionManager->haveROSession(session->getSlot()->getSlotID())) return CKR_SESSION_READ_ONLY_EXISTS;
+	case CKU_SO:
+		// There cannot exist a R/O session on this slot
+		if (sessionManager->haveROSession(session->getSlot()->getSlotID())) return CKR_SESSION_READ_ONLY_EXISTS;
 
-			// Login
-			rv = token->loginSO(pin);
-			break;
-		case CKU_USER:
-			// Login
-			rv = token->loginUser(pin);
-			break;
-		case CKU_CONTEXT_SPECIFIC:
-			// Check if re-authentication is required
-			if (!session->getReAuthentication()) return CKR_OPERATION_NOT_INITIALIZED;
+		// Login
+		rv = token->loginSO(pin);
+		break;
+	case CKU_USER:
+		// Login
+		rv = token->loginUser(pin);
+		break;
+	case CKU_CONTEXT_SPECIFIC:
+		// Check if re-authentication is required
+		if (!session->getReAuthentication()) return CKR_OPERATION_NOT_INITIALIZED;
 
-			// Re-authenticate
-			rv = token->reAuthenticate(pin);
-			if (rv == CKR_OK) session->setReAuthentication(false);
-			break;
-		default:
-			return CKR_USER_TYPE_INVALID;
+		// Re-authenticate
+		rv = token->reAuthenticate(pin);
+		if (rv == CKR_OK) session->setReAuthentication(false);
+		break;
+	default:
+		return CKR_USER_TYPE_INVALID;
 	}
 
 	return rv;
@@ -1346,7 +1344,7 @@ CK_RV SoftHSM::C_Logout(CK_SESSION_HANDLE hSession)
 // Create a new object on the token in the specified session using the given attribute template
 CK_RV SoftHSM::C_CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTemplate, CK_ULONG ulCount, CK_OBJECT_HANDLE_PTR phObject)
 {
-	return this->CreateObject(hSession,pTemplate,ulCount,phObject,OBJECT_OP_CREATE);
+	return this->CreateObject(hSession, pTemplate, ulCount, phObject, OBJECT_OP_CREATE);
 }
 
 // Create a copy of the object with the specified handle
@@ -1428,7 +1426,7 @@ CK_RV SoftHSM::C_CopyObject(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
 	OSObject *newobject = NULL_PTR;
 	if (isOnToken)
 	{
-		newobject = (OSObject*) token->createObject();
+		newobject = (OSObject*)token->createObject();
 	}
 	else
 	{
@@ -1456,12 +1454,12 @@ CK_RV SoftHSM::C_CopyObject(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
 
 		// Upgrade privacy has to encrypt byte strings
 		if (!wasPrivate && isPrivate &&
-		    attr.isByteStringAttribute() &&
-		    attr.getByteStringValue().size() != 0)
+			attr.isByteStringAttribute() &&
+			attr.getByteStringValue().size() != 0)
 		{
 			ByteString value;
 			if (!token->encrypt(attr.getByteStringValue(), value) ||
-			    !newobject->setAttribute(attrType, value))
+				!newobject->setAttribute(attrType, value))
 			{
 				rv = CKR_FUNCTION_FAILED;
 				break;
@@ -1476,8 +1474,7 @@ CK_RV SoftHSM::C_CopyObject(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
 			}
 		}
 		attrType = object->nextAttributeType(attrType);
-	}
-	while (attrType != CKA_CLASS);
+	} while (attrType != CKA_CLASS);
 
 	if (rv != CKR_OK)
 	{
@@ -1496,7 +1493,7 @@ CK_RV SoftHSM::C_CopyObject(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject
 
 	// Get the new P11 object
 	P11Object* newp11object = NULL;
-	rv = newP11Object(newobject,&newp11object);
+	rv = newP11Object(newobject, &newp11object);
 	if (rv != CKR_OK)
 	{
 		newobject->destroyObject();
@@ -1633,12 +1630,12 @@ CK_RV SoftHSM::C_GetAttributeValue(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE 
 	// Wrap a P11Object around the OSObject so we can access the attributes in the
 	// context of the object in which it is defined.
 	P11Object* p11object = NULL;
-	rv = newP11Object(object,&p11object);
+	rv = newP11Object(object, &p11object);
 	if (rv != CKR_OK)
 		return rv;
 
 	// Ask the P11Object to fill the template with attribute values.
-	rv = p11object->loadTemplate(token, pTemplate,ulCount);
+	rv = p11object->loadTemplate(token, pTemplate, ulCount);
 	delete p11object;
 	return rv;
 }
@@ -1684,12 +1681,12 @@ CK_RV SoftHSM::C_SetAttributeValue(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE 
 	// Wrap a P11Object around the OSObject so we can access the attributes in the
 	// context of the object in which it is defined.
 	P11Object* p11object = NULL;
-	rv = newP11Object(object,&p11object);
+	rv = newP11Object(object, &p11object);
 	if (rv != CKR_OK)
 		return rv;
 
 	// Ask the P11Object to save the template with attribute values.
-	rv = p11object->saveTemplate(token, isPrivate != CK_FALSE, pTemplate,ulCount,OBJECT_OP_SET);
+	rv = p11object->saveTemplate(token, isPrivate != CK_FALSE, pTemplate, ulCount, OBJECT_OP_SET);
 	delete p11object;
 	return rv;
 }
@@ -1711,12 +1708,12 @@ CK_RV SoftHSM::C_FindObjectsInit(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pT
 	// Determine whether we have a public session or not.
 	bool isPublicSession;
 	switch (session->getState()) {
-		case CKS_RO_USER_FUNCTIONS:
-		case CKS_RW_USER_FUNCTIONS:
-			isPublicSession = false;
-			break;
-		default:
-			isPublicSession = true;
+	case CKS_RO_USER_FUNCTIONS:
+	case CKS_RW_USER_FUNCTIONS:
+		isPublicSession = false;
+		break;
+	default:
+		isPublicSession = true;
 	}
 
 	// Get the token
@@ -1734,11 +1731,11 @@ CK_RV SoftHSM::C_FindObjectsInit(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pT
 
 	std::set<OSObject*> allObjects;
 	token->getObjects(allObjects);
-	sessionObjectStore->getObjects(slot->getSlotID(),allObjects);
+	sessionObjectStore->getObjects(slot->getSlotID(), allObjects);
 
 	std::set<CK_OBJECT_HANDLE> handles;
 	std::set<OSObject*>::iterator it;
-	for (it=allObjects.begin(); it != allObjects.end(); ++it)
+	for (it = allObjects.begin(); it != allObjects.end(); ++it)
 	{
 		// Refresh object and check if it is valid
 		if (!(*it)->isValid()) {
@@ -1755,7 +1752,7 @@ CK_RV SoftHSM::C_FindObjectsInit(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pT
 
 		// Perform the actual attribute matching.
 		bool bAttrMatch = true; // We let an empty template match everything.
-		for (CK_ULONG i=0; i<ulCount; ++i)
+		for (CK_ULONG i = 0; i < ulCount; ++i)
 		{
 			bAttrMatch = false;
 
@@ -1823,9 +1820,9 @@ CK_RV SoftHSM::C_FindObjectsInit(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pT
 			// Create an object handle for every returned object.
 			CK_OBJECT_HANDLE hObject;
 			if (isOnToken)
-				hObject = handleManager->addTokenObject(slotID,isPrivate,*it);
+				hObject = handleManager->addTokenObject(slotID, isPrivate, *it);
 			else
-				hObject = handleManager->addSessionObject(slotID,hSession,isPrivate,*it);
+				hObject = handleManager->addSessionObject(slotID, hSession, isPrivate, *it);
 			if (hObject == CK_INVALID_HANDLE)
 			{
 				delete findOp;
@@ -1863,10 +1860,10 @@ CK_RV SoftHSM::C_FindObjects(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE_PTR ph
 	if (findOp == NULL) return CKR_GENERAL_ERROR;
 
 	// Ask the find operation to retrieve the object handles
-	*pulObjectCount = findOp->retrieveHandles(phObject,ulMaxObjectCount);
+	*pulObjectCount = findOp->retrieveHandles(phObject, ulMaxObjectCount);
 
 	// Erase the object handles from the find operation.
-	findOp->eraseHandles(0,*pulObjectCount);
+	findOp->eraseHandles(0, *pulObjectCount);
 
 	return CKR_OK;
 }
@@ -1892,21 +1889,21 @@ static bool isSymMechanism(CK_MECHANISM_PTR pMechanism)
 {
 	if (pMechanism == NULL_PTR) return false;
 
-	switch(pMechanism->mechanism) {
-		case CKM_DES_ECB:
-		case CKM_DES_CBC:
-		case CKM_DES_CBC_PAD:
-		case CKM_DES3_ECB:
-		case CKM_DES3_CBC:
-		case CKM_DES3_CBC_PAD:
-		case CKM_AES_ECB:
-		case CKM_AES_CBC:
-		case CKM_AES_CBC_PAD:
-		case CKM_AES_CTR:
-		case CKM_AES_GCM:
-			return true;
-		default:
-			return false;
+	switch (pMechanism->mechanism) {
+	case CKM_DES_ECB:
+	case CKM_DES_CBC:
+	case CKM_DES_CBC_PAD:
+	case CKM_DES3_ECB:
+	case CKM_DES3_CBC:
+	case CKM_DES3_CBC_PAD:
+	case CKM_AES_ECB:
+	case CKM_AES_CBC:
+	case CKM_AES_CBC_PAD:
+	case CKM_AES_CTR:
+	case CKM_AES_GCM:
+		return true;
+	default:
+		return false;
 	}
 }
 
@@ -1965,165 +1962,165 @@ CK_RV SoftHSM::SymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	size_t counterBits = 0;
 	ByteString aad;
 	size_t tagBytes = 0;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifndef WITH_FIPS
-		case CKM_DES_ECB:
-			if (keyType != CKK_DES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES;
-			mode = SymMode::ECB;
-			bb = 7;
-			break;
-		case CKM_DES_CBC:
-			if (keyType != CKK_DES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES;
-			mode = SymMode::CBC;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
-		case CKM_DES_CBC_PAD:
-			if (keyType != CKK_DES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES;
-			mode = SymMode::CBC;
-			padding = true;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
+	case CKM_DES_ECB:
+		if (keyType != CKK_DES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES;
+		mode = SymMode::ECB;
+		bb = 7;
+		break;
+	case CKM_DES_CBC:
+		if (keyType != CKK_DES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES;
+		mode = SymMode::CBC;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
+	case CKM_DES_CBC_PAD:
+		if (keyType != CKK_DES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES;
+		mode = SymMode::CBC;
+		padding = true;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
 #endif
-		case CKM_DES3_ECB:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES3;
-			mode = SymMode::ECB;
-			bb = 7;
-			break;
-		case CKM_DES3_CBC:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES3;
-			mode = SymMode::CBC;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
-		case CKM_DES3_CBC_PAD:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES3;
-			mode = SymMode::CBC;
-			padding = true;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
-		case CKM_AES_ECB:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::ECB;
-			break;
-		case CKM_AES_CBC:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::CBC;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			break;
-		case CKM_AES_CBC_PAD:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::CBC;
-			padding = true;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			break;
-		case CKM_AES_CTR:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::CTR;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_AES_CTR_PARAMS))
-			{
-				DEBUG_MSG("CTR mode requires a counter block");
-				return CKR_ARGUMENTS_BAD;
-			}
-			counterBits = CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->ulCounterBits;
-			if (counterBits == 0 || counterBits > 128)
-			{
-				DEBUG_MSG("Invalid ulCounterBits");
-				return CKR_MECHANISM_PARAM_INVALID;
-			}
-			iv.resize(16);
-			memcpy(&iv[0], CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->cb, 16);
-			break;
-		case CKM_AES_GCM:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::GCM;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_GCM_PARAMS))
-			{
-				DEBUG_MSG("GCM mode requires parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
-			memcpy(&iv[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pIv, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
-			aad.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
-			memcpy(&aad[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pAAD, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
-			tagBytes = CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulTagBits;
-			if (tagBytes > 128 || tagBytes % 8 != 0)
-			{
-				DEBUG_MSG("Invalid ulTagBits value");
-				return CKR_ARGUMENTS_BAD;
-			}
-			tagBytes = tagBytes / 8;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_DES3_ECB:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES3;
+		mode = SymMode::ECB;
+		bb = 7;
+		break;
+	case CKM_DES3_CBC:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES3;
+		mode = SymMode::CBC;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
+	case CKM_DES3_CBC_PAD:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES3;
+		mode = SymMode::CBC;
+		padding = true;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
+	case CKM_AES_ECB:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::ECB;
+		break;
+	case CKM_AES_CBC:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::CBC;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		break;
+	case CKM_AES_CBC_PAD:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::CBC;
+		padding = true;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		break;
+	case CKM_AES_CTR:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::CTR;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_AES_CTR_PARAMS))
+		{
+			DEBUG_MSG("CTR mode requires a counter block");
+			return CKR_ARGUMENTS_BAD;
+		}
+		counterBits = CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->ulCounterBits;
+		if (counterBits == 0 || counterBits > 128)
+		{
+			DEBUG_MSG("Invalid ulCounterBits");
+			return CKR_MECHANISM_PARAM_INVALID;
+		}
+		iv.resize(16);
+		memcpy(&iv[0], CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->cb, 16);
+		break;
+	case CKM_AES_GCM:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::GCM;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_GCM_PARAMS))
+		{
+			DEBUG_MSG("GCM mode requires parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
+		memcpy(&iv[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pIv, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
+		aad.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
+		memcpy(&aad[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pAAD, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
+		tagBytes = CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulTagBits;
+		if (tagBytes > 128 || tagBytes % 8 != 0)
+		{
+			DEBUG_MSG("Invalid ulTagBits value");
+			return CKR_ARGUMENTS_BAD;
+		}
+		tagBytes = tagBytes / 8;
+		break;
+	default:
+		return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
 	if (cipher == NULL) return CKR_MECHANISM_INVALID;
@@ -2202,36 +2199,36 @@ CK_RV SoftHSM::AsymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	// Get the asymmetric algorithm matching the mechanism
 	AsymMech::Type mechanism;
 	bool isRSA = false;
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-			if (keyType != CKK_RSA)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			mechanism = AsymMech::RSA_PKCS;
-			isRSA = true;
-			break;
-		case CKM_RSA_X_509:
-			if (keyType != CKK_RSA)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			mechanism = AsymMech::RSA;
-			isRSA = true;
-			break;
-		case CKM_RSA_PKCS_OAEP:
-			if (keyType != CKK_RSA)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			rv = MechParamCheckRSAPKCSOAEP(pMechanism);
-			if (rv != CKR_OK)
-				return rv;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+		if (keyType != CKK_RSA)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		mechanism = AsymMech::RSA_PKCS;
+		isRSA = true;
+		break;
+	case CKM_RSA_X_509:
+		if (keyType != CKK_RSA)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		mechanism = AsymMech::RSA;
+		isRSA = true;
+		break;
+	case CKM_RSA_PKCS_OAEP:
+		if (keyType != CKK_RSA)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		rv = MechParamCheckRSAPKCSOAEP(pMechanism);
+		if (rv != CKR_OK)
+			return rv;
 
-			mechanism = AsymMech::RSA_PKCS_OAEP;
-			isRSA = true;
-			break;
-		case CKM_IBM_SM2:
+		mechanism = AsymMech::RSA_PKCS_OAEP;
+		isRSA = true;
+		break;
+	case CKM_IBM_SM2:
 
-			mechanism = AsymMech::SM2;
-			isRSA = false;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+		mechanism = AsymMech::SM2;
+		isRSA = false;
+		break;
+	default:
+		return CKR_MECHANISM_INVALID;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -2257,8 +2254,8 @@ CK_RV SoftHSM::AsymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	}
 	else
 	{
-		return CKR_MECHANISM_INVALID;
-        }
+		return CKR_HOST_MEMORY;
+	}
 
 	session->setOpType(SESSION_OP_ENCRYPT);
 	session->setAsymmetricCryptoOp(asymCrypto);
@@ -2391,13 +2388,13 @@ static CK_RV AsymEncrypt(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDataLen
 
 	// We must allow input length <= k and therfore need to prepend the data with zeroes.
 	if (mechanism == AsymMech::SM2) {
-		data.wipe(size-ulDataLen);
+		data.wipe(size - ulDataLen);
 	}
 
 	data += ByteString(pData, ulDataLen);
 
 	// Encrypt the data
-	if (!asymCrypto->encrypt(publicKey,data,encryptedData,mechanism))
+	if (!asymCrypto->encrypt(publicKey, data, encryptedData, mechanism))
 	{
 		session->resetOp();
 		return CKR_GENERAL_ERROR;
@@ -2435,10 +2432,10 @@ CK_RV SoftHSM::C_Encrypt(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK_ULONG
 
 	if (session->getSymmetricCryptoOp() != NULL)
 		return SymEncrypt(session, pData, ulDataLen,
-				  pEncryptedData, pulEncryptedDataLen);
+			pEncryptedData, pulEncryptedDataLen);
 	else
 		return AsymEncrypt(session, pData, ulDataLen,
-				   pEncryptedData, pulEncryptedDataLen);
+			pEncryptedData, pulEncryptedDataLen);
 }
 
 // SymAlgorithm version of C_EncryptUpdate
@@ -2477,7 +2474,7 @@ static CK_RV SymEncryptUpdate(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDa
 	if (*pulEncryptedDataLen < maxSize)
 	{
 		DEBUG_MSG("ulDataLen: %#5x  output buffer size: %#5x  blockSize: %#3x  remainingSize: %#4x  maxSize: %#5x",
-			  ulDataLen, *pulEncryptedDataLen, blockSize, remainingSize, maxSize);
+			ulDataLen, *pulEncryptedDataLen, blockSize, remainingSize, maxSize);
 		*pulEncryptedDataLen = maxSize;
 		return CKR_BUFFER_TOO_SMALL;
 	}
@@ -2493,14 +2490,14 @@ static CK_RV SymEncryptUpdate(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDa
 		return CKR_GENERAL_ERROR;
 	}
 	DEBUG_MSG("ulDataLen: %#5x  output buffer size: %#5x  blockSize: %#3x  remainingSize: %#4x  maxSize: %#5x  encryptedData.size(): %#5x",
-		  ulDataLen, *pulEncryptedDataLen, blockSize, remainingSize, maxSize, encryptedData.size());
+		ulDataLen, *pulEncryptedDataLen, blockSize, remainingSize, maxSize, encryptedData.size());
 
 	// Check output size from crypto. Unrecoverable error if to large.
 	if (*pulEncryptedDataLen < encryptedData.size())
 	{
 		session->resetOp();
 		ERROR_MSG("EncryptUpdate returning too much data. Length of output data buffer is %i but %i bytes was returned by the encrypt.",
-			  *pulEncryptedDataLen, encryptedData.size());
+			*pulEncryptedDataLen, encryptedData.size());
 		return CKR_GENERAL_ERROR;
 	}
 
@@ -2531,7 +2528,7 @@ CK_RV SoftHSM::C_EncryptUpdate(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK
 
 	if (session->getSymmetricCryptoOp() != NULL)
 		return SymEncryptUpdate(session, pData, ulDataLen,
-				  pEncryptedData, pulEncryptedDataLen);
+			pEncryptedData, pulEncryptedDataLen);
 	else
 		return CKR_FUNCTION_NOT_SUPPORTED;
 }
@@ -2557,7 +2554,7 @@ static CK_RV SymEncryptFinal(Session* session, CK_BYTE_PTR pEncryptedData, CK_UL
 		{
 			session->resetOp();
 			DEBUG_MSG("Remaining buffer size is not an integral of the block size. Block size: %#2x  Remaining size: %#2x",
-				  blockSize, remainingSize);
+				blockSize, remainingSize);
 			return CKR_DATA_LEN_RANGE;
 		}
 		// when padding: an integral of the block size that is longer than the remaining data.
@@ -2575,7 +2572,7 @@ static CK_RV SymEncryptFinal(Session* session, CK_BYTE_PTR pEncryptedData, CK_UL
 	if (*pulEncryptedDataLen < size)
 	{
 		DEBUG_MSG("output buffer size: %#5x  size: %#5x",
-			  *pulEncryptedDataLen, size);
+			*pulEncryptedDataLen, size);
 		*pulEncryptedDataLen = size;
 		return CKR_BUFFER_TOO_SMALL;
 	}
@@ -2588,14 +2585,14 @@ static CK_RV SymEncryptFinal(Session* session, CK_BYTE_PTR pEncryptedData, CK_UL
 		return CKR_GENERAL_ERROR;
 	}
 	DEBUG_MSG("output buffer size: %#2x  size: %#2x  encryptedFinal.size(): %#2x",
-		  *pulEncryptedDataLen, size, encryptedFinal.size());
+		*pulEncryptedDataLen, size, encryptedFinal.size());
 
 	// Check output size from crypto. Unrecoverable error if to large.
 	if (*pulEncryptedDataLen < encryptedFinal.size())
 	{
 		session->resetOp();
 		ERROR_MSG("EncryptFinal returning too much data. Length of output data buffer is %i but %i bytes was returned by the encrypt.",
-			  *pulEncryptedDataLen, encryptedFinal.size());
+			*pulEncryptedDataLen, encryptedFinal.size());
 		return CKR_GENERAL_ERROR;
 	}
 
@@ -2690,165 +2687,165 @@ CK_RV SoftHSM::SymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	size_t counterBits = 0;
 	ByteString aad;
 	size_t tagBytes = 0;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifndef WITH_FIPS
-		case CKM_DES_ECB:
-			if (keyType != CKK_DES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES;
-			mode = SymMode::ECB;
-			bb = 7;
-			break;
-		case CKM_DES_CBC:
-			if (keyType != CKK_DES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES;
-			mode = SymMode::CBC;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
-		case CKM_DES_CBC_PAD:
-			if (keyType != CKK_DES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES;
-			mode = SymMode::CBC;
-			padding = true;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
+	case CKM_DES_ECB:
+		if (keyType != CKK_DES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES;
+		mode = SymMode::ECB;
+		bb = 7;
+		break;
+	case CKM_DES_CBC:
+		if (keyType != CKK_DES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES;
+		mode = SymMode::CBC;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
+	case CKM_DES_CBC_PAD:
+		if (keyType != CKK_DES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES;
+		mode = SymMode::CBC;
+		padding = true;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
 #endif
-		case CKM_DES3_ECB:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES3;
-			mode = SymMode::ECB;
-			bb = 7;
-			break;
-		case CKM_DES3_CBC:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES3;
-			mode = SymMode::CBC;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
-		case CKM_DES3_CBC_PAD:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::DES3;
-			mode = SymMode::CBC;
-			padding = true;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			bb = 7;
-			break;
-		case CKM_AES_ECB:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::ECB;
-			break;
-		case CKM_AES_CBC:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::CBC;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			break;
-		case CKM_AES_CBC_PAD:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::CBC;
-			padding = true;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen == 0)
-			{
-				DEBUG_MSG("CBC mode requires an init vector");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(pMechanism->ulParameterLen);
-			memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
-			break;
-		case CKM_AES_CTR:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::CTR;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_AES_CTR_PARAMS))
-			{
-				DEBUG_MSG("CTR mode requires a counter block");
-				return CKR_ARGUMENTS_BAD;
-			}
-			counterBits = CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->ulCounterBits;
-			if (counterBits == 0 || counterBits > 128)
-			{
-				DEBUG_MSG("Invalid ulCounterBits");
-				return CKR_MECHANISM_PARAM_INVALID;
-			}
-			iv.resize(16);
-			memcpy(&iv[0], CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->cb, 16);
-			break;
-		case CKM_AES_GCM:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = SymAlgo::AES;
-			mode = SymMode::GCM;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_GCM_PARAMS))
-			{
-				DEBUG_MSG("GCM mode requires parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			iv.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
-			memcpy(&iv[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pIv, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
-			aad.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
-			memcpy(&aad[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pAAD, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
-			tagBytes = CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulTagBits;
-			if (tagBytes > 128 || tagBytes % 8 != 0)
-			{
-				DEBUG_MSG("Invalid ulTagBits value");
-				return CKR_ARGUMENTS_BAD;
-			}
-			tagBytes = tagBytes / 8;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_DES3_ECB:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES3;
+		mode = SymMode::ECB;
+		bb = 7;
+		break;
+	case CKM_DES3_CBC:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES3;
+		mode = SymMode::CBC;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
+	case CKM_DES3_CBC_PAD:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::DES3;
+		mode = SymMode::CBC;
+		padding = true;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		bb = 7;
+		break;
+	case CKM_AES_ECB:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::ECB;
+		break;
+	case CKM_AES_CBC:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::CBC;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		break;
+	case CKM_AES_CBC_PAD:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::CBC;
+		padding = true;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen == 0)
+		{
+			DEBUG_MSG("CBC mode requires an init vector");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(pMechanism->ulParameterLen);
+		memcpy(&iv[0], pMechanism->pParameter, pMechanism->ulParameterLen);
+		break;
+	case CKM_AES_CTR:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::CTR;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_AES_CTR_PARAMS))
+		{
+			DEBUG_MSG("CTR mode requires a counter block");
+			return CKR_ARGUMENTS_BAD;
+		}
+		counterBits = CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->ulCounterBits;
+		if (counterBits == 0 || counterBits > 128)
+		{
+			DEBUG_MSG("Invalid ulCounterBits");
+			return CKR_MECHANISM_PARAM_INVALID;
+		}
+		iv.resize(16);
+		memcpy(&iv[0], CK_AES_CTR_PARAMS_PTR(pMechanism->pParameter)->cb, 16);
+		break;
+	case CKM_AES_GCM:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = SymAlgo::AES;
+		mode = SymMode::GCM;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_GCM_PARAMS))
+		{
+			DEBUG_MSG("GCM mode requires parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		iv.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
+		memcpy(&iv[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pIv, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulIvLen);
+		aad.resize(CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
+		memcpy(&aad[0], CK_GCM_PARAMS_PTR(pMechanism->pParameter)->pAAD, CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulAADLen);
+		tagBytes = CK_GCM_PARAMS_PTR(pMechanism->pParameter)->ulTagBits;
+		if (tagBytes > 128 || tagBytes % 8 != 0)
+		{
+			DEBUG_MSG("Invalid ulTagBits value");
+			return CKR_ARGUMENTS_BAD;
+		}
+		tagBytes = tagBytes / 8;
+		break;
+	default:
+		return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
 	if (cipher == NULL) return CKR_MECHANISM_INVALID;
@@ -2927,45 +2924,45 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	// Get the asymmetric algorithm matching the mechanism
 	AsymMech::Type mechanism = AsymMech::Unknown;
 	bool isRSA = false;
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-			if (keyType != CKK_RSA)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			mechanism = AsymMech::RSA_PKCS;
-			isRSA = true;
-			break;
-		case CKM_RSA_X_509:
-			if (keyType != CKK_RSA)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			mechanism = AsymMech::RSA;
-			isRSA = true;
-			break;
-		case CKM_RSA_PKCS_OAEP:
-			if (keyType != CKK_RSA)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_OAEP_PARAMS))
-			{
-				DEBUG_MSG("pParameter must be of type CK_RSA_PKCS_OAEP_PARAMS");
-				return CKR_ARGUMENTS_BAD;
-			}
-			if (CK_RSA_PKCS_OAEP_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA_1)
-			{
-				DEBUG_MSG("hashAlg must be CKM_SHA_1");
-				return CKR_ARGUMENTS_BAD;
-			}
-			if (CK_RSA_PKCS_OAEP_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA1)
-			{
-				DEBUG_MSG("mgf must be CKG_MGF1_SHA1");
-				return CKR_ARGUMENTS_BAD;
-			}
-
-			mechanism = AsymMech::RSA_PKCS_OAEP;
-			isRSA = true;
-			break;
-		default:
-			// return CKR_MECHANISM_INVALID;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+		if (keyType != CKK_RSA)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		mechanism = AsymMech::RSA_PKCS;
+		isRSA = true;
+		break;
+	case CKM_RSA_X_509:
+		if (keyType != CKK_RSA)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		mechanism = AsymMech::RSA;
+		isRSA = true;
+		break;
+	case CKM_RSA_PKCS_OAEP:
+		if (keyType != CKK_RSA)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_OAEP_PARAMS))
+		{
+			DEBUG_MSG("pParameter must be of type CK_RSA_PKCS_OAEP_PARAMS");
 			return CKR_ARGUMENTS_BAD;
+		}
+		if (CK_RSA_PKCS_OAEP_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA_1)
+		{
+			DEBUG_MSG("hashAlg must be CKM_SHA_1");
+			return CKR_ARGUMENTS_BAD;
+		}
+		if (CK_RSA_PKCS_OAEP_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA1)
+		{
+			DEBUG_MSG("mgf must be CKG_MGF1_SHA1");
+			return CKR_ARGUMENTS_BAD;
+		}
+
+		mechanism = AsymMech::RSA_PKCS_OAEP;
+		isRSA = true;
+		break;
+	default:
+		// return CKR_MECHANISM_INVALID;
+		return CKR_ARGUMENTS_BAD;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -2973,9 +2970,9 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	if (isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::RSA);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
+		if (asymCrypto == NULL) return CKR_HOST_MEMORY//return CKR_MECHANISM_INVALID;
 
-		privateKey = asymCrypto->newPrivateKey();
+			privateKey = asymCrypto->newPrivateKey();
 		if (privateKey == NULL)
 		{
 			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
@@ -2991,8 +2988,8 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	}
 	else
 	{
-		return CKR_MECHANISM_INVALID;
-        }
+		return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;//return CKR_MECHANISM_INVALID;
+	}
 
 	// Check if re-authentication is required
 	if (key->getBooleanValue(CKA_ALWAYS_AUTHENTICATE, false))
@@ -3059,7 +3056,7 @@ static CK_RV SymDecrypt(Session* session, CK_BYTE_PTR pEncryptedData, CK_ULONG u
 	ByteString data;
 
 	// Decrypt the data
-	if (!cipher->decryptUpdate(encryptedData,data))
+	if (!cipher->decryptUpdate(encryptedData, data))
 	{
 		session->resetOp();
 		return CKR_GENERAL_ERROR;
@@ -3128,7 +3125,7 @@ static CK_RV AsymDecrypt(Session* session, CK_BYTE_PTR pEncryptedData, CK_ULONG 
 	ByteString data;
 
 	// Decrypt the data
-	if (!asymCrypto->decrypt(privateKey,encryptedData,data,mechanism))
+	if (!asymCrypto->decrypt(privateKey, encryptedData, data, mechanism))
 	{
 		session->resetOp();
 		return CKR_GENERAL_ERROR;
@@ -3170,10 +3167,10 @@ CK_RV SoftHSM::C_Decrypt(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pEncryptedData,
 
 	if (session->getSymmetricCryptoOp() != NULL)
 		return SymDecrypt(session, pEncryptedData, ulEncryptedDataLen,
-				  pData, pulDataLen);
+			pData, pulDataLen);
 	else
 		return AsymDecrypt(session, pEncryptedData, ulEncryptedDataLen,
-				   pData, pulDataLen);
+			pData, pulDataLen);
 }
 
 // SymAlgorithm version of C_DecryptUpdate
@@ -3215,7 +3212,7 @@ static CK_RV SymDecryptUpdate(Session* session, CK_BYTE_PTR pEncryptedData, CK_U
 	if (*pDataLen < maxSize)
 	{
 		DEBUG_MSG("Output buffer too short   ulEncryptedDataLen: %#5x  output buffer size: %#5x  blockSize: %#3x  remainingSize: %#4x  maxSize: %#5x",
-			  ulEncryptedDataLen, *pDataLen, blockSize, remainingSize, maxSize);
+			ulEncryptedDataLen, *pDataLen, blockSize, remainingSize, maxSize);
 		*pDataLen = maxSize;
 		return CKR_BUFFER_TOO_SMALL;
 	}
@@ -3231,14 +3228,14 @@ static CK_RV SymDecryptUpdate(Session* session, CK_BYTE_PTR pEncryptedData, CK_U
 		return CKR_GENERAL_ERROR;
 	}
 	DEBUG_MSG("ulEncryptedDataLen: %#5x  output buffer size: %#5x  blockSize: %#3x  remainingSize: %#4x  maxSize: %#5x  decryptedData.size(): %#5x",
-		  ulEncryptedDataLen, *pDataLen, blockSize, remainingSize, maxSize, decryptedData.size());
+		ulEncryptedDataLen, *pDataLen, blockSize, remainingSize, maxSize, decryptedData.size());
 
 	// Check output size from crypto. Unrecoverable error if to large.
 	if (*pDataLen < decryptedData.size())
 	{
 		session->resetOp();
 		ERROR_MSG("DecryptUpdate returning too much data. Length of output data buffer is %i but %i bytes was returned by the decrypt.",
-				*pDataLen, decryptedData.size());
+			*pDataLen, decryptedData.size());
 		return CKR_GENERAL_ERROR;
 	}
 
@@ -3270,7 +3267,7 @@ CK_RV SoftHSM::C_DecryptUpdate(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pEncrypte
 
 	if (session->getSymmetricCryptoOp() != NULL)
 		return SymDecryptUpdate(session, pEncryptedData, ulEncryptedDataLen,
-				  pData, pDataLen);
+			pData, pDataLen);
 	else
 		return CKR_FUNCTION_NOT_SUPPORTED;
 }
@@ -3294,7 +3291,7 @@ static CK_RV SymDecryptFinal(Session* session, CK_BYTE_PTR pDecryptedData, CK_UL
 		{
 			session->resetOp();
 			DEBUG_MSG("Remaining data length is not an integral of the block size. Block size: %#2x  Remaining size: %#2x",
-				   blockSize, remainingSize);
+				blockSize, remainingSize);
 			return CKR_ENCRYPTED_DATA_LEN_RANGE;
 		}
 		// It is at least one padding byte. If no padding the all remains will be returned.
@@ -3313,7 +3310,7 @@ static CK_RV SymDecryptFinal(Session* session, CK_BYTE_PTR pDecryptedData, CK_UL
 	if (*pulDecryptedDataLen < size)
 	{
 		DEBUG_MSG("output buffer size: %#5x  size: %#5x",
-			  *pulDecryptedDataLen, size);
+			*pulDecryptedDataLen, size);
 		*pulDecryptedDataLen = size;
 		return CKR_BUFFER_TOO_SMALL;
 	}
@@ -3326,14 +3323,14 @@ static CK_RV SymDecryptFinal(Session* session, CK_BYTE_PTR pDecryptedData, CK_UL
 		return CKR_GENERAL_ERROR;
 	}
 	DEBUG_MSG("output buffer size: %#2x  size: %#2x  decryptedFinal.size(): %#2x",
-		  *pulDecryptedDataLen, size, decryptedFinal.size());
+		*pulDecryptedDataLen, size, decryptedFinal.size());
 
 	// Check output size from crypto. Unrecoverable error if to large.
 	if (*pulDecryptedDataLen < decryptedFinal.size())
 	{
 		session->resetOp();
 		ERROR_MSG("DecryptFinal returning too much data. Length of output data buffer is %i but %i bytes was returned by the encrypt.",
-			  *pulDecryptedDataLen, decryptedFinal.size());
+			*pulDecryptedDataLen, decryptedFinal.size());
 		return CKR_GENERAL_ERROR;
 	}
 
@@ -3388,37 +3385,37 @@ CK_RV SoftHSM::C_DigestInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 
 	// Get the mechanism
 	HashAlgo::Type algo = HashAlgo::Unknown;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifndef WITH_FIPS
-		case CKM_MD5:
-			algo = HashAlgo::MD5;
-			break;
+	case CKM_MD5:
+		algo = HashAlgo::MD5;
+		break;
 #endif
-		case CKM_SHA_1:
-			algo = HashAlgo::SHA1;
-			break;
-		case CKM_SHA224:
-			algo = HashAlgo::SHA224;
-			break;
-		case CKM_SHA256:
-			algo = HashAlgo::SHA256;
-			break;
-		case CKM_SHA384:
-			algo = HashAlgo::SHA384;
-			break;
-		case CKM_SHA512:
-			algo = HashAlgo::SHA512;
-			break;
+	case CKM_SHA_1:
+		algo = HashAlgo::SHA1;
+		break;
+	case CKM_SHA224:
+		algo = HashAlgo::SHA224;
+		break;
+	case CKM_SHA256:
+		algo = HashAlgo::SHA256;
+		break;
+	case CKM_SHA384:
+		algo = HashAlgo::SHA384;
+		break;
+	case CKM_SHA512:
+		algo = HashAlgo::SHA512;
+		break;
 #ifdef WITH_GOST
-		case CKM_GOSTR3411:
-			algo = HashAlgo::GOST;
-			break;
+	case CKM_GOSTR3411:
+		algo = HashAlgo::GOST;
+		break;
 #endif
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_SESSION_HANDLE_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 	HashAlgorithm* hash = CryptoFactory::i()->getHashAlgorithm(algo);
-	if (hash == NULL) return CKR_MECHANISM_INVALID;
+	if (hash == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 	// Initialize hashing
 	if (hash->hashInit() == false)
@@ -3562,10 +3559,10 @@ CK_RV SoftHSM::C_DigestKey(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hObject)
 	// Whitelist
 	HashAlgo::Type algo = session->getHashAlgo();
 	if (algo != HashAlgo::SHA1 &&
-	    algo != HashAlgo::SHA224 &&
-	    algo != HashAlgo::SHA256 &&
-	    algo != HashAlgo::SHA384 &&
-	    algo != HashAlgo::SHA512)
+		algo != HashAlgo::SHA224 &&
+		algo != HashAlgo::SHA256 &&
+		algo != HashAlgo::SHA384 &&
+		algo != HashAlgo::SHA512)
 	{
 		// Parano...
 		if (!key->getBooleanValue(CKA_EXTRACTABLE, false))
@@ -3655,21 +3652,21 @@ static bool isMacMechanism(CK_MECHANISM_PTR pMechanism)
 {
 	if (pMechanism == NULL_PTR) return false;
 
-	switch(pMechanism->mechanism) {
-		case CKM_MD5_HMAC:
-		case CKM_SHA_1_HMAC:
-		case CKM_SHA224_HMAC:
-		case CKM_SHA256_HMAC:
-		case CKM_SHA384_HMAC:
-		case CKM_SHA512_HMAC:
+	switch (pMechanism->mechanism) {
+	case CKM_MD5_HMAC:
+	case CKM_SHA_1_HMAC:
+	case CKM_SHA224_HMAC:
+	case CKM_SHA256_HMAC:
+	case CKM_SHA384_HMAC:
+	case CKM_SHA512_HMAC:
 #ifdef WITH_GOST
-		case CKM_GOSTR3411_HMAC:
+	case CKM_GOSTR3411_HMAC:
 #endif
-		case CKM_DES3_CMAC:
-		case CKM_AES_CMAC:
-			return true;
-		default:
-			return false;
+	case CKM_DES3_CMAC:
+	case CKM_AES_CMAC:
+		return true;
+	default:
+		return false;
 	}
 }
 
@@ -3714,7 +3711,7 @@ CK_RV SoftHSM::MacSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechani
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_MECHANISM_INVALID;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED; //return CKR_MECHANISM_INVALID;
 
 	// Get key info
 	CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
@@ -3724,66 +3721,66 @@ CK_RV SoftHSM::MacSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechani
 	MacAlgo::Type algo = MacAlgo::Unknown;
 	size_t bb = 8;
 	size_t minSize = 0;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifndef WITH_FIPS
-		case CKM_MD5_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_MD5_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 16;
-			algo = MacAlgo::HMAC_MD5;
-			break;
+	case CKM_MD5_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_MD5_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 16;
+		algo = MacAlgo::HMAC_MD5;
+		break;
 #endif
-		case CKM_SHA_1_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA_1_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 20;
-			algo = MacAlgo::HMAC_SHA1;
-			break;
-		case CKM_SHA224_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA224_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 28;
-			algo = MacAlgo::HMAC_SHA224;
-			break;
-		case CKM_SHA256_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA256_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 32;
-			algo = MacAlgo::HMAC_SHA256;
-			break;
-		case CKM_SHA384_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA384_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 48;
-			algo = MacAlgo::HMAC_SHA384;
-			break;
-		case CKM_SHA512_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA512_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 64;
-			algo = MacAlgo::HMAC_SHA512;
-			break;
+	case CKM_SHA_1_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA_1_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 20;
+		algo = MacAlgo::HMAC_SHA1;
+		break;
+	case CKM_SHA224_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA224_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 28;
+		algo = MacAlgo::HMAC_SHA224;
+		break;
+	case CKM_SHA256_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA256_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 32;
+		algo = MacAlgo::HMAC_SHA256;
+		break;
+	case CKM_SHA384_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA384_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 48;
+		algo = MacAlgo::HMAC_SHA384;
+		break;
+	case CKM_SHA512_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA512_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 64;
+		algo = MacAlgo::HMAC_SHA512;
+		break;
 #ifdef WITH_GOST
-		case CKM_GOSTR3411_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_GOST28147)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 32;
-			algo = MacAlgo::HMAC_GOST;
-			break;
+	case CKM_GOSTR3411_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_GOST28147)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 32;
+		algo = MacAlgo::HMAC_GOST;
+		break;
 #endif
-		case CKM_DES3_CMAC:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = MacAlgo::CMAC_DES;
-			bb = 7;
-			break;
-		case CKM_AES_CMAC:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = MacAlgo::CMAC_AES;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_DES3_CMAC:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = MacAlgo::CMAC_DES;
+		bb = 7;
+		break;
+	case CKM_AES_CMAC:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = MacAlgo::CMAC_AES;
+		break;
+	default:
+		return CKR_MECHANISM_INVALID;
 	}
 	MacAlgorithm* mac = CryptoFactory::i()->getMacAlgorithm(algo);
 	if (mac == NULL) return CKR_MECHANISM_INVALID;
@@ -3801,7 +3798,7 @@ CK_RV SoftHSM::MacSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechani
 	privkey->setBitLen(privkey->getKeyBits().size() * bb);
 
 	// Check key size
-	if (privkey->getBitLen() < (minSize*8))
+	if (privkey->getBitLen() < (minSize * 8))
 	{
 		mac->recycleKey(privkey);
 		CryptoFactory::i()->recycleMacAlgorithm(mac);
@@ -3866,7 +3863,7 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_MECHANISM_INVALID;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED; //return CKR_MECHANISM_INVALID;
 
 	// Get the asymmetric algorithm matching the mechanism
 	AsymMech::Type mechanism = AsymMech::Unknown;
@@ -3888,7 +3885,7 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 	if (isSM2)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
+		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 		privateKey = asymCrypto->newPrivateKey();
 		if (privateKey == NULL)
@@ -3903,7 +3900,7 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
 			return CKR_GENERAL_ERROR;
 		}
-    }
+	}
 
 
 	// Check if re-authentication is required
@@ -3926,7 +3923,7 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 // Initialise a signing operation using the specified key and mechanism
 CK_RV SoftHSM::C_SignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism, CK_OBJECT_HANDLE hKey)
 {
-		return AsymSignInit(hSession, pMechanism, hKey);
+	return AsymSignInit(hSession, pMechanism, hKey);
 }
 
 // MacAlgorithm version of C_Sign
@@ -4027,7 +4024,7 @@ static CK_RV AsymSign(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDataLen, C
 
 	// We must allow input length <= k and therfore need to prepend the data with zeroes.
 	if (mechanism == AsymMech::SM2) {
-		data.wipe(size-ulDataLen);
+		data.wipe(size - ulDataLen);
 	}
 
 	data += ByteString(pData, ulDataLen);
@@ -4037,13 +4034,13 @@ static CK_RV AsymSign(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDataLen, C
 	if (session->getAllowMultiPartOp())
 	{
 		if (!asymCrypto->signUpdate(data) ||
-		    !asymCrypto->signFinal(signature))
+			!asymCrypto->signFinal(signature))
 		{
 			session->resetOp();
 			return CKR_GENERAL_ERROR;
 		}
 	}
-	else if (!asymCrypto->sign(privateKey,data,signature,mechanism,param,paramLen))
+	else if (!asymCrypto->sign(privateKey, data, signature, mechanism, param, paramLen))
 	{
 		session->resetOp();
 		return CKR_GENERAL_ERROR;
@@ -4081,7 +4078,7 @@ CK_RV SoftHSM::C_Sign(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK_ULONG ul
 
 
 	return AsymSign(session, pData, ulDataLen,
-				pSignature, pulSignatureLen);
+		pSignature, pulSignatureLen);
 }
 
 // MacAlgorithm version of C_SignUpdate
@@ -4361,66 +4358,66 @@ CK_RV SoftHSM::MacVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 	MacAlgo::Type algo = MacAlgo::Unknown;
 	size_t bb = 8;
 	size_t minSize = 0;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifndef WITH_FIPS
-		case CKM_MD5_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_MD5_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 16;
-			algo = MacAlgo::HMAC_MD5;
-			break;
+	case CKM_MD5_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_MD5_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 16;
+		algo = MacAlgo::HMAC_MD5;
+		break;
 #endif
-		case CKM_SHA_1_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA_1_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 20;
-			algo = MacAlgo::HMAC_SHA1;
-			break;
-		case CKM_SHA224_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA224_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 28;
-			algo = MacAlgo::HMAC_SHA224;
-			break;
-		case CKM_SHA256_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA256_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 32;
-			algo = MacAlgo::HMAC_SHA256;
-			break;
-		case CKM_SHA384_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA384_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 48;
-			algo = MacAlgo::HMAC_SHA384;
-			break;
-		case CKM_SHA512_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA512_HMAC)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 64;
-			algo = MacAlgo::HMAC_SHA512;
-			break;
+	case CKM_SHA_1_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA_1_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 20;
+		algo = MacAlgo::HMAC_SHA1;
+		break;
+	case CKM_SHA224_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA224_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 28;
+		algo = MacAlgo::HMAC_SHA224;
+		break;
+	case CKM_SHA256_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA256_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 32;
+		algo = MacAlgo::HMAC_SHA256;
+		break;
+	case CKM_SHA384_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA384_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 48;
+		algo = MacAlgo::HMAC_SHA384;
+		break;
+	case CKM_SHA512_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_SHA512_HMAC)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 64;
+		algo = MacAlgo::HMAC_SHA512;
+		break;
 #ifdef WITH_GOST
-		case CKM_GOSTR3411_HMAC:
-			if (keyType != CKK_GENERIC_SECRET && keyType != CKK_GOST28147)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			minSize = 32;
-			algo = MacAlgo::HMAC_GOST;
-			break;
+	case CKM_GOSTR3411_HMAC:
+		if (keyType != CKK_GENERIC_SECRET && keyType != CKK_GOST28147)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		minSize = 32;
+		algo = MacAlgo::HMAC_GOST;
+		break;
 #endif
-		case CKM_DES3_CMAC:
-			if (keyType != CKK_DES2 && keyType != CKK_DES3)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = MacAlgo::CMAC_DES;
-			bb = 7;
-			break;
-		case CKM_AES_CMAC:
-			if (keyType != CKK_AES)
-				return CKR_KEY_TYPE_INCONSISTENT;
-			algo = MacAlgo::CMAC_AES;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_DES3_CMAC:
+		if (keyType != CKK_DES2 && keyType != CKK_DES3)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = MacAlgo::CMAC_DES;
+		bb = 7;
+		break;
+	case CKM_AES_CMAC:
+		if (keyType != CKK_AES)
+			return CKR_KEY_TYPE_INCONSISTENT;
+		algo = MacAlgo::CMAC_AES;
+		break;
+	default:
+		return CKR_MECHANISM_INVALID;
 	}
 	MacAlgorithm* mac = CryptoFactory::i()->getMacAlgorithm(algo);
 	if (mac == NULL) return CKR_MECHANISM_INVALID;
@@ -4438,7 +4435,7 @@ CK_RV SoftHSM::MacVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 	pubkey->setBitLen(pubkey->getKeyBits().size() * bb);
 
 	// Check key size
-	if (pubkey->getBitLen() < (minSize*8))
+	if (pubkey->getBitLen() < (minSize * 8))
 	{
 		mac->recycleKey(pubkey);
 		CryptoFactory::i()->recycleMacAlgorithm(mac);
@@ -4503,7 +4500,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_MECHANISM_INVALID;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_MECHANISM_INVALID;
 
 	// Get the asymmetric algorithm matching the mechanism
 	AsymMech::Type mechanism = AsymMech::Unknown;
@@ -4513,253 +4510,184 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	bool bAllowMultiPartOp;
 	bool isRSA = false;
 	bool isDSA = false;
-#ifdef WITH_ECC
 	bool isECDSA = false;
-#endif
-#ifdef WITH_EDDSA
-	bool isEDDSA = false;
-#endif
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-			mechanism = AsymMech::RSA_PKCS;
-			bAllowMultiPartOp = false;
-			isRSA = true;
-			break;
-		case CKM_RSA_X_509:
-			mechanism = AsymMech::RSA;
-			bAllowMultiPartOp = false;
-			isRSA = true;
-			break;
+
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+		mechanism = AsymMech::RSA_PKCS;
+		bAllowMultiPartOp = false;
+		isRSA = true;
+		break;
+	case CKM_RSA_X_509:
+		mechanism = AsymMech::RSA;
+		bAllowMultiPartOp = false;
+		isRSA = true;
+		break;
 #ifndef WITH_FIPS
-		case CKM_MD5_RSA_PKCS:
-			mechanism = AsymMech::RSA_MD5_PKCS;
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
+	case CKM_MD5_RSA_PKCS:
+		mechanism = AsymMech::RSA_MD5_PKCS;
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
 #endif
-		case CKM_SHA1_RSA_PKCS:
-			mechanism = AsymMech::RSA_SHA1_PKCS;
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA224_RSA_PKCS:
-			mechanism = AsymMech::RSA_SHA224_PKCS;
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA256_RSA_PKCS:
-			mechanism = AsymMech::RSA_SHA256_PKCS;
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA384_RSA_PKCS:
-			mechanism = AsymMech::RSA_SHA384_PKCS;
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA512_RSA_PKCS:
-			mechanism = AsymMech::RSA_SHA512_PKCS;
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-#ifdef WITH_RAW_PSS
-		case CKM_RSA_PKCS_PSS:
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS))
-			{
-				ERROR_MSG("Invalid parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			mechanism = AsymMech::RSA_PKCS_PSS;
+	case CKM_SHA1_RSA_PKCS:
+		mechanism = AsymMech::RSA_SHA1_PKCS;
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA224_RSA_PKCS:
+		mechanism = AsymMech::RSA_SHA224_PKCS;
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA256_RSA_PKCS:
+		mechanism = AsymMech::RSA_SHA256_PKCS;
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA384_RSA_PKCS:
+		mechanism = AsymMech::RSA_SHA384_PKCS;
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA512_RSA_PKCS:
+		mechanism = AsymMech::RSA_SHA512_PKCS;
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA1_RSA_PKCS_PSS:
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA_1 ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA1)
+		{
+			ERROR_MSG("Invalid parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		mechanism = AsymMech::RSA_SHA1_PKCS_PSS;
+		pssParam.hashAlg = HashAlgo::SHA1;
+		pssParam.mgf = AsymRSAMGF::MGF1_SHA1;
+		pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
+		param = &pssParam;
+		paramLen = sizeof(pssParam);
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA224_RSA_PKCS_PSS:
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA224 ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA224)
+		{
+			ERROR_MSG("Invalid parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		mechanism = AsymMech::RSA_SHA224_PKCS_PSS;
+		pssParam.hashAlg = HashAlgo::SHA224;
+		pssParam.mgf = AsymRSAMGF::MGF1_SHA224;
+		pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
+		param = &pssParam;
+		paramLen = sizeof(pssParam);
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA256_RSA_PKCS_PSS:
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA256 ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA256)
+		{
+			ERROR_MSG("Invalid parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		mechanism = AsymMech::RSA_SHA256_PKCS_PSS;
+		pssParam.hashAlg = HashAlgo::SHA256;
+		pssParam.mgf = AsymRSAMGF::MGF1_SHA256;
+		pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
+		param = &pssParam;
+		paramLen = sizeof(pssParam);
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA384_RSA_PKCS_PSS:
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA384 ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA384)
+		{
+			ERROR_MSG("Invalid parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		mechanism = AsymMech::RSA_SHA384_PKCS_PSS;
+		pssParam.hashAlg = HashAlgo::SHA384;
+		pssParam.mgf = AsymRSAMGF::MGF1_SHA384;
+		pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
+		param = &pssParam;
+		paramLen = sizeof(pssParam);
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_SHA512_RSA_PKCS_PSS:
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA512 ||
+			CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA512)
+		{
+			ERROR_MSG("Invalid parameters");
+			return CKR_ARGUMENTS_BAD;
+		}
+		mechanism = AsymMech::RSA_SHA512_PKCS_PSS;
+		pssParam.hashAlg = HashAlgo::SHA512;
+		pssParam.mgf = AsymRSAMGF::MGF1_SHA512;
+		pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
+		param = &pssParam;
+		paramLen = sizeof(pssParam);
+		bAllowMultiPartOp = true;
+		isRSA = true;
+		break;
+	case CKM_DSA:
+		mechanism = AsymMech::DSA;
+		bAllowMultiPartOp = false;
+		isDSA = true;
+		break;
+	case CKM_DSA_SHA1:
+		mechanism = AsymMech::DSA_SHA1;
+		bAllowMultiPartOp = true;
+		isDSA = true;
+		break;
+	case CKM_DSA_SHA224:
+		mechanism = AsymMech::DSA_SHA224;
+		bAllowMultiPartOp = true;
+		isDSA = true;
+		break;
+	case CKM_DSA_SHA256:
+		mechanism = AsymMech::DSA_SHA256;
+		bAllowMultiPartOp = true;
+		isDSA = true;
+		break;
+	case CKM_DSA_SHA384:
+		mechanism = AsymMech::DSA_SHA384;
+		bAllowMultiPartOp = true;
+		isDSA = true;
+		break;
+	case CKM_DSA_SHA512:
+		mechanism = AsymMech::DSA_SHA512;
+		bAllowMultiPartOp = true;
+		isDSA = true;
+		break;
+	case CKM_ECDSA:
+		mechanism = AsymMech::ECDSA;
+		bAllowMultiPartOp = false;
+		isECDSA = true;
+		break;
+	case CKM_IBM_SM2:
+		mechanism = AsymMech::SM2;
+		bAllowMultiPartOp = false;
+		isECDSA = true;
+		break;
 
-			unsigned long expectedMgf;
-			switch(CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg) {
-				case CKM_SHA_1:
-					pssParam.hashAlg = HashAlgo::SHA1;
-					pssParam.mgf = AsymRSAMGF::MGF1_SHA1;
-					expectedMgf = CKG_MGF1_SHA1;
-					break;
-				case CKM_SHA224:
-					pssParam.hashAlg = HashAlgo::SHA224;
-					pssParam.mgf = AsymRSAMGF::MGF1_SHA224;
-					expectedMgf = CKG_MGF1_SHA224;
-					break;
-				case CKM_SHA256:
-					pssParam.hashAlg = HashAlgo::SHA256;
-					pssParam.mgf = AsymRSAMGF::MGF1_SHA256;
-					expectedMgf = CKG_MGF1_SHA256;
-					break;
-				case CKM_SHA384:
-					pssParam.hashAlg = HashAlgo::SHA384;
-					pssParam.mgf = AsymRSAMGF::MGF1_SHA384;
-					expectedMgf = CKG_MGF1_SHA384;
-					break;
-				case CKM_SHA512:
-					pssParam.hashAlg = HashAlgo::SHA512;
-					pssParam.mgf = AsymRSAMGF::MGF1_SHA512;
-					expectedMgf = CKG_MGF1_SHA512;
-					break;
-				default:
-					return CKR_ARGUMENTS_BAD;
-			}
-
-			if (CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != expectedMgf) {
-				return CKR_ARGUMENTS_BAD;
-			}
-
-			pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
-			param = &pssParam;
-			paramLen = sizeof(pssParam);
-			bAllowMultiPartOp = false;
-			isRSA = true;
-			break;
-#endif
-		case CKM_SHA1_RSA_PKCS_PSS:
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA_1 ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA1)
-			{
-				ERROR_MSG("Invalid parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			mechanism = AsymMech::RSA_SHA1_PKCS_PSS;
-			pssParam.hashAlg = HashAlgo::SHA1;
-			pssParam.mgf = AsymRSAMGF::MGF1_SHA1;
-			pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
-			param = &pssParam;
-			paramLen = sizeof(pssParam);
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA224_RSA_PKCS_PSS:
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA224 ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA224)
-			{
-				ERROR_MSG("Invalid parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			mechanism = AsymMech::RSA_SHA224_PKCS_PSS;
-			pssParam.hashAlg = HashAlgo::SHA224;
-			pssParam.mgf = AsymRSAMGF::MGF1_SHA224;
-			pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
-			param = &pssParam;
-			paramLen = sizeof(pssParam);
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA256_RSA_PKCS_PSS:
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA256 ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA256)
-			{
-				ERROR_MSG("Invalid parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			mechanism = AsymMech::RSA_SHA256_PKCS_PSS;
-			pssParam.hashAlg = HashAlgo::SHA256;
-			pssParam.mgf = AsymRSAMGF::MGF1_SHA256;
-			pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
-			param = &pssParam;
-			paramLen = sizeof(pssParam);
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA384_RSA_PKCS_PSS:
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA384 ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA384)
-			{
-				ERROR_MSG("Invalid parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			mechanism = AsymMech::RSA_SHA384_PKCS_PSS;
-			pssParam.hashAlg = HashAlgo::SHA384;
-			pssParam.mgf = AsymRSAMGF::MGF1_SHA384;
-			pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
-			param = &pssParam;
-			paramLen = sizeof(pssParam);
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_SHA512_RSA_PKCS_PSS:
-			if (pMechanism->pParameter == NULL_PTR ||
-			    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_PSS_PARAMS) ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->hashAlg != CKM_SHA512 ||
-			    CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->mgf != CKG_MGF1_SHA512)
-			{
-				ERROR_MSG("Invalid parameters");
-				return CKR_ARGUMENTS_BAD;
-			}
-			mechanism = AsymMech::RSA_SHA512_PKCS_PSS;
-			pssParam.hashAlg = HashAlgo::SHA512;
-			pssParam.mgf = AsymRSAMGF::MGF1_SHA512;
-			pssParam.sLen = CK_RSA_PKCS_PSS_PARAMS_PTR(pMechanism->pParameter)->sLen;
-			param = &pssParam;
-			paramLen = sizeof(pssParam);
-			bAllowMultiPartOp = true;
-			isRSA = true;
-			break;
-		case CKM_DSA:
-			mechanism = AsymMech::DSA;
-			bAllowMultiPartOp = false;
-			isDSA = true;
-			break;
-		case CKM_DSA_SHA1:
-			mechanism = AsymMech::DSA_SHA1;
-			bAllowMultiPartOp = true;
-			isDSA = true;
-			break;
-		case CKM_DSA_SHA224:
-			mechanism = AsymMech::DSA_SHA224;
-			bAllowMultiPartOp = true;
-			isDSA = true;
-			break;
-		case CKM_DSA_SHA256:
-			mechanism = AsymMech::DSA_SHA256;
-			bAllowMultiPartOp = true;
-			isDSA = true;
-			break;
-		case CKM_DSA_SHA384:
-			mechanism = AsymMech::DSA_SHA384;
-			bAllowMultiPartOp = true;
-			isDSA = true;
-			break;
-		case CKM_DSA_SHA512:
-			mechanism = AsymMech::DSA_SHA512;
-			bAllowMultiPartOp = true;
-			isDSA = true;
-			break;
-#ifdef WITH_ECC
-		case CKM_ECDSA:
-			mechanism = AsymMech::ECDSA;
-			bAllowMultiPartOp = false;
-			isECDSA = true;
-			break;
-#endif
-#ifdef WITH_GOST
-		case CKM_GOSTR3410:
-			mechanism = AsymMech::GOST;
-			bAllowMultiPartOp = false;
-			break;
-		case CKM_GOSTR3410_WITH_GOSTR3411:
-			mechanism = AsymMech::GOST_GOST;
-			bAllowMultiPartOp = true;
-			break;
-#endif
-#ifdef WITH_EDDSA
-		case CKM_EDDSA:
-			mechanism = AsymMech::EDDSA;
-			bAllowMultiPartOp = false;
-			isEDDSA = true;
-			break;
-#endif
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_GENERAL_ERROR; //return CKR_MECHANISM_INVALID;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -4767,7 +4695,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	if (isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::RSA);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
+		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
@@ -4783,30 +4711,10 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 			return CKR_GENERAL_ERROR;
 		}
 	}
-	else if (isDSA)
-	{
-		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::DSA);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
-
-		publicKey = asymCrypto->newPublicKey();
-		if (publicKey == NULL)
-		{
-			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
-			return CKR_HOST_MEMORY;
-		}
-
-		if (getDSAPublicKey((DSAPublicKey*)publicKey, token, key) != CKR_OK)
-		{
-			asymCrypto->recyclePublicKey(publicKey);
-			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
-			return CKR_GENERAL_ERROR;
-		}
-        }
-#ifdef WITH_ECC
 	else if (isECDSA)
 	{
-		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::ECDSA);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
+		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
+		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
@@ -4815,35 +4723,14 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 			return CKR_HOST_MEMORY;
 		}
 
-		if (getECPublicKey((ECPublicKey*)publicKey, token, key) != CKR_OK)
+		if (getSM2PublicKey((SM2PublicKey*)publicKey, token, key) != CKR_OK)
 		{
 			asymCrypto->recyclePublicKey(publicKey);
 			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
 			return CKR_GENERAL_ERROR;
 		}
 	}
-#endif
-#ifdef WITH_EDDSA
-	else if (isEDDSA)
-	{
-		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::EDDSA);
-		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
 
-		publicKey = asymCrypto->newPublicKey();
-		if (publicKey == NULL)
-		{
-			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
-			return CKR_HOST_MEMORY;
-		}
-
-		if (getEDPublicKey((EDPublicKey*)publicKey, token, key) != CKR_OK)
-		{
-			asymCrypto->recyclePublicKey(publicKey);
-			CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
-			return CKR_GENERAL_ERROR;
-		}
-	}
-#endif
 	else
 	{
 #ifdef WITH_GOST
@@ -4866,14 +4753,14 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 #else
 		return CKR_MECHANISM_INVALID;
 #endif
-        }
+	}
 
 	// Initialize verifying
-	if (bAllowMultiPartOp && !asymCrypto->verifyInit(publicKey,mechanism,param,paramLen))
+	if (bAllowMultiPartOp && !asymCrypto->verifyInit(publicKey, mechanism, param, paramLen))
 	{
 		asymCrypto->recyclePublicKey(publicKey);
 		CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
-		return CKR_MECHANISM_INVALID;
+		return CKR_OPERATION_NOT_INITIALIZED;//return CKR_MECHANISM_INVALID;
 	}
 
 	session->setOpType(SESSION_OP_VERIFY);
@@ -4971,7 +4858,7 @@ static CK_RV AsymVerify(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDataLen,
 
 	// We must allow input length <= k and therfore need to prepend the data with zeroes.
 	if (mechanism == AsymMech::RSA) {
-		data.wipe(size-ulDataLen);
+		data.wipe(size - ulDataLen);
 	}
 
 	data += ByteString(pData, ulDataLen);
@@ -4981,13 +4868,13 @@ static CK_RV AsymVerify(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDataLen,
 	if (session->getAllowMultiPartOp())
 	{
 		if (!asymCrypto->verifyUpdate(data) ||
-		    !asymCrypto->verifyFinal(signature))
+			!asymCrypto->verifyFinal(signature))
 		{
 			session->resetOp();
 			return CKR_SIGNATURE_INVALID;
 		}
 	}
-	else if (!asymCrypto->verify(publicKey,data,signature,mechanism,param,paramLen))
+	else if (!asymCrypto->verify(publicKey, data, signature, mechanism, param, paramLen))
 	{
 		session->resetOp();
 		return CKR_SIGNATURE_INVALID;
@@ -5015,10 +4902,10 @@ CK_RV SoftHSM::C_Verify(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pData, CK_ULONG 
 
 	if (session->getMacOp() != NULL)
 		return MacVerify(session, pData, ulDataLen,
-				 pSignature, ulSignatureLen);
+			pSignature, ulSignatureLen);
 	else
 		return AsymVerify(session, pData, ulDataLen,
-				  pSignature, ulSignatureLen);
+			pSignature, ulSignatureLen);
 }
 
 // MacAlgorithm version of C_VerifyUpdate
@@ -5278,38 +5165,38 @@ CK_RV SoftHSM::C_GenerateKey(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 	CK_KEY_TYPE keyType;
 	switch (pMechanism->mechanism)
 	{
-		case CKM_DSA_PARAMETER_GEN:
-			objClass = CKO_DOMAIN_PARAMETERS;
-			keyType = CKK_DSA;
-			break;
-		case CKM_DH_PKCS_PARAMETER_GEN:
-			objClass = CKO_DOMAIN_PARAMETERS;
-			keyType = CKK_DH;
-			break;
+	case CKM_DSA_PARAMETER_GEN:
+		objClass = CKO_DOMAIN_PARAMETERS;
+		keyType = CKK_DSA;
+		break;
+	case CKM_DH_PKCS_PARAMETER_GEN:
+		objClass = CKO_DOMAIN_PARAMETERS;
+		keyType = CKK_DH;
+		break;
 #ifndef WITH_FIPS
-		case CKM_DES_KEY_GEN:
-			objClass = CKO_SECRET_KEY;
-			keyType = CKK_DES;
-			break;
+	case CKM_DES_KEY_GEN:
+		objClass = CKO_SECRET_KEY;
+		keyType = CKK_DES;
+		break;
 #endif
-		case CKM_DES2_KEY_GEN:
-			objClass = CKO_SECRET_KEY;
-			keyType = CKK_DES2;
-			break;
-		case CKM_DES3_KEY_GEN:
-			objClass = CKO_SECRET_KEY;
-			keyType = CKK_DES3;
-			break;
-		case CKM_AES_KEY_GEN:
-			objClass = CKO_SECRET_KEY;
-			keyType = CKK_AES;
-			break;
-		case CKM_GENERIC_SECRET_KEY_GEN:
-			objClass = CKO_SECRET_KEY;
-			keyType = CKK_GENERIC_SECRET;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_DES2_KEY_GEN:
+		objClass = CKO_SECRET_KEY;
+		keyType = CKK_DES2;
+		break;
+	case CKM_DES3_KEY_GEN:
+		objClass = CKO_SECRET_KEY;
+		keyType = CKK_DES3;
+		break;
+	case CKM_AES_KEY_GEN:
+		objClass = CKO_SECRET_KEY;
+		keyType = CKK_AES;
+		break;
+	case CKM_GENERIC_SECRET_KEY_GEN:
+		objClass = CKO_SECRET_KEY;
+		keyType = CKK_GENERIC_SECRET;
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Extract information from the template that is needed to create the object.
@@ -5323,25 +5210,25 @@ CK_RV SoftHSM::C_GenerateKey(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 	if (objClass != CKO_SECRET_KEY && objClass != CKO_DOMAIN_PARAMETERS)
 		return CKR_ATTRIBUTE_VALUE_INVALID;
 	if (pMechanism->mechanism == CKM_DSA_PARAMETER_GEN &&
-	    (objClass != CKO_DOMAIN_PARAMETERS || keyType != CKK_DSA))
+		(objClass != CKO_DOMAIN_PARAMETERS || keyType != CKK_DSA))
 		return CKR_TEMPLATE_INCONSISTENT;
 	if (pMechanism->mechanism == CKM_DH_PKCS_PARAMETER_GEN &&
-	    (objClass != CKO_DOMAIN_PARAMETERS || keyType != CKK_DH))
+		(objClass != CKO_DOMAIN_PARAMETERS || keyType != CKK_DH))
 		return CKR_TEMPLATE_INCONSISTENT;
 	if (pMechanism->mechanism == CKM_DES_KEY_GEN &&
-	    (objClass != CKO_SECRET_KEY || keyType != CKK_DES))
+		(objClass != CKO_SECRET_KEY || keyType != CKK_DES))
 		return CKR_TEMPLATE_INCONSISTENT;
 	if (pMechanism->mechanism == CKM_DES2_KEY_GEN &&
-	    (objClass != CKO_SECRET_KEY || keyType != CKK_DES2))
+		(objClass != CKO_SECRET_KEY || keyType != CKK_DES2))
 		return CKR_TEMPLATE_INCONSISTENT;
 	if (pMechanism->mechanism == CKM_DES3_KEY_GEN &&
-	    (objClass != CKO_SECRET_KEY || keyType != CKK_DES3))
+		(objClass != CKO_SECRET_KEY || keyType != CKK_DES3))
 		return CKR_TEMPLATE_INCONSISTENT;
 	if (pMechanism->mechanism == CKM_AES_KEY_GEN &&
-	    (objClass != CKO_SECRET_KEY || keyType != CKK_AES))
+		(objClass != CKO_SECRET_KEY || keyType != CKK_AES))
 		return CKR_TEMPLATE_INCONSISTENT;
 	if (pMechanism->mechanism == CKM_GENERIC_SECRET_KEY_GEN &&
-	    (objClass != CKO_SECRET_KEY || keyType != CKK_GENERIC_SECRET))
+		(objClass != CKO_SECRET_KEY || keyType != CKK_GENERIC_SECRET))
 		return CKR_TEMPLATE_INCONSISTENT;
 
 	// Check authorization
@@ -5430,24 +5317,24 @@ CK_RV SoftHSM::C_GenerateKeyPair
 	CK_KEY_TYPE keyType;
 	switch (pMechanism->mechanism)
 	{
-		case CKM_RSA_PKCS_KEY_PAIR_GEN:
-			keyType = CKK_RSA;
-			break;
-		case CKM_DSA_KEY_PAIR_GEN:
-			keyType = CKK_DSA;
-			break;
-		case CKM_DH_PKCS_KEY_PAIR_GEN:
-			keyType = CKK_DH;
-			break;
-		case CKM_EC_KEY_PAIR_GEN:
-			keyType = CKK_EC;
-			break;
-		case CKM_IBM_SM2_KEY_PAIR_GEN:
-			// pkcs11.h: #define CKK_IBM_SM2 (0x80050002UL)
-			keyType = CKK_IBM_SM2;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_RSA_PKCS_KEY_PAIR_GEN:
+		keyType = CKK_RSA;
+		break;
+	case CKM_DSA_KEY_PAIR_GEN:
+		keyType = CKK_DSA;
+		break;
+	case CKM_DH_PKCS_KEY_PAIR_GEN:
+		keyType = CKK_DH;
+		break;
+	case CKM_EC_KEY_PAIR_GEN:
+		keyType = CKK_EC;
+		break;
+	case CKM_IBM_SM2_KEY_PAIR_GEN:
+		// pkcs11.h: #define CKK_IBM_SM2 (0x80050002UL)
+		keyType = CKK_IBM_SM2;
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID; //return CKR_MECHANISM_INVALID;
 	}
 	CK_CERTIFICATE_TYPE dummy;
 
@@ -5516,31 +5403,31 @@ CK_RV SoftHSM::C_GenerateKeyPair
 	// Generate RSA keys
 	if (pMechanism->mechanism == CKM_RSA_PKCS_KEY_PAIR_GEN)
 	{
-			return this->generateRSA(hSession,
-									 pPublicKeyTemplate, ulPublicKeyAttributeCount,
-									 pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
-									 phPublicKey, phPrivateKey,
-									 ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
+		return this->generateRSA(hSession,
+			pPublicKeyTemplate, ulPublicKeyAttributeCount,
+			pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
+			phPublicKey, phPrivateKey,
+			ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
 	}
 
 	// Generate DSA keys
 	if (pMechanism->mechanism == CKM_DSA_KEY_PAIR_GEN)
 	{
-			return this->generateDSA(hSession,
-									 pPublicKeyTemplate, ulPublicKeyAttributeCount,
-									 pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
-									 phPublicKey, phPrivateKey,
-									 ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
+		return this->generateDSA(hSession,
+			pPublicKeyTemplate, ulPublicKeyAttributeCount,
+			pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
+			phPublicKey, phPrivateKey,
+			ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
 	}
 
 	// Generate EC keys
 	if (pMechanism->mechanism == CKM_EC_KEY_PAIR_GEN)
 	{
-			return this->generateEC(hSession,
-									 pPublicKeyTemplate, ulPublicKeyAttributeCount,
-									 pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
-									 phPublicKey, phPrivateKey,
-									 ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
+		return this->generateEC(hSession,
+			pPublicKeyTemplate, ulPublicKeyAttributeCount,
+			pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
+			phPublicKey, phPrivateKey,
+			ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
 	}
 
 	// Generate SM2 keys
@@ -5556,31 +5443,31 @@ CK_RV SoftHSM::C_GenerateKeyPair
 	// Generate DH keys
 	if (pMechanism->mechanism == CKM_DH_PKCS_KEY_PAIR_GEN)
 	{
-			return this->generateDH(hSession,
-									 pPublicKeyTemplate, ulPublicKeyAttributeCount,
-									 pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
-									 phPublicKey, phPrivateKey,
-									 ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
+		return this->generateDH(hSession,
+			pPublicKeyTemplate, ulPublicKeyAttributeCount,
+			pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
+			phPublicKey, phPrivateKey,
+			ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
 	}
 
 	// Generate GOST keys
 	if (pMechanism->mechanism == CKM_GOSTR3410_KEY_PAIR_GEN)
 	{
-			return this->generateGOST(hSession,
-									 pPublicKeyTemplate, ulPublicKeyAttributeCount,
-									 pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
-									 phPublicKey, phPrivateKey,
-									 ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
+		return this->generateGOST(hSession,
+			pPublicKeyTemplate, ulPublicKeyAttributeCount,
+			pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
+			phPublicKey, phPrivateKey,
+			ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
 	}
 
 	// Generate EDDSA keys
 	if (pMechanism->mechanism == CKM_EC_EDWARDS_KEY_PAIR_GEN)
 	{
-			return this->generateED(hSession,
-									 pPublicKeyTemplate, ulPublicKeyAttributeCount,
-									 pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
-									 phPublicKey, phPrivateKey,
-									 ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
+		return this->generateED(hSession,
+			pPublicKeyTemplate, ulPublicKeyAttributeCount,
+			pPrivateKeyTemplate, ulPrivateKeyAttributeCount,
+			phPublicKey, phPrivateKey,
+			ispublicKeyToken, ispublicKeyPrivate, isprivateKeyToken, isprivateKeyPrivate);
 	}
 
 	return CKR_GENERAL_ERROR;
@@ -5614,32 +5501,32 @@ CK_RV SoftHSM::WrapKeySym
 		wrappedlen = keydata.size();
 	}
 #endif
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifdef HAVE_AES_KEY_WRAP
-		case CKM_AES_KEY_WRAP:
-			if ((wrappedlen < 16) || ((wrappedlen % 8) != 0))
-				return CKR_KEY_SIZE_RANGE;
-			algo = SymAlgo::AES;
-			mode = SymWrap::AES_KEYWRAP;
-			break;
+	case CKM_AES_KEY_WRAP:
+		if ((wrappedlen < 16) || ((wrappedlen % 8) != 0))
+			return CKR_KEY_SIZE_RANGE;
+		algo = SymAlgo::AES;
+		mode = SymWrap::AES_KEYWRAP;
+		break;
 #endif
 #ifdef HAVE_AES_KEY_WRAP_PAD
-		case CKM_AES_KEY_WRAP_PAD:
-			algo = SymAlgo::AES;
-			mode = SymWrap::AES_KEYWRAP_PAD;
-			break;
+	case CKM_AES_KEY_WRAP_PAD:
+		algo = SymAlgo::AES;
+		mode = SymWrap::AES_KEYWRAP_PAD;
+		break;
 #endif
-		case CKM_AES_CBC:
-			algo = SymAlgo::AES;
-			break;
-		case CKM_DES3_CBC:
-			algo = SymAlgo::DES3;
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_AES_CBC:
+		algo = SymAlgo::AES;
+		break;
+	case CKM_DES3_CBC:
+		algo = SymAlgo::DES3;
+		break;
+	default:
+		return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_MECHANISM_INVALID;
+	if (cipher == NULL) return CKR_GENERAL_ERROR; //return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* wrappingkey = new SymmetricKey();
 
@@ -5659,43 +5546,44 @@ CK_RV SoftHSM::WrapKeySym
 	if (pMechanism->mechanism == CKM_AES_CBC) {
 		iv.resize(16);
 		memcpy(&iv[0], pMechanism->pParameter, 16);
-	} else if (pMechanism->mechanism == CKM_DES3_CBC){
+	}
+	else if (pMechanism->mechanism == CKM_DES3_CBC) {
 		iv.resize(8);
 		memcpy(&iv[0], pMechanism->pParameter, 8);
 	}
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 
-		case CKM_AES_CBC:
-		case CKM_DES3_CBC:
-			if (!cipher->encryptInit(wrappingkey, SymMode::CBC, iv, false))
-			{
-				cipher->recycleKey(wrappingkey);
-				CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-				return CKR_MECHANISM_INVALID;
-			}
-			if (!cipher->encryptUpdate(keydata, wrapped))
-			{
-				cipher->recycleKey(wrappingkey);
-				CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-				return CKR_GENERAL_ERROR;
-			}
-			// Finalize encryption
-			if (!cipher->encryptFinal(encryptedFinal))
-			{
-				cipher->recycleKey(wrappingkey);
-				CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-				return CKR_GENERAL_ERROR;
-			}
-			wrapped += encryptedFinal;
-			break;
-		default:
-			// Wrap the key
-			if (!cipher->wrapKey(wrappingkey, mode, keydata, wrapped))
-			{
-				cipher->recycleKey(wrappingkey);
-				CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-				return CKR_GENERAL_ERROR;
-			}
+	case CKM_AES_CBC:
+	case CKM_DES3_CBC:
+		if (!cipher->encryptInit(wrappingkey, SymMode::CBC, iv, false))
+		{
+			cipher->recycleKey(wrappingkey);
+			CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
+			return CKR_MECHANISM_INVALID;
+		}
+		if (!cipher->encryptUpdate(keydata, wrapped))
+		{
+			cipher->recycleKey(wrappingkey);
+			CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
+			return CKR_GENERAL_ERROR;
+		}
+		// Finalize encryption
+		if (!cipher->encryptFinal(encryptedFinal))
+		{
+			cipher->recycleKey(wrappingkey);
+			CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
+			return CKR_GENERAL_ERROR;
+		}
+		wrapped += encryptedFinal;
+		break;
+	default:
+		// Wrap the key
+		if (!cipher->wrapKey(wrappingkey, mode, keydata, wrapped))
+		{
+			cipher->recycleKey(wrappingkey);
+			CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
+			return CKR_GENERAL_ERROR;
+		}
 	}
 
 	cipher->recycleKey(wrappingkey);
@@ -5718,43 +5606,43 @@ CK_RV SoftHSM::WrapKeyAsym
 	AsymMech::Type mech = AsymMech::Unknown;
 
 	CK_ULONG modulus_length;
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-		case CKM_RSA_PKCS_OAEP:
-			algo = AsymAlgo::RSA;
-			if (!wrapKey->attributeExists(CKA_MODULUS_BITS))
-				return CKR_GENERAL_ERROR;
-			modulus_length = wrapKey->getUnsignedLongValue(CKA_MODULUS_BITS, 0);
-			// adjust key bit length
-			modulus_length /= bb;
-			break;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+	case CKM_RSA_PKCS_OAEP:
+		algo = AsymAlgo::RSA;
+		if (!wrapKey->attributeExists(CKA_MODULUS_BITS))
+			return CKR_GENERAL_ERROR;
+		modulus_length = wrapKey->getUnsignedLongValue(CKA_MODULUS_BITS, 0);
+		// adjust key bit length
+		modulus_length /= bb;
+		break;
 
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_KEY_SIZE_RANGE;//return CKR_MECHANISM_INVALID;
 	}
 
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-			mech = AsymMech::RSA_PKCS;
-			// RFC 3447 section 7.2.1
-			if (keydata.size() > modulus_length - 11)
-				return CKR_KEY_SIZE_RANGE;
-			break;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+		mech = AsymMech::RSA_PKCS;
+		// RFC 3447 section 7.2.1
+		if (keydata.size() > modulus_length - 11)
+			return CKR_KEY_SIZE_RANGE;
+		break;
 
-		case CKM_RSA_PKCS_OAEP:
-			mech = AsymMech::RSA_PKCS_OAEP;
-			// SHA-1 is the only supported option
-			// PKCS#11 2.40 draft 2 section 2.1.8: input length <= k-2-2hashLen
-			if (keydata.size() > modulus_length - 2 - 2 * 160 / 8)
-				return CKR_KEY_SIZE_RANGE;
-			break;
+	case CKM_RSA_PKCS_OAEP:
+		mech = AsymMech::RSA_PKCS_OAEP;
+		// SHA-1 is the only supported option
+		// PKCS#11 2.40 draft 2 section 2.1.8: input length <= k-2-2hashLen
+		if (keydata.size() > modulus_length - 2 - 2 * 160 / 8)
+			return CKR_KEY_SIZE_RANGE;
+		break;
 
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_HOST_MEMORY;//return CKR_MECHANISM_INVALID;
 	}
 
 	AsymmetricAlgorithm* cipher = CryptoFactory::i()->getAsymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_MECHANISM_INVALID;
+	if (cipher == NULL) return CKM_RSA_PKCS_OAEP; //return CKR_MECHANISM_INVALID;
 
 	PublicKey* publicKey = cipher->newPublicKey();
 	if (publicKey == NULL)
@@ -5763,19 +5651,19 @@ CK_RV SoftHSM::WrapKeyAsym
 		return CKR_HOST_MEMORY;
 	}
 
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-		case CKM_RSA_PKCS_OAEP:
-			if (getRSAPublicKey((RSAPublicKey*)publicKey, token, wrapKey) != CKR_OK)
-			{
-				cipher->recyclePublicKey(publicKey);
-				CryptoFactory::i()->recycleAsymmetricAlgorithm(cipher);
-				return CKR_GENERAL_ERROR;
-			}
-			break;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+	case CKM_RSA_PKCS_OAEP:
+		if (getRSAPublicKey((RSAPublicKey*)publicKey, token, wrapKey) != CKR_OK)
+		{
+			cipher->recyclePublicKey(publicKey);
+			CryptoFactory::i()->recycleAsymmetricAlgorithm(cipher);
+			return CKR_GENERAL_ERROR;
+		}
+		break;
 
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_ARGUMENTS_BAD;//return CKR_MECHANISM_INVALID;
 	}
 	// Wrap the key
 	if (!cipher->wrapKey(publicKey, keydata, wrapped, mech))
@@ -5814,32 +5702,32 @@ CK_RV SoftHSM::C_WrapKey
 
 	CK_RV rv;
 	// Check the mechanism, only accept advanced AES key wrapping and RSA
-	switch(pMechanism->mechanism)
+	switch (pMechanism->mechanism)
 	{
 #ifdef HAVE_AES_KEY_WRAP
-		case CKM_AES_KEY_WRAP:
+	case CKM_AES_KEY_WRAP:
 #endif
 #ifdef HAVE_AES_KEY_WRAP_PAD
-		case CKM_AES_KEY_WRAP_PAD:
+	case CKM_AES_KEY_WRAP_PAD:
 #endif
-		case CKM_RSA_PKCS:
-			// Does not handle optional init vector
-			if (pMechanism->pParameter != NULL_PTR ||
-                            pMechanism->ulParameterLen != 0)
-				return CKR_ARGUMENTS_BAD;
-			break;
-		case CKM_RSA_PKCS_OAEP:
-			rv = MechParamCheckRSAPKCSOAEP(pMechanism);
-			if (rv != CKR_OK)
-				return rv;
-			break;
-		case CKM_AES_CBC:
-			if (pMechanism->pParameter == NULL_PTR ||
-                            pMechanism->ulParameterLen != 16)
-                                return CKR_ARGUMENTS_BAD;
-                        break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_RSA_PKCS:
+		// Does not handle optional init vector
+		if (pMechanism->pParameter != NULL_PTR ||
+			pMechanism->ulParameterLen != 0)
+			return CKR_ARGUMENTS_BAD;
+		break;
+	case CKM_RSA_PKCS_OAEP:
+		rv = MechParamCheckRSAPKCSOAEP(pMechanism);
+		if (rv != CKR_OK)
+			return rv;
+		break;
+	case CKM_AES_CBC:
+		if (pMechanism->pParameter == NULL_PTR ||
+			pMechanism->ulParameterLen != 16)
+			return CKR_ARGUMENTS_BAD;
+		break;
+	default:
+		return CKR_ARGUMENTS_BAD; //return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the token
@@ -5886,7 +5774,7 @@ CK_RV SoftHSM::C_WrapKey
 
 	// Check if the specified mechanism is allowed for the wrapping key
 	if (!isMechanismPermitted(wrapKey, pMechanism))
-		return CKR_MECHANISM_INVALID;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_MECHANISM_INVALID;
 
 	// Check the to be wrapped key handle.
 	OSObject *key = (OSObject *)handleManager->getObject(hKey);
@@ -5926,7 +5814,7 @@ CK_RV SoftHSM::C_WrapKey
 
 		if (attr.isAttributeMapAttribute())
 		{
-			typedef std::map<CK_ATTRIBUTE_TYPE,OSAttribute> attrmap_type;
+			typedef std::map<CK_ATTRIBUTE_TYPE, OSAttribute> attrmap_type;
 
 			const attrmap_type& map = attr.getAttributeMapValue();
 
@@ -5966,31 +5854,26 @@ CK_RV SoftHSM::C_WrapKey
 		CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
 		AsymAlgo::Type alg = AsymAlgo::Unknown;
 		switch (keyType) {
-			case CKK_RSA:
-				alg = AsymAlgo::RSA;
-				break;
-			case CKK_DSA:
-				alg = AsymAlgo::DSA;
-				break;
-			case CKK_DH:
-				alg = AsymAlgo::DH;
-				break;
-#ifdef WITH_ECC
-			case CKK_EC:
-				// can be ecdh too but it doesn't matter
-				alg = AsymAlgo::ECDSA;
-				break;
-#endif
-#ifdef WITH_EDDSA
-			// Not yet
-#endif
-#ifdef WITH_GOST
-			case CKK_GOSTR3410:
-				alg = AsymAlgo::GOST;
-				break;
-#endif
-			default:
-				return CKR_KEY_NOT_WRAPPABLE;
+		case CKK_RSA:
+			alg = AsymAlgo::RSA;
+			break;
+		case CKK_DSA:
+			alg = AsymAlgo::DSA;
+			break;
+		case CKK_DH:
+			alg = AsymAlgo::DH;
+			break;
+		case CKK_EC:
+			// can be ecdh too but it doesn't matter
+			alg = AsymAlgo::ECDSA;
+			break;
+		case CKK_IBM_SM2:
+			// can be ecdh too but it doesn't matter
+			alg = AsymAlgo::SM2;
+			break;
+
+		default:
+			return CKR_KEY_NOT_WRAPPABLE;
 		}
 		AsymmetricAlgorithm* asymCrypto = NULL;
 		PrivateKey* privateKey = NULL;
@@ -6004,25 +5887,21 @@ CK_RV SoftHSM::C_WrapKey
 			return CKR_HOST_MEMORY;
 		}
 		switch (keyType) {
-			case CKK_RSA:
-				rv = getRSAPrivateKey((RSAPrivateKey*)privateKey, token, key);
-				break;
-			case CKK_DSA:
-				rv = getDSAPrivateKey((DSAPrivateKey*)privateKey, token, key);
-				break;
-			case CKK_DH:
-				rv = getDHPrivateKey((DHPrivateKey*)privateKey, token, key);
-				break;
-#ifdef WITH_ECC
-			case CKK_EC:
-				rv = getECPrivateKey((ECPrivateKey*)privateKey, token, key);
-				break;
-#endif
-#ifdef WITH_GOST
-			case CKK_GOSTR3410:
-				rv = getGOSTPrivateKey((GOSTPrivateKey*)privateKey, token, key);
-				break;
-#endif
+		case CKK_RSA:
+			rv = getRSAPrivateKey((RSAPrivateKey*)privateKey, token, key);
+			break;
+		case CKK_DSA:
+			rv = getDSAPrivateKey((DSAPrivateKey*)privateKey, token, key);
+			break;
+		case CKK_DH:
+			rv = getDHPrivateKey((DHPrivateKey*)privateKey, token, key);
+			break;
+		case CKK_EC:
+			rv = getECPrivateKey((ECPrivateKey*)privateKey, token, key);
+			break;
+		case CKK_IBM_SM2:
+			rv = getSM2PrivateKey((ECPrivateKey*)privateKey, token, key);
+			break;
 		}
 		if (rv != CKR_OK)
 		{
@@ -6071,24 +5950,24 @@ CK_RV SoftHSM::UnwrapKeySym
 	SymAlgo::Type algo = SymAlgo::Unknown;
 	SymWrap::Type mode = SymWrap::Unknown;
 	size_t bb = 8;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifdef HAVE_AES_KEY_WRAP
-		case CKM_AES_KEY_WRAP:
-			algo = SymAlgo::AES;
-			mode = SymWrap::AES_KEYWRAP;
-			break;
+	case CKM_AES_KEY_WRAP:
+		algo = SymAlgo::AES;
+		mode = SymWrap::AES_KEYWRAP;
+		break;
 #endif
 #ifdef HAVE_AES_KEY_WRAP_PAD
-		case CKM_AES_KEY_WRAP_PAD:
-			algo = SymAlgo::AES;
-			mode = SymWrap::AES_KEYWRAP_PAD;
-			break;
+	case CKM_AES_KEY_WRAP_PAD:
+		algo = SymAlgo::AES;
+		mode = SymWrap::AES_KEYWRAP_PAD;
+		break;
 #endif
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_MECHANISM_INVALID;
+	if (cipher == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* unwrappingkey = new SymmetricKey();
 
@@ -6124,22 +6003,22 @@ CK_RV SoftHSM::UnwrapKeyAsym
 	// Get the symmetric algorithm matching the mechanism
 	AsymAlgo::Type algo = AsymAlgo::Unknown;
 	AsymMech::Type mode = AsymMech::Unknown;
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-			algo = AsymAlgo::RSA;
-			mode = AsymMech::RSA_PKCS;
-			break;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+		algo = AsymAlgo::RSA;
+		mode = AsymMech::RSA_PKCS;
+		break;
 
-		case CKM_RSA_PKCS_OAEP:
-			algo = AsymAlgo::RSA;
-			mode = AsymMech::RSA_PKCS_OAEP;
-			break;
+	case CKM_RSA_PKCS_OAEP:
+		algo = AsymAlgo::RSA;
+		mode = AsymMech::RSA_PKCS_OAEP;
+		break;
 
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_HOST_MEMORY;// return CKR_MECHANISM_INVALID;
 	}
 	AsymmetricAlgorithm* cipher = CryptoFactory::i()->getAsymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_MECHANISM_INVALID;
+	if (cipher == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 	PrivateKey* unwrappingkey = cipher->newPrivateKey();
 	if (unwrappingkey == NULL)
@@ -6148,19 +6027,19 @@ CK_RV SoftHSM::UnwrapKeyAsym
 		return CKR_HOST_MEMORY;
 	}
 
-	switch(pMechanism->mechanism) {
-		case CKM_RSA_PKCS:
-		case CKM_RSA_PKCS_OAEP:
-			if (getRSAPrivateKey((RSAPrivateKey*)unwrappingkey, token, unwrapKey) != CKR_OK)
-			{
-				cipher->recyclePrivateKey(unwrappingkey);
-				CryptoFactory::i()->recycleAsymmetricAlgorithm(cipher);
-				return CKR_GENERAL_ERROR;
-			}
-			break;
+	switch (pMechanism->mechanism) {
+	case CKM_RSA_PKCS:
+	case CKM_RSA_PKCS_OAEP:
+		if (getRSAPrivateKey((RSAPrivateKey*)unwrappingkey, token, unwrapKey) != CKR_OK)
+		{
+			cipher->recyclePrivateKey(unwrappingkey);
+			CryptoFactory::i()->recycleAsymmetricAlgorithm(cipher);
+			return CKR_GENERAL_ERROR;
+		}
+		break;
 
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_CRYPTOKI_NOT_INITIALIZED;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Unwrap the key
@@ -6198,39 +6077,39 @@ CK_RV SoftHSM::C_UnwrapKey
 
 	CK_RV rv;
 	// Check the mechanism
-	switch(pMechanism->mechanism)
+	switch (pMechanism->mechanism)
 	{
 #ifdef HAVE_AES_KEY_WRAP
-		case CKM_AES_KEY_WRAP:
-			if ((ulWrappedKeyLen < 24) || ((ulWrappedKeyLen % 8) != 0))
-				return CKR_WRAPPED_KEY_LEN_RANGE;
-			// Does not handle optional init vector
-			if (pMechanism->pParameter != NULL_PTR ||
-                            pMechanism->ulParameterLen != 0)
-				return CKR_ARGUMENTS_BAD;
-			break;
+	case CKM_AES_KEY_WRAP:
+		if ((ulWrappedKeyLen < 24) || ((ulWrappedKeyLen % 8) != 0))
+			return CKR_WRAPPED_KEY_LEN_RANGE;
+		// Does not handle optional init vector
+		if (pMechanism->pParameter != NULL_PTR ||
+			pMechanism->ulParameterLen != 0)
+			return CKR_ARGUMENTS_BAD;
+		break;
 #endif
 #ifdef HAVE_AES_KEY_WRAP_PAD
-		case CKM_AES_KEY_WRAP_PAD:
-			if ((ulWrappedKeyLen < 16) || ((ulWrappedKeyLen % 8) != 0))
-				return CKR_WRAPPED_KEY_LEN_RANGE;
-			// Does not handle optional init vector
-			if (pMechanism->pParameter != NULL_PTR ||
-                            pMechanism->ulParameterLen != 0)
-				return CKR_ARGUMENTS_BAD;
-			break;
+	case CKM_AES_KEY_WRAP_PAD:
+		if ((ulWrappedKeyLen < 16) || ((ulWrappedKeyLen % 8) != 0))
+			return CKR_WRAPPED_KEY_LEN_RANGE;
+		// Does not handle optional init vector
+		if (pMechanism->pParameter != NULL_PTR ||
+			pMechanism->ulParameterLen != 0)
+			return CKR_ARGUMENTS_BAD;
+		break;
 #endif
-		case CKM_RSA_PKCS:
-			// Input length checks needs to be done later when unwrapping key is known
-			break;
-		case CKM_RSA_PKCS_OAEP:
-			rv = MechParamCheckRSAPKCSOAEP(pMechanism);
-			if (rv != CKR_OK)
-				return rv;
-			break;
+	case CKM_RSA_PKCS:
+		// Input length checks needs to be done later when unwrapping key is known
+		break;
+	case CKM_RSA_PKCS_OAEP:
+		rv = MechParamCheckRSAPKCSOAEP(pMechanism);
+		if (rv != CKR_OK)
+			return rv;
+		break;
 
-		default:
-			return CKR_MECHANISM_INVALID;
+	default:
+		return CKR_UNWRAPPING_KEY_HANDLE_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the token
@@ -6272,7 +6151,7 @@ CK_RV SoftHSM::C_UnwrapKey
 
 	// Check if the specified mechanism is allowed for the unwrap key
 	if (!isMechanismPermitted(unwrapKey, pMechanism))
-		return CKR_MECHANISM_INVALID;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_MECHANISM_INVALID;
 
 	// Extract information from the template that is needed to create the object.
 	CK_OBJECT_CLASS objClass;
@@ -6322,13 +6201,13 @@ CK_RV SoftHSM::C_UnwrapKey
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-				continue;
-			default:
-				secretAttribs[secretAttribsCount++] = pTemplate[i];
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+			continue;
+		default:
+			secretAttribs[secretAttribsCount++] = pTemplate[i];
 		}
 	}
 
@@ -6339,7 +6218,7 @@ CK_RV SoftHSM::C_UnwrapKey
 
 		if (unwrapAttr.isAttributeMapAttribute())
 		{
-			typedef std::map<CK_ATTRIBUTE_TYPE,OSAttribute> attrmap_type;
+			typedef std::map<CK_ATTRIBUTE_TYPE, OSAttribute> attrmap_type;
 
 			const attrmap_type& map = unwrapAttr.getAttributeMapValue();
 
@@ -6498,23 +6377,23 @@ CK_RV SoftHSM::C_DeriveKey
 	// Check the mechanism, only accept DH and ECDH derive
 	switch (pMechanism->mechanism)
 	{
-		case CKM_DH_PKCS_DERIVE:
+	case CKM_DH_PKCS_DERIVE:
 #if defined(WITH_ECC) || defined(WITH_EDDSA)
-		case CKM_ECDH1_DERIVE:
+	case CKM_ECDH1_DERIVE:
 #endif
 #ifndef WITH_FIPS
-		case CKM_DES_ECB_ENCRYPT_DATA:
-		case CKM_DES_CBC_ENCRYPT_DATA:
+	case CKM_DES_ECB_ENCRYPT_DATA:
+	case CKM_DES_CBC_ENCRYPT_DATA:
 #endif
-		case CKM_DES3_ECB_ENCRYPT_DATA:
-		case CKM_DES3_CBC_ENCRYPT_DATA:
-		case CKM_AES_ECB_ENCRYPT_DATA:
-		case CKM_AES_CBC_ENCRYPT_DATA:
-			break;
+	case CKM_DES3_ECB_ENCRYPT_DATA:
+	case CKM_DES3_CBC_ENCRYPT_DATA:
+	case CKM_AES_ECB_ENCRYPT_DATA:
+	case CKM_AES_CBC_ENCRYPT_DATA:
+		break;
 
-		default:
-			ERROR_MSG("Invalid mechanism");
-			return CKR_MECHANISM_INVALID;
+	default:
+		ERROR_MSG("Invalid mechanism");
+		return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the token
@@ -6564,10 +6443,10 @@ CK_RV SoftHSM::C_DeriveKey
 	if (objClass != CKO_SECRET_KEY)
 		return CKR_ATTRIBUTE_VALUE_INVALID;
 	if (keyType != CKK_GENERIC_SECRET &&
-	    keyType != CKK_DES &&
-	    keyType != CKK_DES2 &&
-	    keyType != CKK_DES3 &&
-	    keyType != CKK_AES)
+		keyType != CKK_DES &&
+		keyType != CKK_DES2 &&
+		keyType != CKK_DES3 &&
+		keyType != CKK_AES)
 		return CKR_TEMPLATE_INCONSISTENT;
 
 	// Check authorization
@@ -6616,39 +6495,39 @@ CK_RV SoftHSM::C_DeriveKey
 
 	// Derive symmetric secret
 	if (pMechanism->mechanism == CKM_DES_ECB_ENCRYPT_DATA ||
-	    pMechanism->mechanism == CKM_DES_CBC_ENCRYPT_DATA ||
-	    pMechanism->mechanism == CKM_DES3_ECB_ENCRYPT_DATA ||
-	    pMechanism->mechanism == CKM_DES3_CBC_ENCRYPT_DATA ||
-	    pMechanism->mechanism == CKM_AES_ECB_ENCRYPT_DATA ||
-	    pMechanism->mechanism == CKM_AES_CBC_ENCRYPT_DATA)
+		pMechanism->mechanism == CKM_DES_CBC_ENCRYPT_DATA ||
+		pMechanism->mechanism == CKM_DES3_ECB_ENCRYPT_DATA ||
+		pMechanism->mechanism == CKM_DES3_CBC_ENCRYPT_DATA ||
+		pMechanism->mechanism == CKM_AES_ECB_ENCRYPT_DATA ||
+		pMechanism->mechanism == CKM_AES_CBC_ENCRYPT_DATA)
 	{
 		// Check key class and type
 		CK_KEY_TYPE baseKeyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
 		if (key->getUnsignedLongValue(CKA_CLASS, CKO_VENDOR_DEFINED) != CKO_SECRET_KEY)
 			return CKR_KEY_TYPE_INCONSISTENT;
 		if (pMechanism->mechanism == CKM_DES_ECB_ENCRYPT_DATA &&
-		    baseKeyType != CKK_DES)
+			baseKeyType != CKK_DES)
 			return CKR_KEY_TYPE_INCONSISTENT;
 		if (pMechanism->mechanism == CKM_DES_CBC_ENCRYPT_DATA &&
-		    baseKeyType != CKK_DES)
+			baseKeyType != CKK_DES)
 			return CKR_KEY_TYPE_INCONSISTENT;
 		if (pMechanism->mechanism == CKM_DES3_ECB_ENCRYPT_DATA &&
-		    baseKeyType != CKK_DES2 && baseKeyType != CKK_DES3)
+			baseKeyType != CKK_DES2 && baseKeyType != CKK_DES3)
 			return CKR_KEY_TYPE_INCONSISTENT;
 		if (pMechanism->mechanism == CKM_DES3_CBC_ENCRYPT_DATA &&
-		    baseKeyType != CKK_DES2 && baseKeyType != CKK_DES3)
+			baseKeyType != CKK_DES2 && baseKeyType != CKK_DES3)
 			return CKR_KEY_TYPE_INCONSISTENT;
 		if (pMechanism->mechanism == CKM_AES_ECB_ENCRYPT_DATA &&
-		    baseKeyType != CKK_AES)
+			baseKeyType != CKK_AES)
 			return CKR_KEY_TYPE_INCONSISTENT;
 		if (pMechanism->mechanism == CKM_AES_CBC_ENCRYPT_DATA &&
-		    baseKeyType != CKK_AES)
+			baseKeyType != CKK_AES)
 			return CKR_KEY_TYPE_INCONSISTENT;
 
 		return this->deriveSymmetric(hSession, pMechanism, hBaseKey, pTemplate, ulCount, phKey, keyType, isOnToken, isPrivate);
 	}
 
-	return CKR_MECHANISM_INVALID;
+	return CKR_KEY_TYPE_INCONSISTENT;//return CKR_MECHANISM_INVALID;
 }
 
 // Seed the random number generator with new data
@@ -6766,24 +6645,24 @@ CK_RV SoftHSM::generateGeneric
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_VALUE_LEN:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				keyLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_VALUE_LEN:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			keyLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -6807,7 +6686,7 @@ CK_RV SoftHSM::generateGeneric
 	ByteString key;
 	if (!rng->generateRandom(key, keyLen)) return CKR_GENERAL_ERROR;
 
-        CK_RV rv = CKR_OK;
+	CK_RV rv = CKR_OK;
 
 	// Create the secret key object using C_CreateObject
 	const CK_ULONG maxAttribs = 32;
@@ -6824,19 +6703,19 @@ CK_RV SoftHSM::generateGeneric
 	// Add the additional
 	if (ulCount > (maxAttribs - keyAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
-			default:
-				keyAttribs[keyAttribsCount++] = pTemplate[i];
-				break;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
+		default:
+			keyAttribs[keyAttribsCount++] = pTemplate[i];
+			break;
 		}
 	}
 
@@ -6849,17 +6728,18 @@ CK_RV SoftHSM::generateGeneric
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_GENERIC_SECRET_KEY_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// Common Secret Key Attributes
 			bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 			bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -6890,7 +6770,8 @@ CK_RV SoftHSM::generateGeneric
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -6938,24 +6819,24 @@ CK_RV SoftHSM::generateAES
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_VALUE_LEN:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				keyLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_VALUE_LEN:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			keyLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -7015,23 +6896,23 @@ CK_RV SoftHSM::generateAES
 	// Add the additional
 	if (ulCount > (maxAttribs - keyAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			keyAttribs[keyAttribsCount++] = pTemplate[i];
 		}
 	}
 
 	if (rv == CKR_OK)
-		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey,OBJECT_OP_GENERATE);
+		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey, OBJECT_OP_GENERATE);
 
 	// Store the attributes that are being supplied
 	if (rv == CKR_OK)
@@ -7039,17 +6920,18 @@ CK_RV SoftHSM::generateAES
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_AES_KEY_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// Common Secret Key Attributes
 			bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 			bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -7077,7 +6959,8 @@ CK_RV SoftHSM::generateAES
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -7127,16 +7010,16 @@ CK_RV SoftHSM::generateDES
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -7182,23 +7065,23 @@ CK_RV SoftHSM::generateDES
 	// Add the additional
 	if (ulCount > (maxAttribs - keyAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			keyAttribs[keyAttribsCount++] = pTemplate[i];
 		}
 	}
 
 	if (rv == CKR_OK)
-		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey,OBJECT_OP_GENERATE);
+		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey, OBJECT_OP_GENERATE);
 
 	// Store the attributes that are being supplied
 	if (rv == CKR_OK)
@@ -7206,17 +7089,18 @@ CK_RV SoftHSM::generateDES
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DES_KEY_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// Common Secret Key Attributes
 			bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 			bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -7244,7 +7128,8 @@ CK_RV SoftHSM::generateDES
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -7294,16 +7179,16 @@ CK_RV SoftHSM::generateDES2
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -7349,23 +7234,23 @@ CK_RV SoftHSM::generateDES2
 	// Add the additional
 	if (ulCount > (maxAttribs - keyAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			keyAttribs[keyAttribsCount++] = pTemplate[i];
 		}
 	}
 
 	if (rv == CKR_OK)
-		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey,OBJECT_OP_GENERATE);
+		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey, OBJECT_OP_GENERATE);
 
 	// Store the attributes that are being supplied
 	if (rv == CKR_OK)
@@ -7373,17 +7258,18 @@ CK_RV SoftHSM::generateDES2
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DES2_KEY_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// Common Secret Key Attributes
 			bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 			bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -7411,7 +7297,8 @@ CK_RV SoftHSM::generateDES2
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -7461,16 +7348,16 @@ CK_RV SoftHSM::generateDES3
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -7516,23 +7403,23 @@ CK_RV SoftHSM::generateDES3
 	// Add the additional
 	if (ulCount > (maxAttribs - keyAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			keyAttribs[keyAttribsCount++] = pTemplate[i];
 		}
 	}
 
 	if (rv == CKR_OK)
-		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey,OBJECT_OP_GENERATE);
+		rv = this->CreateObject(hSession, keyAttribs, keyAttribsCount, phKey, OBJECT_OP_GENERATE);
 
 	// Store the attributes that are being supplied
 	if (rv == CKR_OK)
@@ -7540,17 +7427,18 @@ CK_RV SoftHSM::generateDES3
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DES3_KEY_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// Common Secret Key Attributes
 			bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+			bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 			bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -7578,7 +7466,8 @@ CK_RV SoftHSM::generateDES3
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -7636,19 +7525,19 @@ CK_RV SoftHSM::generateRSA
 	{
 		switch (pPublicKeyTemplate[i].type)
 		{
-			case CKA_MODULUS_BITS:
-				if (pPublicKeyTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_MODULUS_BITS does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				bitLen = *(CK_ULONG*)pPublicKeyTemplate[i].pValue;
-				break;
-			case CKA_PUBLIC_EXPONENT:
-				exponent = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			default:
-				break;
+		case CKA_MODULUS_BITS:
+			if (pPublicKeyTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_MODULUS_BITS does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			bitLen = *(CK_ULONG*)pPublicKeyTemplate[i].pValue;
+			break;
+		case CKA_PUBLIC_EXPONENT:
+			exponent = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -7675,8 +7564,8 @@ CK_RV SoftHSM::generateRSA
 		return CKR_GENERAL_ERROR;
 	}
 
-	RSAPublicKey* pub = (RSAPublicKey*) kp->getPublicKey();
-	RSAPrivateKey* priv = (RSAPrivateKey*) kp->getPrivateKey();
+	RSAPublicKey* pub = (RSAPublicKey*)kp->getPublicKey();
+	RSAPrivateKey* priv = (RSAPrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 
@@ -7697,23 +7586,23 @@ CK_RV SoftHSM::generateRSA
 		// Add the additional
 		if (ulPublicKeyAttributeCount > (maxAttribs - publicKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPublicKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-				case CKA_PUBLIC_EXPONENT:
-					continue;
-				default:
-					publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+			case CKA_PUBLIC_EXPONENT:
+				continue;
+			default:
+				publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,publicKeyAttribs,publicKeyAttribsCount,phPublicKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, publicKeyAttribs, publicKeyAttribsCount, phPublicKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -7721,13 +7610,14 @@ CK_RV SoftHSM::generateRSA
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPublicKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_RSA_PKCS_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// RSA Public Key Attributes
 				ByteString modulus;
@@ -7752,7 +7642,8 @@ CK_RV SoftHSM::generateRSA
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -7772,22 +7663,22 @@ CK_RV SoftHSM::generateRSA
 		CK_ULONG privateKeyAttribsCount = 4;
 		if (ulPrivateKeyAttributeCount > (maxAttribs - privateKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPrivateKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,privateKeyAttribs,privateKeyAttribsCount,phPrivateKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, privateKeyAttribs, privateKeyAttribsCount, phPrivateKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -7795,17 +7686,18 @@ CK_RV SoftHSM::generateRSA
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPrivateKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_RSA_PKCS_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// Common Private Key Attributes
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -7836,7 +7728,7 @@ CK_RV SoftHSM::generateRSA
 					privateExponent = priv->getD();
 					prime1 = priv->getP();
 					prime2 = priv->getQ();
-					exponent1 =  priv->getDP1();
+					exponent1 = priv->getDP1();
 					exponent2 = priv->getDQ1();
 					coefficient = priv->getPQ();
 				}
@@ -7845,7 +7737,7 @@ CK_RV SoftHSM::generateRSA
 				bOK = bOK && osobject->setAttribute(CKA_PRIVATE_EXPONENT, privateExponent);
 				bOK = bOK && osobject->setAttribute(CKA_PRIME_1, prime1);
 				bOK = bOK && osobject->setAttribute(CKA_PRIME_2, prime2);
-				bOK = bOK && osobject->setAttribute(CKA_EXPONENT_1,exponent1);
+				bOK = bOK && osobject->setAttribute(CKA_EXPONENT_1, exponent1);
 				bOK = bOK && osobject->setAttribute(CKA_EXPONENT_2, exponent2);
 				bOK = bOK && osobject->setAttribute(CKA_COEFFICIENT, coefficient);
 
@@ -7856,7 +7748,8 @@ CK_RV SoftHSM::generateRSA
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -7923,17 +7816,17 @@ CK_RV SoftHSM::generateDSA
 	{
 		switch (pPublicKeyTemplate[i].type)
 		{
-			case CKA_PRIME:
-				prime = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			case CKA_SUBPRIME:
-				subprime = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			case CKA_BASE:
-				generator = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			default:
-				break;
+		case CKA_PRIME:
+			prime = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		case CKA_SUBPRIME:
+			subprime = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		case CKA_BASE:
+			generator = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -7960,8 +7853,8 @@ CK_RV SoftHSM::generateDSA
 		return CKR_GENERAL_ERROR;
 	}
 
-	DSAPublicKey* pub = (DSAPublicKey*) kp->getPublicKey();
-	DSAPrivateKey* priv = (DSAPrivateKey*) kp->getPrivateKey();
+	DSAPublicKey* pub = (DSAPublicKey*)kp->getPublicKey();
+	DSAPrivateKey* priv = (DSAPrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 
@@ -7982,22 +7875,22 @@ CK_RV SoftHSM::generateDSA
 		// Add the additional
 		if (ulPublicKeyAttributeCount > (maxAttribs - publicKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPublicKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,publicKeyAttribs,publicKeyAttribsCount,phPublicKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, publicKeyAttribs, publicKeyAttribsCount, phPublicKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -8005,13 +7898,14 @@ CK_RV SoftHSM::generateDSA
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPublicKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DSA_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// DSA Public Key Attributes
 				ByteString value;
@@ -8032,7 +7926,8 @@ CK_RV SoftHSM::generateDSA
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -8052,22 +7947,22 @@ CK_RV SoftHSM::generateDSA
 		CK_ULONG privateKeyAttribsCount = 4;
 		if (ulPrivateKeyAttributeCount > (maxAttribs - privateKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPrivateKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,privateKeyAttribs,privateKeyAttribsCount,phPrivateKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, privateKeyAttribs, privateKeyAttribsCount, phPrivateKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -8075,17 +7970,18 @@ CK_RV SoftHSM::generateDSA
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPrivateKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DSA_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// Common Private Key Attributes
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -8120,7 +8016,8 @@ CK_RV SoftHSM::generateDSA
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -8180,24 +8077,24 @@ CK_RV SoftHSM::generateDSAParameters
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_PRIME_BITS:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_PRIME_BITS does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				bitLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_SUB_PRIME_BITS:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_SUB_PRIME_BITS does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				qLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			default:
-				break;
+		case CKA_PRIME_BITS:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_PRIME_BITS does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			bitLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_SUB_PRIME_BITS:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_SUB_PRIME_BITS does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			qLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -8210,8 +8107,8 @@ CK_RV SoftHSM::generateDSAParameters
 
 	// No real choice for CKA_SUB_PRIME_BITS
 	if ((qLen != 0) &&
-	    (((bitLen >= 2048) && (qLen != 256)) ||
-	     ((bitLen < 2048) && (qLen != 160))))
+		(((bitLen >= 2048) && (qLen != 256)) ||
+		((bitLen < 2048) && (qLen != 160))))
 		INFO_MSG("CKA_SUB_PRIME_BITS is ignored");
 
 
@@ -8226,7 +8123,7 @@ CK_RV SoftHSM::generateDSAParameters
 		return CKR_GENERAL_ERROR;
 	}
 
-	DSAParameters* params = (DSAParameters*) p;
+	DSAParameters* params = (DSAParameters*)p;
 
 	CK_RV rv = CKR_OK;
 
@@ -8245,22 +8142,22 @@ CK_RV SoftHSM::generateDSAParameters
 	// Add the additional
 	if (ulCount > (maxAttribs - paramsAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+			continue;
 		default:
 			paramsAttribs[paramsAttribsCount++] = pTemplate[i];
 		}
 	}
 
 	if (rv == CKR_OK)
-		rv = this->CreateObject(hSession, paramsAttribs, paramsAttribsCount, phKey,OBJECT_OP_GENERATE);
+		rv = this->CreateObject(hSession, paramsAttribs, paramsAttribsCount, phKey, OBJECT_OP_GENERATE);
 
 	// Store the attributes that are being supplied
 	if (rv == CKR_OK)
@@ -8268,13 +8165,14 @@ CK_RV SoftHSM::generateDSAParameters
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DSA_PARAMETER_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// DSA Domain Parameters Attributes
 			ByteString prime;
@@ -8303,7 +8201,8 @@ CK_RV SoftHSM::generateDSAParameters
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -8359,11 +8258,11 @@ CK_RV SoftHSM::generateEC
 	{
 		switch (pPublicKeyTemplate[i].type)
 		{
-			case CKA_EC_PARAMS:
-				params = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			default:
-				break;
+		case CKA_EC_PARAMS:
+			params = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -8388,8 +8287,8 @@ CK_RV SoftHSM::generateEC
 		return CKR_GENERAL_ERROR;
 	}
 
-	ECPublicKey* pub = (ECPublicKey*) kp->getPublicKey();
-	ECPrivateKey* priv = (ECPrivateKey*) kp->getPrivateKey();
+	ECPublicKey* pub = (ECPublicKey*)kp->getPublicKey();
+	ECPrivateKey* priv = (ECPrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 
@@ -8410,22 +8309,22 @@ CK_RV SoftHSM::generateEC
 		// Add the additional
 		if (ulPublicKeyAttributeCount > (maxAttribs - publicKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPublicKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,publicKeyAttribs,publicKeyAttribsCount,phPublicKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, publicKeyAttribs, publicKeyAttribsCount, phPublicKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -8433,13 +8332,14 @@ CK_RV SoftHSM::generateEC
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPublicKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_EC_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// EC Public Key Attributes
 				ByteString point;
@@ -8460,7 +8360,8 @@ CK_RV SoftHSM::generateEC
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -8480,22 +8381,22 @@ CK_RV SoftHSM::generateEC
 		CK_ULONG privateKeyAttribsCount = 4;
 		if (ulPrivateKeyAttributeCount > (maxAttribs - privateKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPrivateKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,privateKeyAttribs,privateKeyAttribsCount,phPrivateKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, privateKeyAttribs, privateKeyAttribsCount, phPrivateKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -8503,17 +8404,18 @@ CK_RV SoftHSM::generateEC
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPrivateKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_EC_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// Common Private Key Attributes
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -8540,7 +8442,8 @@ CK_RV SoftHSM::generateEC
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -8858,11 +8761,11 @@ CK_RV SoftHSM::generateED
 	{
 		switch (pPublicKeyTemplate[i].type)
 		{
-			case CKA_EC_PARAMS:
-				params = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			default:
-				break;
+		case CKA_EC_PARAMS:
+			params = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -8887,8 +8790,8 @@ CK_RV SoftHSM::generateED
 		return CKR_GENERAL_ERROR;
 	}
 
-	EDPublicKey* pub = (EDPublicKey*) kp->getPublicKey();
-	EDPrivateKey* priv = (EDPrivateKey*) kp->getPrivateKey();
+	EDPublicKey* pub = (EDPublicKey*)kp->getPublicKey();
+	EDPrivateKey* priv = (EDPrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 
@@ -8909,22 +8812,22 @@ CK_RV SoftHSM::generateED
 		// Add the additional
 		if (ulPublicKeyAttributeCount > (maxAttribs - publicKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPublicKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,publicKeyAttribs,publicKeyAttribsCount,phPublicKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, publicKeyAttribs, publicKeyAttribsCount, phPublicKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -8932,13 +8835,14 @@ CK_RV SoftHSM::generateED
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPublicKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_EC_EDWARDS_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// EDDSA Public Key Attributes
 				ByteString value;
@@ -8959,7 +8863,8 @@ CK_RV SoftHSM::generateED
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -8979,22 +8884,22 @@ CK_RV SoftHSM::generateED
 		CK_ULONG privateKeyAttribsCount = 4;
 		if (ulPrivateKeyAttributeCount > (maxAttribs - privateKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPrivateKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,privateKeyAttribs,privateKeyAttribsCount,phPrivateKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, privateKeyAttribs, privateKeyAttribsCount, phPrivateKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -9002,17 +8907,18 @@ CK_RV SoftHSM::generateED
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPrivateKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_EC_EDWARDS_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// Common Private Key Attributes
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -9039,7 +8945,8 @@ CK_RV SoftHSM::generateED
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -9105,14 +9012,14 @@ CK_RV SoftHSM::generateDH
 	{
 		switch (pPublicKeyTemplate[i].type)
 		{
-			case CKA_PRIME:
-				prime = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			case CKA_BASE:
-				generator = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			default:
-				break;
+		case CKA_PRIME:
+			prime = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		case CKA_BASE:
+			generator = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -9128,11 +9035,11 @@ CK_RV SoftHSM::generateDH
 	{
 		switch (pPrivateKeyTemplate[i].type)
 		{
-			case CKA_VALUE_BITS:
-				bitLen = *(CK_ULONG*)pPrivateKeyTemplate[i].pValue;
-				break;
-			default:
-				break;
+		case CKA_VALUE_BITS:
+			bitLen = *(CK_ULONG*)pPrivateKeyTemplate[i].pValue;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -9153,8 +9060,8 @@ CK_RV SoftHSM::generateDH
 		return CKR_GENERAL_ERROR;
 	}
 
-	DHPublicKey* pub = (DHPublicKey*) kp->getPublicKey();
-	DHPrivateKey* priv = (DHPrivateKey*) kp->getPrivateKey();
+	DHPublicKey* pub = (DHPublicKey*)kp->getPublicKey();
+	DHPrivateKey* priv = (DHPrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 
@@ -9175,22 +9082,22 @@ CK_RV SoftHSM::generateDH
 		// Add the additional
 		if (ulPublicKeyAttributeCount > (maxAttribs - publicKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPublicKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,publicKeyAttribs,publicKeyAttribsCount,phPublicKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, publicKeyAttribs, publicKeyAttribsCount, phPublicKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -9198,13 +9105,14 @@ CK_RV SoftHSM::generateDH
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPublicKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DH_PKCS_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// DH Public Key Attributes
 				ByteString value;
@@ -9225,7 +9133,8 @@ CK_RV SoftHSM::generateDH
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -9245,22 +9154,22 @@ CK_RV SoftHSM::generateDH
 		CK_ULONG privateKeyAttribsCount = 4;
 		if (ulPrivateKeyAttributeCount > (maxAttribs - privateKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPrivateKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,privateKeyAttribs,privateKeyAttribsCount,phPrivateKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, privateKeyAttribs, privateKeyAttribsCount, phPrivateKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -9268,17 +9177,18 @@ CK_RV SoftHSM::generateDH
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPrivateKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DH_PKCS_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// Common Private Key Attributes
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -9314,7 +9224,8 @@ CK_RV SoftHSM::generateDH
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -9373,16 +9284,16 @@ CK_RV SoftHSM::generateDHParameters
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_PRIME_BITS:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_PRIME_BITS does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				bitLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			default:
-				break;
+		case CKA_PRIME_BITS:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_PRIME_BITS does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			bitLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -9404,7 +9315,7 @@ CK_RV SoftHSM::generateDHParameters
 		return CKR_GENERAL_ERROR;
 	}
 
-	DHParameters* params = (DHParameters*) p;
+	DHParameters* params = (DHParameters*)p;
 
 	CK_RV rv = CKR_OK;
 
@@ -9423,22 +9334,22 @@ CK_RV SoftHSM::generateDHParameters
 	// Add the additional
 	if (ulCount > (maxAttribs - paramsAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+			continue;
 		default:
 			paramsAttribs[paramsAttribsCount++] = pTemplate[i];
 		}
 	}
 
 	if (rv == CKR_OK)
-		rv = this->CreateObject(hSession, paramsAttribs, paramsAttribsCount, phKey,OBJECT_OP_GENERATE);
+		rv = this->CreateObject(hSession, paramsAttribs, paramsAttribsCount, phKey, OBJECT_OP_GENERATE);
 
 	// Store the attributes that are being supplied
 	if (rv == CKR_OK)
@@ -9446,13 +9357,14 @@ CK_RV SoftHSM::generateDHParameters
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 			CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_DH_PKCS_PARAMETER_GEN;
-			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+			bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 			// DH Domain Parameters Attributes
 			ByteString prime;
@@ -9477,7 +9389,8 @@ CK_RV SoftHSM::generateDHParameters
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -9535,17 +9448,17 @@ CK_RV SoftHSM::generateGOST
 	{
 		switch (pPublicKeyTemplate[i].type)
 		{
-			case CKA_GOSTR3410_PARAMS:
-				param_3410 = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			case CKA_GOSTR3411_PARAMS:
-				param_3411 = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			case CKA_GOST28147_PARAMS:
-				param_28147 = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
-				break;
-			default:
-				break;
+		case CKA_GOSTR3410_PARAMS:
+			param_3410 = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		case CKA_GOSTR3411_PARAMS:
+			param_3411 = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		case CKA_GOST28147_PARAMS:
+			param_28147 = ByteString((unsigned char*)pPublicKeyTemplate[i].pValue, pPublicKeyTemplate[i].ulValueLen);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -9570,8 +9483,8 @@ CK_RV SoftHSM::generateGOST
 		return CKR_GENERAL_ERROR;
 	}
 
-	GOSTPublicKey* pub = (GOSTPublicKey*) kp->getPublicKey();
-	GOSTPrivateKey* priv = (GOSTPrivateKey*) kp->getPrivateKey();
+	GOSTPublicKey* pub = (GOSTPublicKey*)kp->getPublicKey();
+	GOSTPrivateKey* priv = (GOSTPrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 
@@ -9592,22 +9505,22 @@ CK_RV SoftHSM::generateGOST
 		// Add the additional
 		if (ulPublicKeyAttributeCount > (maxAttribs - publicKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPublicKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPublicKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				publicKeyAttribs[publicKeyAttribsCount++] = pPublicKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,publicKeyAttribs,publicKeyAttribsCount,phPublicKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, publicKeyAttribs, publicKeyAttribsCount, phPublicKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -9615,13 +9528,14 @@ CK_RV SoftHSM::generateGOST
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPublicKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_EC_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// EC Public Key Attributes
 				ByteString point;
@@ -9642,7 +9556,8 @@ CK_RV SoftHSM::generateGOST
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
+			}
+			else
 				rv = CKR_FUNCTION_FAILED;
 		}
 	}
@@ -9662,22 +9577,22 @@ CK_RV SoftHSM::generateGOST
 		CK_ULONG privateKeyAttribsCount = 4;
 		if (ulPrivateKeyAttributeCount > (maxAttribs - privateKeyAttribsCount))
 			rv = CKR_TEMPLATE_INCONSISTENT;
-		for (CK_ULONG i=0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
+		for (CK_ULONG i = 0; i < ulPrivateKeyAttributeCount && rv == CKR_OK; ++i)
 		{
 			switch (pPrivateKeyTemplate[i].type)
 			{
-				case CKA_CLASS:
-				case CKA_TOKEN:
-				case CKA_PRIVATE:
-				case CKA_KEY_TYPE:
-					continue;
-				default:
-					privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
+			case CKA_CLASS:
+			case CKA_TOKEN:
+			case CKA_PRIVATE:
+			case CKA_KEY_TYPE:
+				continue;
+			default:
+				privateKeyAttribs[privateKeyAttribsCount++] = pPrivateKeyTemplate[i];
 			}
 		}
 
 		if (rv == CKR_OK)
-			rv = this->CreateObject(hSession,privateKeyAttribs,privateKeyAttribsCount,phPrivateKey,OBJECT_OP_GENERATE);
+			rv = this->CreateObject(hSession, privateKeyAttribs, privateKeyAttribsCount, phPrivateKey, OBJECT_OP_GENERATE);
 
 		// Store the attributes that are being supplied by the key generation to the object
 		if (rv == CKR_OK)
@@ -9685,17 +9600,18 @@ CK_RV SoftHSM::generateGOST
 			OSObject* osobject = (OSObject*)handleManager->getObject(*phPrivateKey);
 			if (osobject == NULL_PTR || !osobject->isValid()) {
 				rv = CKR_FUNCTION_FAILED;
-			} else if (osobject->startTransaction()) {
+			}
+			else if (osobject->startTransaction()) {
 				bool bOK = true;
 
 				// Common Key Attributes
-				bOK = bOK && osobject->setAttribute(CKA_LOCAL,true);
+				bOK = bOK && osobject->setAttribute(CKA_LOCAL, true);
 				CK_ULONG ulKeyGenMechanism = (CK_ULONG)CKM_EC_KEY_PAIR_GEN;
-				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM,ulKeyGenMechanism);
+				bOK = bOK && osobject->setAttribute(CKA_KEY_GEN_MECHANISM, ulKeyGenMechanism);
 
 				// Common Private Key Attributes
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
 				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 
@@ -9730,8 +9646,9 @@ CK_RV SoftHSM::generateGOST
 
 				if (!bOK)
 					rv = CKR_FUNCTION_FAILED;
-			} else
-				  rv = CKR_FUNCTION_FAILED;
+			}
+			else
+				rv = CKR_FUNCTION_FAILED;
 		}
 	}
 
@@ -9796,75 +9713,75 @@ CK_RV SoftHSM::deriveDH
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_VALUE:
-				INFO_MSG("CKA_VALUE must not be included");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			case CKA_VALUE_LEN:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				byteLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_VALUE:
+			INFO_MSG("CKA_VALUE must not be included");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		case CKA_VALUE_LEN:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			byteLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
 	// Check the length
 	switch (keyType)
 	{
-		case CKK_GENERIC_SECRET:
-			if (byteLen == 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be set");
-				return CKR_TEMPLATE_INCOMPLETE;
-			}
-			break;
+	case CKK_GENERIC_SECRET:
+		if (byteLen == 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be set");
+			return CKR_TEMPLATE_INCOMPLETE;
+		}
+		break;
 #ifndef WITH_FIPS
-		case CKK_DES:
-			if (byteLen != 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must not be set");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			}
-			byteLen = 8;
-			break;
+	case CKK_DES:
+		if (byteLen != 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must not be set");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		}
+		byteLen = 8;
+		break;
 #endif
-		case CKK_DES2:
-			if (byteLen != 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must not be set");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			}
-			byteLen = 16;
-			break;
-		case CKK_DES3:
-			if (byteLen != 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must not be set");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			}
-			byteLen = 24;
-			break;
-		case CKK_AES:
-			if (byteLen != 16 && byteLen != 24 && byteLen != 32)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 16, 24, or 32");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			break;
-		default:
+	case CKK_DES2:
+		if (byteLen != 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must not be set");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		}
+		byteLen = 16;
+		break;
+	case CKK_DES3:
+		if (byteLen != 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must not be set");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		}
+		byteLen = 24;
+		break;
+	case CKK_AES:
+		if (byteLen != 16 && byteLen != 24 && byteLen != 32)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 16, 24, or 32");
 			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID;
 	}
 
 	// Get the base key handle
@@ -9931,16 +9848,16 @@ CK_RV SoftHSM::deriveDH
 	// Add the additional
 	if (ulCount > (maxAttribs - secretAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			secretAttribs[secretAttribsCount++] = pTemplate[i];
 		}
@@ -9955,30 +9872,31 @@ CK_RV SoftHSM::deriveDH
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,false);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, false);
 
 			// Common Secret Key Attributes
 			if (baseKey->getBooleanValue(CKA_ALWAYS_SENSITIVE, false))
 			{
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,false);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, false);
 			}
 			if (baseKey->getBooleanValue(CKA_NEVER_EXTRACTABLE, true))
 			{
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,bNeverExtractable);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,false);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, false);
 			}
 
 			// Secret Attributes
@@ -10000,8 +9918,8 @@ CK_RV SoftHSM::deriveDH
 
 				// Fix the odd parity for DES
 				if (keyType == CKK_DES ||
-				    keyType == CKK_DES2 ||
-				    keyType == CKK_DES3)
+					keyType == CKK_DES2 ||
+					keyType == CKK_DES3)
 				{
 					for (size_t i = 0; i < secretValue.size(); i++)
 					{
@@ -10012,23 +9930,23 @@ CK_RV SoftHSM::deriveDH
 				// Get the KCV
 				switch (keyType)
 				{
-					case CKK_GENERIC_SECRET:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = secret->getKeyCheckValue();
-						break;
-					case CKK_DES:
-					case CKK_DES2:
-					case CKK_DES3:
-						secret->setBitLen(byteLen * 7);
-						plainKCV = ((DESKey*)secret)->getKeyCheckValue();
-						break;
-					case CKK_AES:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = ((AESKey*)secret)->getKeyCheckValue();
-						break;
-					default:
-						bOK = false;
-						break;
+				case CKK_GENERIC_SECRET:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = secret->getKeyCheckValue();
+					break;
+				case CKK_DES:
+				case CKK_DES2:
+				case CKK_DES3:
+					secret->setBitLen(byteLen * 7);
+					plainKCV = ((DESKey*)secret)->getKeyCheckValue();
+					break;
+				case CKK_AES:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = ((AESKey*)secret)->getKeyCheckValue();
+					break;
+				default:
+					bOK = false;
+					break;
 				}
 
 				if (isPrivate)
@@ -10053,7 +9971,8 @@ CK_RV SoftHSM::deriveDH
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -10092,7 +10011,7 @@ CK_RV SoftHSM::deriveECDH
 	*phKey = CK_INVALID_HANDLE;
 
 	if ((pMechanism->pParameter == NULL_PTR) ||
-	    (pMechanism->ulParameterLen != sizeof(CK_ECDH1_DERIVE_PARAMS)))
+		(pMechanism->ulParameterLen != sizeof(CK_ECDH1_DERIVE_PARAMS)))
 	{
 		DEBUG_MSG("pParameter must be of type CK_ECDH1_DERIVE_PARAMS");
 		return CKR_MECHANISM_PARAM_INVALID;
@@ -10103,13 +10022,13 @@ CK_RV SoftHSM::deriveECDH
 		return CKR_MECHANISM_PARAM_INVALID;
 	}
 	if ((CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulSharedDataLen != 0) ||
-	    (CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pSharedData != NULL_PTR))
+		(CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pSharedData != NULL_PTR))
 	{
 		DEBUG_MSG("there must be no shared data");
 		return CKR_MECHANISM_PARAM_INVALID;
 	}
 	if ((CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen == 0) ||
-	    (CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData == NULL_PTR))
+		(CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData == NULL_PTR))
 	{
 		DEBUG_MSG("there must be a public data");
 		return CKR_MECHANISM_PARAM_INVALID;
@@ -10132,27 +10051,27 @@ CK_RV SoftHSM::deriveECDH
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_VALUE:
-				INFO_MSG("CKA_VALUE must not be included");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			case CKA_VALUE_LEN:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				byteLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_VALUE:
+			INFO_MSG("CKA_VALUE must not be included");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		case CKA_VALUE_LEN:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			byteLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -10160,43 +10079,43 @@ CK_RV SoftHSM::deriveECDH
 	// byteLen == 0 impiles return max size the ECC can derive
 	switch (keyType)
 	{
-		case CKK_GENERIC_SECRET:
-			break;
+	case CKK_GENERIC_SECRET:
+		break;
 #ifndef WITH_FIPS
-		case CKK_DES:
-			if (byteLen != 0 && byteLen != 8)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0 or 8");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			byteLen = 8;
-			break;
-#endif
-		case CKK_DES2:
-			if (byteLen != 0 && byteLen != 16)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0 or 16");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			byteLen = 16;
-			break;
-		case CKK_DES3:
-			if (byteLen != 0 && byteLen != 24)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0 or 24");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			byteLen = 24;
-			break;
-		case CKK_AES:
-			if (byteLen != 0 && byteLen != 16 && byteLen != 24 && byteLen != 32)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0, 16, 24, or 32");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			break;
-		default:
+	case CKK_DES:
+		if (byteLen != 0 && byteLen != 8)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0 or 8");
 			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		byteLen = 8;
+		break;
+#endif
+	case CKK_DES2:
+		if (byteLen != 0 && byteLen != 16)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0 or 16");
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		byteLen = 16;
+		break;
+	case CKK_DES3:
+		if (byteLen != 0 && byteLen != 24)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0 or 24");
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		byteLen = 24;
+		break;
+	case CKK_AES:
+		if (byteLen != 0 && byteLen != 16 && byteLen != 24 && byteLen != 32)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0, 16, 24, or 32");
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID;
 	}
 
 	// Get the base key handle
@@ -10226,8 +10145,8 @@ CK_RV SoftHSM::deriveECDH
 	ByteString publicData;
 	publicData.resize(CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen);
 	memcpy(&publicData[0],
-	       CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData,
-	       CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen);
+		CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData,
+		CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen);
 	PublicKey* publicKey = ecdh->newPublicKey();
 	if (publicKey == NULL)
 	{
@@ -10265,16 +10184,16 @@ CK_RV SoftHSM::deriveECDH
 	// Add the additional
 	if (ulCount > (maxAttribs - secretAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			secretAttribs[secretAttribsCount++] = pTemplate[i];
 		}
@@ -10289,30 +10208,31 @@ CK_RV SoftHSM::deriveECDH
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,false);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, false);
 
 			// Common Secret Key Attributes
 			if (baseKey->getBooleanValue(CKA_ALWAYS_SENSITIVE, false))
 			{
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,false);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, false);
 			}
 			if (baseKey->getBooleanValue(CKA_NEVER_EXTRACTABLE, true))
 			{
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,bNeverExtractable);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,false);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, false);
 			}
 
 			// Secret Attributes
@@ -10327,16 +10247,16 @@ CK_RV SoftHSM::deriveECDH
 			{
 				switch (keyType)
 				{
-					case CKK_GENERIC_SECRET:
-						byteLen = secretValue.size();
-						break;
-					case CKK_AES:
-						if (secretValue.size() >= 32)
-							byteLen = 32;
-						else if (secretValue.size() >= 24)
-							byteLen = 24;
-						else
-							byteLen = 16;
+				case CKK_GENERIC_SECRET:
+					byteLen = secretValue.size();
+					break;
+				case CKK_AES:
+					if (secretValue.size() >= 32)
+						byteLen = 32;
+					else if (secretValue.size() >= 24)
+						byteLen = 24;
+					else
+						byteLen = 16;
 				}
 			}
 
@@ -10353,8 +10273,8 @@ CK_RV SoftHSM::deriveECDH
 
 				// Fix the odd parity for DES
 				if (keyType == CKK_DES ||
-				    keyType == CKK_DES2 ||
-				    keyType == CKK_DES3)
+					keyType == CKK_DES2 ||
+					keyType == CKK_DES3)
 				{
 					for (size_t i = 0; i < secretValue.size(); i++)
 					{
@@ -10365,23 +10285,23 @@ CK_RV SoftHSM::deriveECDH
 				// Get the KCV
 				switch (keyType)
 				{
-					case CKK_GENERIC_SECRET:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = secret->getKeyCheckValue();
-						break;
-					case CKK_DES:
-					case CKK_DES2:
-					case CKK_DES3:
-						secret->setBitLen(byteLen * 7);
-						plainKCV = ((DESKey*)secret)->getKeyCheckValue();
-						break;
-					case CKK_AES:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = ((AESKey*)secret)->getKeyCheckValue();
-						break;
-					default:
-						bOK = false;
-						break;
+				case CKK_GENERIC_SECRET:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = secret->getKeyCheckValue();
+					break;
+				case CKK_DES:
+				case CKK_DES2:
+				case CKK_DES3:
+					secret->setBitLen(byteLen * 7);
+					plainKCV = ((DESKey*)secret)->getKeyCheckValue();
+					break;
+				case CKK_AES:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = ((AESKey*)secret)->getKeyCheckValue();
+					break;
+				default:
+					bOK = false;
+					break;
 				}
 
 				if (isPrivate)
@@ -10406,7 +10326,8 @@ CK_RV SoftHSM::deriveECDH
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -10446,7 +10367,7 @@ CK_RV SoftHSM::deriveEDDSA
 	*phKey = CK_INVALID_HANDLE;
 
 	if ((pMechanism->pParameter == NULL_PTR) ||
-	    (pMechanism->ulParameterLen != sizeof(CK_ECDH1_DERIVE_PARAMS)))
+		(pMechanism->ulParameterLen != sizeof(CK_ECDH1_DERIVE_PARAMS)))
 	{
 		DEBUG_MSG("pParameter must be of type CK_ECDH1_DERIVE_PARAMS");
 		return CKR_MECHANISM_PARAM_INVALID;
@@ -10457,13 +10378,13 @@ CK_RV SoftHSM::deriveEDDSA
 		return CKR_MECHANISM_PARAM_INVALID;
 	}
 	if ((CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulSharedDataLen != 0) ||
-	    (CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pSharedData != NULL_PTR))
+		(CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pSharedData != NULL_PTR))
 	{
 		DEBUG_MSG("there must be no shared data");
 		return CKR_MECHANISM_PARAM_INVALID;
 	}
 	if ((CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen == 0) ||
-	    (CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData == NULL_PTR))
+		(CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData == NULL_PTR))
 	{
 		DEBUG_MSG("there must be a public data");
 		return CKR_MECHANISM_PARAM_INVALID;
@@ -10486,27 +10407,27 @@ CK_RV SoftHSM::deriveEDDSA
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_VALUE:
-				INFO_MSG("CKA_VALUE must not be included");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			case CKA_VALUE_LEN:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				byteLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_VALUE:
+			INFO_MSG("CKA_VALUE must not be included");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		case CKA_VALUE_LEN:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			byteLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -10514,43 +10435,43 @@ CK_RV SoftHSM::deriveEDDSA
 	// byteLen == 0 impiles return max size the ECC can derive
 	switch (keyType)
 	{
-		case CKK_GENERIC_SECRET:
-			break;
+	case CKK_GENERIC_SECRET:
+		break;
 #ifndef WITH_FIPS
-		case CKK_DES:
-			if (byteLen != 0 && byteLen != 8)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0 or 8");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			byteLen = 8;
-			break;
-#endif
-		case CKK_DES2:
-			if (byteLen != 0 && byteLen != 16)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0 or 16");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			byteLen = 16;
-			break;
-		case CKK_DES3:
-			if (byteLen != 0 && byteLen != 24)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0 or 24");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			byteLen = 24;
-			break;
-		case CKK_AES:
-			if (byteLen != 0 && byteLen != 16 && byteLen != 24 && byteLen != 32)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 0, 16, 24, or 32");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			break;
-		default:
+	case CKK_DES:
+		if (byteLen != 0 && byteLen != 8)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0 or 8");
 			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		byteLen = 8;
+		break;
+#endif
+	case CKK_DES2:
+		if (byteLen != 0 && byteLen != 16)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0 or 16");
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		byteLen = 16;
+		break;
+	case CKK_DES3:
+		if (byteLen != 0 && byteLen != 24)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0 or 24");
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		byteLen = 24;
+		break;
+	case CKK_AES:
+		if (byteLen != 0 && byteLen != 16 && byteLen != 24 && byteLen != 32)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 0, 16, 24, or 32");
+			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID;
 	}
 
 	// Get the base key handle
@@ -10580,8 +10501,8 @@ CK_RV SoftHSM::deriveEDDSA
 	ByteString publicData;
 	publicData.resize(CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen);
 	memcpy(&publicData[0],
-	       CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData,
-	       CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen);
+		CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->pPublicData,
+		CK_ECDH1_DERIVE_PARAMS_PTR(pMechanism->pParameter)->ulPublicDataLen);
 	PublicKey* publicKey = eddsa->newPublicKey();
 	if (publicKey == NULL)
 	{
@@ -10619,16 +10540,16 @@ CK_RV SoftHSM::deriveEDDSA
 	// Add the additional
 	if (ulCount > (maxAttribs - secretAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
 		default:
 			secretAttribs[secretAttribsCount++] = pTemplate[i];
 		}
@@ -10643,30 +10564,31 @@ CK_RV SoftHSM::deriveEDDSA
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,false);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, false);
 
 			// Common Secret Key Attributes
 			if (baseKey->getBooleanValue(CKA_ALWAYS_SENSITIVE, false))
 			{
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,false);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, false);
 			}
 			if (baseKey->getBooleanValue(CKA_NEVER_EXTRACTABLE, true))
 			{
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,bNeverExtractable);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,false);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, false);
 			}
 
 			// Secret Attributes
@@ -10681,16 +10603,16 @@ CK_RV SoftHSM::deriveEDDSA
 			{
 				switch (keyType)
 				{
-					case CKK_GENERIC_SECRET:
-						byteLen = secretValue.size();
-						break;
-					case CKK_AES:
-						if (secretValue.size() >= 32)
-							byteLen = 32;
-						else if (secretValue.size() >= 24)
-							byteLen = 24;
-						else
-							byteLen = 16;
+				case CKK_GENERIC_SECRET:
+					byteLen = secretValue.size();
+					break;
+				case CKK_AES:
+					if (secretValue.size() >= 32)
+						byteLen = 32;
+					else if (secretValue.size() >= 24)
+						byteLen = 24;
+					else
+						byteLen = 16;
 				}
 			}
 
@@ -10707,8 +10629,8 @@ CK_RV SoftHSM::deriveEDDSA
 
 				// Fix the odd parity for DES
 				if (keyType == CKK_DES ||
-				    keyType == CKK_DES2 ||
-				    keyType == CKK_DES3)
+					keyType == CKK_DES2 ||
+					keyType == CKK_DES3)
 				{
 					for (size_t i = 0; i < secretValue.size(); i++)
 					{
@@ -10719,23 +10641,23 @@ CK_RV SoftHSM::deriveEDDSA
 				// Get the KCV
 				switch (keyType)
 				{
-					case CKK_GENERIC_SECRET:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = secret->getKeyCheckValue();
-						break;
-					case CKK_DES:
-					case CKK_DES2:
-					case CKK_DES3:
-						secret->setBitLen(byteLen * 7);
-						plainKCV = ((DESKey*)secret)->getKeyCheckValue();
-						break;
-					case CKK_AES:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = ((AESKey*)secret)->getKeyCheckValue();
-						break;
-					default:
-						bOK = false;
-						break;
+				case CKK_GENERIC_SECRET:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = secret->getKeyCheckValue();
+					break;
+				case CKK_DES:
+				case CKK_DES2:
+				case CKK_DES3:
+					secret->setBitLen(byteLen * 7);
+					plainKCV = ((DESKey*)secret)->getKeyCheckValue();
+					break;
+				case CKK_AES:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = ((AESKey*)secret)->getKeyCheckValue();
+					break;
+				default:
+					bOK = false;
+					break;
 				}
 
 				if (isPrivate)
@@ -10760,7 +10682,8 @@ CK_RV SoftHSM::deriveEDDSA
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -10807,8 +10730,8 @@ CK_RV SoftHSM::deriveSymmetric
 	ByteString data;
 
 	if ((pMechanism->mechanism == CKM_DES_ECB_ENCRYPT_DATA ||
-	    pMechanism->mechanism == CKM_DES3_ECB_ENCRYPT_DATA) &&
-	    pMechanism->ulParameterLen == sizeof(CK_KEY_DERIVATION_STRING_DATA))
+		pMechanism->mechanism == CKM_DES3_ECB_ENCRYPT_DATA) &&
+		pMechanism->ulParameterLen == sizeof(CK_KEY_DERIVATION_STRING_DATA))
 	{
 		CK_BYTE_PTR pData = CK_KEY_DERIVATION_STRING_DATA_PTR(pMechanism->pParameter)->pData;
 		CK_ULONG ulLen = CK_KEY_DERIVATION_STRING_DATA_PTR(pMechanism->pParameter)->ulLen;
@@ -10824,12 +10747,12 @@ CK_RV SoftHSM::deriveSymmetric
 		}
 		data.resize(ulLen);
 		memcpy(&data[0],
-		       pData,
-		       ulLen);
+			pData,
+			ulLen);
 	}
 	else if ((pMechanism->mechanism == CKM_DES_CBC_ENCRYPT_DATA ||
-		 pMechanism->mechanism == CKM_DES3_CBC_ENCRYPT_DATA) &&
-		 pMechanism->ulParameterLen == sizeof(CK_DES_CBC_ENCRYPT_DATA_PARAMS))
+		pMechanism->mechanism == CKM_DES3_CBC_ENCRYPT_DATA) &&
+		pMechanism->ulParameterLen == sizeof(CK_DES_CBC_ENCRYPT_DATA_PARAMS))
 	{
 		CK_BYTE_PTR pData = CK_DES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->pData;
 		CK_ULONG length = CK_DES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->length;
@@ -10845,11 +10768,11 @@ CK_RV SoftHSM::deriveSymmetric
 		}
 		data.resize(length);
 		memcpy(&data[0],
-		       pData,
-		       length);
+			pData,
+			length);
 	}
 	else if (pMechanism->mechanism == CKM_AES_ECB_ENCRYPT_DATA &&
-		 pMechanism->ulParameterLen == sizeof(CK_KEY_DERIVATION_STRING_DATA))
+		pMechanism->ulParameterLen == sizeof(CK_KEY_DERIVATION_STRING_DATA))
 	{
 		CK_BYTE_PTR pData = CK_KEY_DERIVATION_STRING_DATA_PTR(pMechanism->pParameter)->pData;
 		CK_ULONG ulLen = CK_KEY_DERIVATION_STRING_DATA_PTR(pMechanism->pParameter)->ulLen;
@@ -10865,11 +10788,11 @@ CK_RV SoftHSM::deriveSymmetric
 		}
 		data.resize(ulLen);
 		memcpy(&data[0],
-		       pData,
-		       ulLen);
+			pData,
+			ulLen);
 	}
 	else if ((pMechanism->mechanism == CKM_AES_CBC_ENCRYPT_DATA) &&
-		 pMechanism->ulParameterLen == sizeof(CK_AES_CBC_ENCRYPT_DATA_PARAMS))
+		pMechanism->ulParameterLen == sizeof(CK_AES_CBC_ENCRYPT_DATA_PARAMS))
 	{
 		CK_BYTE_PTR pData = CK_AES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->pData;
 		CK_ULONG length = CK_AES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->length;
@@ -10885,8 +10808,8 @@ CK_RV SoftHSM::deriveSymmetric
 		}
 		data.resize(length);
 		memcpy(&data[0],
-		       pData,
-		       length);
+			pData,
+			length);
 	}
 	else
 	{
@@ -10911,75 +10834,75 @@ CK_RV SoftHSM::deriveSymmetric
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_VALUE:
-				INFO_MSG("CKA_VALUE must not be included");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			case CKA_VALUE_LEN:
-				if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
-				{
-					INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				byteLen = *(CK_ULONG*)pTemplate[i].pValue;
-				break;
-			case CKA_CHECK_VALUE:
-				if (pTemplate[i].ulValueLen > 0)
-				{
-					INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
-					return CKR_ATTRIBUTE_VALUE_INVALID;
-				}
-				checkValue = false;
-				break;
-			default:
-				break;
+		case CKA_VALUE:
+			INFO_MSG("CKA_VALUE must not be included");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		case CKA_VALUE_LEN:
+			if (pTemplate[i].ulValueLen != sizeof(CK_ULONG))
+			{
+				INFO_MSG("CKA_VALUE_LEN does not have the size of CK_ULONG");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			byteLen = *(CK_ULONG*)pTemplate[i].pValue;
+			break;
+		case CKA_CHECK_VALUE:
+			if (pTemplate[i].ulValueLen > 0)
+			{
+				INFO_MSG("CKA_CHECK_VALUE must be a no-value (0 length) entry");
+				return CKR_ATTRIBUTE_VALUE_INVALID;
+			}
+			checkValue = false;
+			break;
+		default:
+			break;
 		}
 	}
 
 	// Check the length
 	switch (keyType)
 	{
-		case CKK_GENERIC_SECRET:
-			if (byteLen == 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be set");
-				return CKR_TEMPLATE_INCOMPLETE;
-			}
-			break;
+	case CKK_GENERIC_SECRET:
+		if (byteLen == 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be set");
+			return CKR_TEMPLATE_INCOMPLETE;
+		}
+		break;
 #ifndef WITH_FIPS
-		case CKK_DES:
-			if (byteLen != 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must not be set");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			}
-			byteLen = 8;
-			break;
+	case CKK_DES:
+		if (byteLen != 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must not be set");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		}
+		byteLen = 8;
+		break;
 #endif
-		case CKK_DES2:
-			if (byteLen != 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must not be set");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			}
-			byteLen = 16;
-			break;
-		case CKK_DES3:
-			if (byteLen != 0)
-			{
-				INFO_MSG("CKA_VALUE_LEN must not be set");
-				return CKR_ATTRIBUTE_READ_ONLY;
-			}
-			byteLen = 24;
-			break;
-		case CKK_AES:
-			if (byteLen != 16 && byteLen != 24 && byteLen != 32)
-			{
-				INFO_MSG("CKA_VALUE_LEN must be 16, 24, or 32");
-				return CKR_ATTRIBUTE_VALUE_INVALID;
-			}
-			break;
-		default:
+	case CKK_DES2:
+		if (byteLen != 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must not be set");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		}
+		byteLen = 16;
+		break;
+	case CKK_DES3:
+		if (byteLen != 0)
+		{
+			INFO_MSG("CKA_VALUE_LEN must not be set");
+			return CKR_ATTRIBUTE_READ_ONLY;
+		}
+		byteLen = 24;
+		break;
+	case CKK_AES:
+		if (byteLen != 16 && byteLen != 24 && byteLen != 32)
+		{
+			INFO_MSG("CKA_VALUE_LEN must be 16, 24, or 32");
 			return CKR_ATTRIBUTE_VALUE_INVALID;
+		}
+		break;
+	default:
+		return CKR_ATTRIBUTE_VALUE_INVALID;
 	}
 
 	// Get the symmetric algorithm matching the mechanism
@@ -10988,51 +10911,51 @@ CK_RV SoftHSM::deriveSymmetric
 	bool padding = false;
 	ByteString iv;
 	size_t bb = 8;
-	switch(pMechanism->mechanism) {
+	switch (pMechanism->mechanism) {
 #ifndef WITH_FIPS
-		case CKM_DES_ECB_ENCRYPT_DATA:
-			algo = SymAlgo::DES;
-			mode = SymMode::ECB;
-			bb = 7;
-			break;
-		case CKM_DES_CBC_ENCRYPT_DATA:
-			algo = SymAlgo::DES;
-			mode = SymMode::CBC;
-			bb = 7;
-			iv.resize(8);
-			memcpy(&iv[0],
-			       &(CK_DES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->iv[0]),
-			       8);
-			break;
+	case CKM_DES_ECB_ENCRYPT_DATA:
+		algo = SymAlgo::DES;
+		mode = SymMode::ECB;
+		bb = 7;
+		break;
+	case CKM_DES_CBC_ENCRYPT_DATA:
+		algo = SymAlgo::DES;
+		mode = SymMode::CBC;
+		bb = 7;
+		iv.resize(8);
+		memcpy(&iv[0],
+			&(CK_DES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->iv[0]),
+			8);
+		break;
 #endif
-		case CKM_DES3_ECB_ENCRYPT_DATA:
-			algo = SymAlgo::DES3;
-			mode = SymMode::ECB;
-			bb = 7;
-			break;
-		case CKM_DES3_CBC_ENCRYPT_DATA:
-			algo = SymAlgo::DES3;
-			mode = SymMode::CBC;
-			bb = 7;
-			iv.resize(8);
-			memcpy(&iv[0],
-			       &(CK_DES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->iv[0]),
-			       8);
-			break;
-		case CKM_AES_ECB_ENCRYPT_DATA:
-			algo = SymAlgo::AES;
-			mode = SymMode::ECB;
-			break;
-		case CKM_AES_CBC_ENCRYPT_DATA:
-			algo = SymAlgo::AES;
-			mode = SymMode::CBC;
-			iv.resize(16);
-			memcpy(&iv[0],
-			       &(CK_AES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->iv[0]),
-			       16);
-			break;
-		default:
-			return CKR_MECHANISM_INVALID;
+	case CKM_DES3_ECB_ENCRYPT_DATA:
+		algo = SymAlgo::DES3;
+		mode = SymMode::ECB;
+		bb = 7;
+		break;
+	case CKM_DES3_CBC_ENCRYPT_DATA:
+		algo = SymAlgo::DES3;
+		mode = SymMode::CBC;
+		bb = 7;
+		iv.resize(8);
+		memcpy(&iv[0],
+			&(CK_DES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->iv[0]),
+			8);
+		break;
+	case CKM_AES_ECB_ENCRYPT_DATA:
+		algo = SymAlgo::AES;
+		mode = SymMode::ECB;
+		break;
+	case CKM_AES_CBC_ENCRYPT_DATA:
+		algo = SymAlgo::AES;
+		mode = SymMode::CBC;
+		iv.resize(16);
+		memcpy(&iv[0],
+			&(CK_AES_CBC_ENCRYPT_DATA_PARAMS_PTR(pMechanism->pParameter)->iv[0]),
+			16);
+		break;
+	default:
+		return CKR_MECHANISM_INVALID;
 	}
 
 	// Check the key handle
@@ -11100,18 +11023,18 @@ CK_RV SoftHSM::deriveSymmetric
 	CK_RV rv = CKR_OK;
 	if (ulCount > (maxAttribs - secretAttribsCount))
 		rv = CKR_TEMPLATE_INCONSISTENT;
-	for (CK_ULONG i=0; i < ulCount && rv == CKR_OK; ++i)
+	for (CK_ULONG i = 0; i < ulCount && rv == CKR_OK; ++i)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CLASS:
-			case CKA_TOKEN:
-			case CKA_PRIVATE:
-			case CKA_KEY_TYPE:
-			case CKA_CHECK_VALUE:
-				continue;
-			default:
-				secretAttribs[secretAttribsCount++] = pTemplate[i];
+		case CKA_CLASS:
+		case CKA_TOKEN:
+		case CKA_PRIVATE:
+		case CKA_KEY_TYPE:
+		case CKA_CHECK_VALUE:
+			continue;
+		default:
+			secretAttribs[secretAttribsCount++] = pTemplate[i];
 		}
 	}
 
@@ -11124,30 +11047,31 @@ CK_RV SoftHSM::deriveSymmetric
 		OSObject* osobject = (OSObject*)handleManager->getObject(*phKey);
 		if (osobject == NULL_PTR || !osobject->isValid()) {
 			rv = CKR_FUNCTION_FAILED;
-		} else if (osobject->startTransaction()) {
+		}
+		else if (osobject->startTransaction()) {
 			bool bOK = true;
 
 			// Common Attributes
-			bOK = bOK && osobject->setAttribute(CKA_LOCAL,false);
+			bOK = bOK && osobject->setAttribute(CKA_LOCAL, false);
 
 			// Common Secret Key Attributes
 			if (baseKey->getBooleanValue(CKA_ALWAYS_SENSITIVE, false))
 			{
 				bool bAlwaysSensitive = osobject->getBooleanValue(CKA_SENSITIVE, false);
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,bAlwaysSensitive);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, bAlwaysSensitive);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE,false);
+				bOK = bOK && osobject->setAttribute(CKA_ALWAYS_SENSITIVE, false);
 			}
 			if (baseKey->getBooleanValue(CKA_NEVER_EXTRACTABLE, true))
 			{
 				bool bNeverExtractable = osobject->getBooleanValue(CKA_EXTRACTABLE, false) == false;
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,bNeverExtractable);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, bNeverExtractable);
 			}
 			else
 			{
-				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE,false);
+				bOK = bOK && osobject->setAttribute(CKA_NEVER_EXTRACTABLE, false);
 			}
 
 			ByteString value;
@@ -11167,8 +11091,8 @@ CK_RV SoftHSM::deriveSymmetric
 
 				// Fix the odd parity for DES
 				if (keyType == CKK_DES ||
-				    keyType == CKK_DES2 ||
-				    keyType == CKK_DES3)
+					keyType == CKK_DES2 ||
+					keyType == CKK_DES3)
 				{
 					for (size_t i = 0; i < secretValue.size(); i++)
 					{
@@ -11181,23 +11105,23 @@ CK_RV SoftHSM::deriveSymmetric
 				secret->setKeyBits(secretValue);
 				switch (keyType)
 				{
-					case CKK_GENERIC_SECRET:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = secret->getKeyCheckValue();
-						break;
-					case CKK_DES:
-					case CKK_DES2:
-					case CKK_DES3:
-						secret->setBitLen(byteLen * 7);
-						plainKCV = ((DESKey*)secret)->getKeyCheckValue();
-						break;
-					case CKK_AES:
-						secret->setBitLen(byteLen * 8);
-						plainKCV = ((AESKey*)secret)->getKeyCheckValue();
-						break;
-					default:
-						bOK = false;
-						break;
+				case CKK_GENERIC_SECRET:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = secret->getKeyCheckValue();
+					break;
+				case CKK_DES:
+				case CKK_DES2:
+				case CKK_DES3:
+					secret->setBitLen(byteLen * 7);
+					plainKCV = ((DESKey*)secret)->getKeyCheckValue();
+					break;
+				case CKK_AES:
+					secret->setBitLen(byteLen * 8);
+					plainKCV = ((AESKey*)secret)->getKeyCheckValue();
+					break;
+				default:
+					bOK = false;
+					break;
 				}
 				delete secret;
 
@@ -11223,7 +11147,8 @@ CK_RV SoftHSM::deriveSymmetric
 
 			if (!bOK)
 				rv = CKR_FUNCTION_FAILED;
-		} else
+		}
+		else
 			rv = CKR_FUNCTION_FAILED;
 	}
 
@@ -11268,7 +11193,7 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 	CK_BBOOL isOnToken = CK_FALSE;
 	CK_BBOOL isPrivate = CK_TRUE;
 	bool isImplicit = false;
-	CK_RV rv = extractObjectInformation(pTemplate,ulCount,objClass,keyType,certType, isOnToken, isPrivate, isImplicit);
+	CK_RV rv = extractObjectInformation(pTemplate, ulCount, objClass, keyType, certType, isOnToken, isPrivate, isImplicit);
 	if (rv != CKR_OK)
 	{
 		ERROR_MSG("Mandatory attribute not present in template");
@@ -11297,24 +11222,24 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 	{
 		return CKR_TEMPLATE_INCONSISTENT;
 	}
-	for (CK_ULONG i=0; i < ulCount; i++)
+	for (CK_ULONG i = 0; i < ulCount; i++)
 	{
 		switch (pTemplate[i].type)
 		{
-			case CKA_CHECK_VALUE:
-				saveAttribs[saveAttribsCount++] = pTemplate[i];
-				break;
-			default:
-				attribs[attribsCount++] = pTemplate[i];
+		case CKA_CHECK_VALUE:
+			saveAttribs[saveAttribsCount++] = pTemplate[i];
+			break;
+		default:
+			attribs[attribsCount++] = pTemplate[i];
 		}
 	}
-	for (CK_ULONG i=0; i < saveAttribsCount; i++)
+	for (CK_ULONG i = 0; i < saveAttribsCount; i++)
 	{
 		attribs[attribsCount++] = saveAttribs[i];
 	}
 
 	P11Object* p11object = NULL;
-	rv = newP11Object(objClass,keyType,certType,&p11object);
+	rv = newP11Object(objClass, keyType, certType, &p11object);
 	if (rv != CKR_OK)
 		return rv;
 
@@ -11322,7 +11247,7 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 	OSObject *object = NULL_PTR;
 	if (isOnToken)
 	{
-		object = (OSObject*) token->createObject();
+		object = (OSObject*)token->createObject();
 	}
 	else
 	{
@@ -11335,7 +11260,7 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 		return CKR_GENERAL_ERROR;
 	}
 
-	rv = p11object->saveTemplate(token, isPrivate != CK_FALSE, attribs,attribsCount,op);
+	rv = p11object->saveTemplate(token, isPrivate != CK_FALSE, attribs, attribsCount, op);
 	delete p11object;
 	if (rv != CKR_OK)
 		return rv;
@@ -11343,19 +11268,19 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 	if (op == OBJECT_OP_CREATE)
 	{
 		if (objClass == CKO_PUBLIC_KEY &&
-		    (!object->startTransaction() ||
-		    !object->setAttribute(CKA_LOCAL, false) ||
-		    !object->commitTransaction()))
+			(!object->startTransaction() ||
+				!object->setAttribute(CKA_LOCAL, false) ||
+				!object->commitTransaction()))
 		{
 			return CKR_GENERAL_ERROR;
 		}
 
 		if ((objClass == CKO_SECRET_KEY || objClass == CKO_PRIVATE_KEY) &&
-		    (!object->startTransaction() ||
-		    !object->setAttribute(CKA_LOCAL, false) ||
-		    !object->setAttribute(CKA_ALWAYS_SENSITIVE, false) ||
-		    !object->setAttribute(CKA_NEVER_EXTRACTABLE, false) ||
-		    !object->commitTransaction()))
+			(!object->startTransaction() ||
+				!object->setAttribute(CKA_LOCAL, false) ||
+				!object->setAttribute(CKA_ALWAYS_SENSITIVE, false) ||
+				!object->setAttribute(CKA_NEVER_EXTRACTABLE, false) ||
+				!object->commitTransaction()))
 		{
 			return CKR_GENERAL_ERROR;
 		}
@@ -11364,7 +11289,8 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 	if (isOnToken)
 	{
 		*phObject = handleManager->addTokenObject(slot->getSlotID(), isPrivate != CK_FALSE, object);
-	} else {
+	}
+	else {
 		*phObject = handleManager->addSessionObject(slot->getSlotID(), hSession, isPrivate != CK_FALSE, object);
 	}
 
@@ -11410,7 +11336,7 @@ CK_RV SoftHSM::getRSAPrivateKey(RSAPrivateKey* privateKey, Token* token, OSObjec
 		privateExponent = key->getByteStringValue(CKA_PRIVATE_EXPONENT);
 		prime1 = key->getByteStringValue(CKA_PRIME_1);
 		prime2 = key->getByteStringValue(CKA_PRIME_2);
-		exponent1 =  key->getByteStringValue(CKA_EXPONENT_1);
+		exponent1 = key->getByteStringValue(CKA_EXPONENT_1);
 		exponent2 = key->getByteStringValue(CKA_EXPONENT_2);
 		coefficient = key->getByteStringValue(CKA_COEFFICIENT);
 	}
@@ -11997,7 +11923,7 @@ bool SoftHSM::setRSAPrivateKey(OSObject* key, const ByteString &ber, Token* toke
 		privateExponent = ((RSAPrivateKey*)priv)->getD();
 		prime1 = ((RSAPrivateKey*)priv)->getP();
 		prime2 = ((RSAPrivateKey*)priv)->getQ();
-		exponent1 =  ((RSAPrivateKey*)priv)->getDP1();
+		exponent1 = ((RSAPrivateKey*)priv)->getDP1();
 		exponent2 = ((RSAPrivateKey*)priv)->getDQ1();
 		coefficient = ((RSAPrivateKey*)priv)->getPQ();
 	}
@@ -12007,7 +11933,7 @@ bool SoftHSM::setRSAPrivateKey(OSObject* key, const ByteString &ber, Token* toke
 	bOK = bOK && key->setAttribute(CKA_PRIVATE_EXPONENT, privateExponent);
 	bOK = bOK && key->setAttribute(CKA_PRIME_1, prime1);
 	bOK = bOK && key->setAttribute(CKA_PRIME_2, prime2);
-	bOK = bOK && key->setAttribute(CKA_EXPONENT_1,exponent1);
+	bOK = bOK && key->setAttribute(CKA_EXPONENT_1, exponent1);
 	bOK = bOK && key->setAttribute(CKA_EXPONENT_2, exponent2);
 	bOK = bOK && key->setAttribute(CKA_COEFFICIENT, coefficient);
 
@@ -12198,7 +12124,7 @@ CK_RV SoftHSM::MechParamCheckRSAPKCSOAEP(CK_MECHANISM_PTR pMechanism)
 	}
 
 	if (pMechanism->pParameter == NULL_PTR ||
-	    pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_OAEP_PARAMS))
+		pMechanism->ulParameterLen != sizeof(CK_RSA_PKCS_OAEP_PARAMS))
 	{
 		ERROR_MSG("pParameter must be of type CK_RSA_PKCS_OAEP_PARAMS");
 		return CKR_ARGUMENTS_BAD;
