@@ -292,7 +292,7 @@ bool OSSLSM2::generateKeyPair(AsymmetricKeyPair** ppKeyPair, AsymmetricParameter
 	}
 
 	// Create an asymmetric key-pair object to return
-	OSSLSM2KeyPair* kp = new OSSLECKeyPair();
+	OSSLSM2KeyPair* kp = new OSSLSM2KeyPair();
 
 	((OSSLSM2PublicKey*) kp->getPublicKey())->setFromOSSL(eckey);
 	((OSSLSM2PrivateKey*) kp->getPrivateKey())->setFromOSSL(eckey);

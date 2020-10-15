@@ -879,13 +879,12 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 	unsigned long rsaMinSize, rsaMaxSize;
 	unsigned long dsaMinSize, dsaMaxSize;
 	unsigned long dhMinSize, dhMaxSize;
-#ifdef WITH_ECC
+
 	unsigned long ecdsaMinSize, ecdsaMaxSize;
-#endif
-#if defined(WITH_ECC) || defined(WITH_EDDSA)
+
+
 	unsigned long ecdhMinSize = 0, ecdhMaxSize = 0;
 	unsigned long eddsaMinSize = 0, eddsaMaxSize = 0;
-#endif
 
 	if (!isInitialised) return CKR_CRYPTOKI_NOT_INITIALIZED;
 	if (pInfo == NULL_PTR) return CKR_ARGUMENTS_BAD;
@@ -908,42 +907,7 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 	}
 	CryptoFactory::i()->recycleAsymmetricAlgorithm(rsa);
 
-	AsymmetricAlgorithm* dsa = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::DSA);
-	if (dsa != NULL)
-	{
-		dsaMinSize = dsa->getMinKeySize();
-		// Limitation in PKCS#11
-		if (dsaMinSize < 512)
-		{
-			dsaMinSize = 512;
-		}
 
-		dsaMaxSize = dsa->getMaxKeySize();
-		// Limitation in PKCS#11
-		if (dsaMaxSize > 1024)
-		{
-			dsaMaxSize = 1024;
-		}
-	}
-	else
-	{
-		return CKR_GENERAL_ERROR;
-	}
-	CryptoFactory::i()->recycleAsymmetricAlgorithm(dsa);
-
-	AsymmetricAlgorithm* dh = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::DH);
-	if (dh != NULL)
-	{
-		dhMinSize = dh->getMinKeySize();
-		dhMaxSize = dh->getMaxKeySize();
-	}
-	else
-	{
-		return CKR_GENERAL_ERROR;
-	}
-	CryptoFactory::i()->recycleAsymmetricAlgorithm(dh);
-
-#ifdef WITH_ECC
 	AsymmetricAlgorithm* ecdsa = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::ECDSA);
 	if (ecdsa != NULL)
 	{
@@ -968,55 +932,19 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 	}
 	CryptoFactory::i()->recycleAsymmetricAlgorithm(sm2);
 
-	AsymmetricAlgorithm* ecdh = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::ECDH);
-	if (ecdh != NULL)
-	{
-		ecdhMinSize = ecdh->getMinKeySize();
-		ecdhMaxSize = ecdh->getMaxKeySize();
-	}
-	else
-	{
-		return CKR_GENERAL_ERROR;
-	}
-	CryptoFactory::i()->recycleAsymmetricAlgorithm(ecdh);
-#endif
 
-#ifdef WITH_EDDSA
-	AsymmetricAlgorithm* eddsa = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::EDDSA);
-	if (eddsa != NULL)
-	{
-		eddsaMinSize = eddsa->getMinKeySize();
-		eddsaMaxSize = eddsa->getMaxKeySize();
-	}
-	else
-	{
-		return CKR_GENERAL_ERROR;
-	}
-	CryptoFactory::i()->recycleAsymmetricAlgorithm(eddsa);
-#endif
 	switch (type)
 	{
-#ifndef WITH_FIPS
-		case CKM_MD5:
-#endif
-		case CKM_SM3:
+		case CKM_IBM_SM3:
 		case CKM_SHA_1:
 		case CKM_SHA224:
 		case CKM_SHA256:
-		case CKM_SHA384:
 		case CKM_SHA512:
 			// Key size is not in use
 			pInfo->ulMinKeySize = 0;
 			pInfo->ulMaxKeySize = 0;
 			pInfo->flags = CKF_DIGEST;
 			break;
-#ifndef WITH_FIPS
-		case CKM_MD5_HMAC:
-			pInfo->ulMinKeySize = 16;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-#endif
 		case CKM_SHA_1_HMAC:
 			pInfo->ulMinKeySize = 20;
 			pInfo->ulMaxKeySize = 512;
@@ -1057,17 +985,11 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 			pInfo->ulMaxKeySize = rsaMaxSize;
 			pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_ENCRYPT | CKF_DECRYPT;
 			break;
-#ifndef WITH_FIPS
-		case CKM_MD5_RSA_PKCS:
-#endif
 		case CKM_SHA1_RSA_PKCS:
 		case CKM_SHA224_RSA_PKCS:
 		case CKM_SHA256_RSA_PKCS:
 		case CKM_SHA384_RSA_PKCS:
 		case CKM_SHA512_RSA_PKCS:
-#ifdef WITH_RAW_PSS
-		case CKM_RSA_PKCS_PSS:
-#endif
 		case CKM_SHA1_RSA_PKCS_PSS:
 		case CKM_SHA224_RSA_PKCS_PSS:
 		case CKM_SHA256_RSA_PKCS_PSS:
@@ -1087,69 +1009,6 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 			pInfo->ulMaxKeySize = 0x80000000;
 			pInfo->flags = CKF_GENERATE;
 			break;
-#ifndef WITH_FIPS
-		case CKM_DES_KEY_GEN:
-#endif
-		case CKM_DES2_KEY_GEN:
-		case CKM_DES3_KEY_GEN:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_GENERATE;
-			break;
-#ifndef WITH_FIPS
-		case CKM_DES_ECB:
-		case CKM_DES_CBC:
-		case CKM_DES_CBC_PAD:
-#endif
-		case CKM_DES3_CBC:
-			pInfo->flags = CKF_WRAP;
-			// falls through
-		case CKM_DES3_ECB:
-		case CKM_DES3_CBC_PAD:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags |= CKF_ENCRYPT | CKF_DECRYPT;
-			break;
-		case CKM_DES3_CMAC:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_AES_KEY_GEN:
-			pInfo->ulMinKeySize = 16;
-			pInfo->ulMaxKeySize = 32;
-			pInfo->flags = CKF_GENERATE;
-			break;
-		case CKM_AES_CBC:
-			pInfo->flags = CKF_WRAP;
-			// falls through
-		case CKM_AES_ECB:
-		case CKM_AES_CBC_PAD:
-		case CKM_AES_CTR:
-		case CKM_AES_GCM:
-			pInfo->ulMinKeySize = 16;
-			pInfo->ulMaxKeySize = 32;
-			pInfo->flags |= CKF_ENCRYPT | CKF_DECRYPT;
-			break;
-		case CKM_AES_KEY_WRAP:
-			pInfo->ulMinKeySize = 16;
-			pInfo->ulMaxKeySize = 0x80000000;
-			pInfo->flags = CKF_WRAP | CKF_UNWRAP;
-			break;
-#ifdef HAVE_AES_KEY_WRAP_PAD
-		case CKM_AES_KEY_WRAP_PAD:
-			pInfo->ulMinKeySize = 1;
-			pInfo->ulMaxKeySize = 0x80000000;
-			pInfo->flags = CKF_WRAP | CKF_UNWRAP;
-			break;
-#endif
-#ifndef WITH_FIPS
-		case CKM_DES_ECB_ENCRYPT_DATA:
-		case CKM_DES_CBC_ENCRYPT_DATA:
-#endif
 		case CKM_DES3_ECB_ENCRYPT_DATA:
 		case CKM_DES3_CBC_ENCRYPT_DATA:
 		case CKM_AES_ECB_ENCRYPT_DATA:
@@ -1184,22 +1043,7 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 			pInfo->ulMaxKeySize = dsaMaxSize;
 			pInfo->flags = CKF_SIGN | CKF_VERIFY;
 			break;
-		case CKM_DH_PKCS_KEY_PAIR_GEN:
-			pInfo->ulMinKeySize = dhMinSize;
-			pInfo->ulMaxKeySize = dhMaxSize;
-			pInfo->flags = CKF_GENERATE_KEY_PAIR;
-			break;
-		case CKM_DH_PKCS_PARAMETER_GEN:
-			pInfo->ulMinKeySize = dhMinSize;
-			pInfo->ulMaxKeySize = dhMaxSize;
-			pInfo->flags = CKF_GENERATE;
-			break;
-		case CKM_DH_PKCS_DERIVE:
-			pInfo->ulMinKeySize = dhMinSize;
-			pInfo->ulMaxKeySize = dhMaxSize;
-			pInfo->flags = CKF_DERIVE;
-			break;
-#ifdef WITH_ECC
+
 		case CKM_EC_KEY_PAIR_GEN:
 			pInfo->ulMinKeySize = ecdsaMinSize;
 			pInfo->ulMaxKeySize = ecdsaMaxSize;
@@ -1223,58 +1067,6 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 			pInfo->ulMaxKeySize = ecdsaMaxSize;
 			pInfo->flags = CKF_SIGN | CKF_VERIFY | CKF_EC_COMMOM;
 			break;
-#endif
-#if defined(WITH_ECC) || defined(WITH_EDDSA)
-		case CKM_ECDH1_DERIVE:
-			pInfo->ulMinKeySize = ecdhMinSize ? ecdhMinSize : eddsaMinSize;
-			pInfo->ulMaxKeySize = ecdhMaxSize ? ecdhMaxSize : eddsaMaxSize;
-			pInfo->flags = CKF_DERIVE;
-			break;
-#endif
-#ifdef WITH_GOST
-		case CKM_GOSTR3411:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_DIGEST;
-			break;
-		case CKM_GOSTR3411_HMAC:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 32;
-			pInfo->ulMaxKeySize = 512;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_GOSTR3410_KEY_PAIR_GEN:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_GENERATE_KEY_PAIR;
-			break;
-		case CKM_GOSTR3410:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-		case CKM_GOSTR3410_WITH_GOSTR3411:
-			// Key size is not in use
-			pInfo->ulMinKeySize = 0;
-			pInfo->ulMaxKeySize = 0;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-#endif
-#ifdef WITH_EDDSA
-		case CKM_EC_EDWARDS_KEY_PAIR_GEN:
-			pInfo->ulMinKeySize = eddsaMinSize;
-			pInfo->ulMaxKeySize = eddsaMaxSize;
-			pInfo->flags = CKF_GENERATE_KEY_PAIR;
-			break;
-		case CKM_EDDSA:
-			pInfo->ulMinKeySize = eddsaMinSize;
-			pInfo->ulMaxKeySize = eddsaMaxSize;
-			pInfo->flags = CKF_SIGN | CKF_VERIFY;
-			break;
-#endif
 		default:
 			DEBUG_MSG("The selected mechanism is not supported");
 			return CKR_MECHANISM_INVALID;
@@ -3129,10 +2921,6 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	if (!key->getBooleanValue(CKA_DECRYPT, false))
 		return CKR_KEY_FUNCTION_NOT_PERMITTED;
 
-	// Check if the specified mechanism is allowed for the key
-	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_MECHANISM_INVALID;
-
 	// Get key info
 	CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
 
@@ -3176,7 +2964,8 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 			isRSA = true;
 			break;
 		default:
-			return CKR_MECHANISM_INVALID;
+			// return CKR_MECHANISM_INVALID;
+			return CKR_ARGUMENTS_BAD;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -5658,8 +5447,7 @@ CK_RV SoftHSM::C_GenerateKeyPair
 			keyType = CKK_IBM_SM2;
 			break;
 		default:
-			// return CKR_MECHANISM_INVALID;
-			return CKR_SESSION_HANDLE_INVALID;
+			return CKR_MECHANISM_INVALID;
 	}
 	CK_CERTIFICATE_TYPE dummy;
 
@@ -8833,7 +8621,7 @@ CK_RV SoftHSM::generateSM2
 	}
 
 	// Set the parameters
-	ECParameters p;
+	SM2Parameters p;
 	p.setEC(params);
 
 	// Generate key pair
@@ -8847,8 +8635,8 @@ CK_RV SoftHSM::generateSM2
 		return CKR_GENERAL_ERROR;
 	}
 
-	ECPublicKey* pub = (ECPublicKey*)kp->getPublicKey();
-	ECPrivateKey* priv = (ECPrivateKey*)kp->getPrivateKey();
+	SM2PublicKey* pub = (SM2PublicKey*)kp->getPublicKey();
+	SM2PrivateKey* priv = (SM2PrivateKey*)kp->getPrivateKey();
 
 	CK_RV rv = CKR_OK;
 

@@ -338,14 +338,6 @@ AsymmetricAlgorithm* OSSLCryptoFactory::getAsymmetricAlgorithm(AsymAlgo::Type al
 			return new OSSLECDSA();
 		case AsymAlgo::SM2:
 			return new OSSLSM2();
-#ifdef WITH_GOST
-		case AsymAlgo::GOST:
-			return new OSSLGOST();
-#endif
-#ifdef WITH_EDDSA
-		case AsymAlgo::EDDSA:
-			return new OSSLEDDSA();
-#endif
 		default:
 			// No algorithm implementation is available
 			ERROR_MSG("Unknown algorithm '%i'", algorithm);
