@@ -1069,7 +1069,7 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 			break;
 		default:
 			DEBUG_MSG("The selected mechanism is not supported");
-			return CKR_MECHANISM_INVALID;
+			return CKR_SLOT_ID_INVALID;
 			break;
 	}
 
