@@ -2130,7 +2130,7 @@ void ObjectTests::testAllowedMechanisms()
 	// SHA_1_HMAC is not an allowed mechanism
 	CK_MECHANISM mechanism = { CKM_SHA_1_HMAC, NULL_PTR, 0 };
 	rv = CRYPTOKI_F_PTR( C_SignInit(hSession, &mechanism, hKey) );
-	CPPUNIT_ASSERT(rv == CKR_MECHANISM_INVALID);
+	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
 
 	// SHA256_HMAC is an allowed mechanism
 	mechanism.mechanism = CKM_SHA256_HMAC;
@@ -2144,7 +2144,7 @@ void ObjectTests::testAllowedMechanisms()
 	// SHA384_HMAC is not an allowed mechanism
 	mechanism.mechanism = CKM_SHA384_HMAC;
 	rv = CRYPTOKI_F_PTR( C_SignInit(hSession, &mechanism, hKey) );
-	CPPUNIT_ASSERT(rv == CKR_MECHANISM_INVALID);
+	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
 
 	// SHA512_HMAC is an allowed mechanism
 	mechanism.mechanism = CKM_SHA512_HMAC;

@@ -58,7 +58,7 @@ void DigestTests::testDigestInit()
 	CPPUNIT_ASSERT(rv == CKR_OK);
 
 	rv = CRYPTOKI_F_PTR( C_DigestInit(hSession, NULL_PTR) );
-	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
+	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_DigestInit(CK_INVALID_HANDLE, &mechanism) );
 	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
@@ -107,10 +107,10 @@ void DigestTests::testDigest()
 	CPPUNIT_ASSERT(rv == CKR_OK);
 
 	rv = CRYPTOKI_F_PTR( C_Digest(hSession, NULL_PTR, sizeof(data)-1, NULL_PTR, &digestLen) );
-	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
+	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_Digest(hSession, data, sizeof(data)-1, NULL_PTR, NULL_PTR) );
-	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
+	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_Digest(hSession, data, sizeof(data)-1, NULL_PTR, &digestLen) );
 	CPPUNIT_ASSERT(rv == CKR_OK);
@@ -160,7 +160,7 @@ void DigestTests::testDigestUpdate()
 	CPPUNIT_ASSERT(rv == CKR_OK);
 
 	rv = CRYPTOKI_F_PTR( C_DigestUpdate(hSession, NULL_PTR, sizeof(data)-1) );
-	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
+	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_DigestUpdate(hSession, data, sizeof(data)-1) );
 	CPPUNIT_ASSERT(rv == CKR_OK);
@@ -260,7 +260,7 @@ void DigestTests::testDigestFinal()
 	CPPUNIT_ASSERT(rv == CKR_OK);
 
 	rv = CRYPTOKI_F_PTR( C_DigestFinal(hSession, NULL_PTR, NULL_PTR) );
-	CPPUNIT_ASSERT(rv == CKR_ARGUMENTS_BAD);
+	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_DigestFinal(hSession, NULL_PTR, &digestLen) );
 	CPPUNIT_ASSERT(rv == CKR_OK);

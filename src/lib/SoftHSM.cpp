@@ -1948,7 +1948,7 @@ CK_RV SoftHSM::SymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Get key info
 	CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
@@ -2120,14 +2120,14 @@ CK_RV SoftHSM::SymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 		tagBytes = tagBytes / 8;
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* secretkey = new SymmetricKey();
 
-	if (getSymmetricKey(secretkey, token, key) != CKR_OK)s
+	if (getSymmetricKey(secretkey, token, key) != CKR_OK)
 	{
 		cipher->recycleKey(secretkey);
 		CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
@@ -2142,7 +2142,7 @@ CK_RV SoftHSM::SymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	{
 		cipher->recycleKey(secretkey);
 		CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	session->setOpType(SESSION_OP_ENCRYPT);
@@ -2228,7 +2228,7 @@ CK_RV SoftHSM::AsymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 		isRSA = false;
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -2236,7 +2236,7 @@ CK_RV SoftHSM::AsymEncryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	if (!isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
-		if (asymCrypto == NULL) return CKR_ARGUMENTS_BAD;
+		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
@@ -2673,7 +2673,7 @@ CK_RV SoftHSM::SymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Get key info
 	CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
@@ -2845,10 +2845,10 @@ CK_RV SoftHSM::SymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 		tagBytes = tagBytes / 8;
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* secretkey = new SymmetricKey();
 
@@ -2867,7 +2867,7 @@ CK_RV SoftHSM::SymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	{
 		cipher->recycleKey(secretkey);
 		CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	session->setOpType(SESSION_OP_DECRYPT);
@@ -2961,7 +2961,7 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 		isRSA = true;
 		break;
 	default:
-		// return CKR_ARGUMENTS_BAD;
+		// return CKR_MECHANISM_INVALID;
 		return CKR_ARGUMENTS_BAD;
 	}
 
@@ -2970,7 +2970,7 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	if (isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::RSA);
-		if (asymCrypto == NULL) return CKR_HOST_MEMORY//return CKR_ARGUMENTS_BAD;
+		if (asymCrypto == NULL) return CKR_HOST_MEMORY//return CKR_MECHANISM_INVALID;
 
 			privateKey = asymCrypto->newPrivateKey();
 		if (privateKey == NULL)
@@ -2988,7 +2988,7 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	}
 	else
 	{
-		return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;//return CKR_ARGUMENTS_BAD;
+		return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Check if re-authentication is required
@@ -3412,10 +3412,10 @@ CK_RV SoftHSM::C_DigestInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 		break;
 #endif
 	default:
-		return CKR_SESSION_HANDLE_INVALID;//return CKR_ARGUMENTS_BAD;
+		return CKR_SESSION_HANDLE_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 	HashAlgorithm* hash = CryptoFactory::i()->getHashAlgorithm(algo);
-	if (hash == NULL) return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+	if (hash == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 	// Initialize hashing
 	if (hash->hashInit() == false)
@@ -3711,7 +3711,7 @@ CK_RV SoftHSM::MacSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechani
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_KEY_FUNCTION_NOT_PERMITTED; //return CKR_ARGUMENTS_BAD;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED; //return CKR_MECHANISM_INVALID;
 
 	// Get key info
 	CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
@@ -3780,10 +3780,10 @@ CK_RV SoftHSM::MacSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechani
 		algo = MacAlgo::CMAC_AES;
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 	MacAlgorithm* mac = CryptoFactory::i()->getMacAlgorithm(algo);
-	if (mac == NULL) return CKR_ARGUMENTS_BAD;
+	if (mac == NULL) return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* privkey = new SymmetricKey();
 
@@ -3810,7 +3810,7 @@ CK_RV SoftHSM::MacSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechani
 	{
 		mac->recycleKey(privkey);
 		CryptoFactory::i()->recycleMacAlgorithm(mac);
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	session->setOpType(SESSION_OP_SIGN);
@@ -3863,7 +3863,7 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_KEY_FUNCTION_NOT_PERMITTED; //return CKR_ARGUMENTS_BAD;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED; //return CKR_MECHANISM_INVALID;
 
 	// Get the asymmetric algorithm matching the mechanism
 	AsymMech::Type mechanism = AsymMech::Unknown;
@@ -3885,7 +3885,7 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 	if (isSM2)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
-		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 		privateKey = asymCrypto->newPrivateKey();
 		if (privateKey == NULL)
@@ -4348,7 +4348,7 @@ CK_RV SoftHSM::MacVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Get key info
 	CK_KEY_TYPE keyType = key->getUnsignedLongValue(CKA_KEY_TYPE, CKK_VENDOR_DEFINED);
@@ -4417,10 +4417,10 @@ CK_RV SoftHSM::MacVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 		algo = MacAlgo::CMAC_AES;
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 	MacAlgorithm* mac = CryptoFactory::i()->getMacAlgorithm(algo);
-	if (mac == NULL) return CKR_ARGUMENTS_BAD;
+	if (mac == NULL) return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* pubkey = new SymmetricKey();
 
@@ -4447,7 +4447,7 @@ CK_RV SoftHSM::MacVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 	{
 		mac->recycleKey(pubkey);
 		CryptoFactory::i()->recycleMacAlgorithm(mac);
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	session->setOpType(SESSION_OP_VERIFY);
@@ -4500,7 +4500,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_ARGUMENTS_BAD;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_MECHANISM_INVALID;
 
 	// Get the asymmetric algorithm matching the mechanism
 	AsymMech::Type mechanism = AsymMech::Unknown;
@@ -4687,7 +4687,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 		break;
 
 	default:
-		return CKR_GENERAL_ERROR; //return CKR_ARGUMENTS_BAD;
+		return CKR_GENERAL_ERROR; //return CKR_MECHANISM_INVALID;
 	}
 
 	AsymmetricAlgorithm* asymCrypto = NULL;
@@ -4695,7 +4695,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	if (isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::RSA);
-		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
@@ -4714,7 +4714,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	else if (isECDSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::SM2);
-		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+		if (asymCrypto == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
@@ -4735,7 +4735,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	{
 #ifdef WITH_GOST
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::GOST);
-		if (asymCrypto == NULL) return CKR_ARGUMENTS_BAD;
+		if (asymCrypto == NULL) return CKR_MECHANISM_INVALID;
 
 		publicKey = asymCrypto->newPublicKey();
 		if (publicKey == NULL)
@@ -4751,7 +4751,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 			return CKR_GENERAL_ERROR;
 		}
 #else
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 #endif
 	}
 
@@ -4760,7 +4760,7 @@ CK_RV SoftHSM::AsymVerifyInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMech
 	{
 		asymCrypto->recyclePublicKey(publicKey);
 		CryptoFactory::i()->recycleAsymmetricAlgorithm(asymCrypto);
-		return CKR_OPERATION_NOT_INITIALIZED;//return CKR_ARGUMENTS_BAD;
+		return CKR_OPERATION_NOT_INITIALIZED;//return CKR_MECHANISM_INVALID;
 	}
 
 	session->setOpType(SESSION_OP_VERIFY);
@@ -5196,7 +5196,7 @@ CK_RV SoftHSM::C_GenerateKey(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMecha
 		keyType = CKK_GENERIC_SECRET;
 		break;
 	default:
-		return CKR_ATTRIBUTE_VALUE_INVALID;//return CKR_ARGUMENTS_BAD;
+		return CKR_ATTRIBUTE_VALUE_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Extract information from the template that is needed to create the object.
@@ -5334,7 +5334,7 @@ CK_RV SoftHSM::C_GenerateKeyPair
 		keyType = CKK_IBM_SM2;
 		break;
 	default:
-		return CKR_ATTRIBUTE_VALUE_INVALID; //return CKR_ARGUMENTS_BAD;
+		return CKR_ATTRIBUTE_VALUE_INVALID; //return CKR_MECHANISM_INVALID;
 	}
 	CK_CERTIFICATE_TYPE dummy;
 
@@ -5523,10 +5523,10 @@ CK_RV SoftHSM::WrapKeySym
 		algo = SymAlgo::DES3;
 		break;
 	default:
-		return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+		return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_GENERAL_ERROR; //return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKR_GENERAL_ERROR; //return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* wrappingkey = new SymmetricKey();
 
@@ -5559,7 +5559,7 @@ CK_RV SoftHSM::WrapKeySym
 		{
 			cipher->recycleKey(wrappingkey);
 			CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-			return CKR_ARGUMENTS_BAD;
+			return CKR_MECHANISM_INVALID;
 		}
 		if (!cipher->encryptUpdate(keydata, wrapped))
 		{
@@ -5618,7 +5618,7 @@ CK_RV SoftHSM::WrapKeyAsym
 		break;
 
 	default:
-		return CKR_KEY_SIZE_RANGE;//return CKR_ARGUMENTS_BAD;
+		return CKR_KEY_SIZE_RANGE;//return CKR_MECHANISM_INVALID;
 	}
 
 	switch (pMechanism->mechanism) {
@@ -5638,11 +5638,11 @@ CK_RV SoftHSM::WrapKeyAsym
 		break;
 
 	default:
-		return CKR_HOST_MEMORY;//return CKR_ARGUMENTS_BAD;
+		return CKR_HOST_MEMORY;//return CKR_MECHANISM_INVALID;
 	}
 
 	AsymmetricAlgorithm* cipher = CryptoFactory::i()->getAsymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKM_RSA_PKCS_OAEP; //return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKM_RSA_PKCS_OAEP; //return CKR_MECHANISM_INVALID;
 
 	PublicKey* publicKey = cipher->newPublicKey();
 	if (publicKey == NULL)
@@ -5663,7 +5663,7 @@ CK_RV SoftHSM::WrapKeyAsym
 		break;
 
 	default:
-		return CKR_ARGUMENTS_BAD;//return CKR_ARGUMENTS_BAD;
+		return CKR_ARGUMENTS_BAD;//return CKR_MECHANISM_INVALID;
 	}
 	// Wrap the key
 	if (!cipher->wrapKey(publicKey, keydata, wrapped, mech))
@@ -5727,7 +5727,7 @@ CK_RV SoftHSM::C_WrapKey
 			return CKR_ARGUMENTS_BAD;
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD; //return CKR_ARGUMENTS_BAD;
+		return CKR_ARGUMENTS_BAD; //return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the token
@@ -5774,7 +5774,7 @@ CK_RV SoftHSM::C_WrapKey
 
 	// Check if the specified mechanism is allowed for the wrapping key
 	if (!isMechanismPermitted(wrapKey, pMechanism))
-		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_ARGUMENTS_BAD;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_MECHANISM_INVALID;
 
 	// Check the to be wrapped key handle.
 	OSObject *key = (OSObject *)handleManager->getObject(hKey);
@@ -5964,10 +5964,10 @@ CK_RV SoftHSM::UnwrapKeySym
 		break;
 #endif
 	default:
-		return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+		return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 	}
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* unwrappingkey = new SymmetricKey();
 
@@ -6015,10 +6015,10 @@ CK_RV SoftHSM::UnwrapKeyAsym
 		break;
 
 	default:
-		return CKR_HOST_MEMORY;// return CKR_ARGUMENTS_BAD;
+		return CKR_HOST_MEMORY;// return CKR_MECHANISM_INVALID;
 	}
 	AsymmetricAlgorithm* cipher = CryptoFactory::i()->getAsymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_GENERAL_ERROR;//return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKR_GENERAL_ERROR;//return CKR_MECHANISM_INVALID;
 
 	PrivateKey* unwrappingkey = cipher->newPrivateKey();
 	if (unwrappingkey == NULL)
@@ -6039,7 +6039,7 @@ CK_RV SoftHSM::UnwrapKeyAsym
 		break;
 
 	default:
-		return CKR_CRYPTOKI_NOT_INITIALIZED;//return CKR_ARGUMENTS_BAD;
+		return CKR_CRYPTOKI_NOT_INITIALIZED;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Unwrap the key
@@ -6109,7 +6109,7 @@ CK_RV SoftHSM::C_UnwrapKey
 		break;
 
 	default:
-		return CKR_UNWRAPPING_KEY_HANDLE_INVALID;//return CKR_ARGUMENTS_BAD;
+		return CKR_UNWRAPPING_KEY_HANDLE_INVALID;//return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the token
@@ -6151,7 +6151,7 @@ CK_RV SoftHSM::C_UnwrapKey
 
 	// Check if the specified mechanism is allowed for the unwrap key
 	if (!isMechanismPermitted(unwrapKey, pMechanism))
-		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_ARGUMENTS_BAD;
+		return CKR_KEY_FUNCTION_NOT_PERMITTED;//return CKR_MECHANISM_INVALID;
 
 	// Extract information from the template that is needed to create the object.
 	CK_OBJECT_CLASS objClass;
@@ -6393,7 +6393,7 @@ CK_RV SoftHSM::C_DeriveKey
 
 	default:
 		ERROR_MSG("Invalid mechanism");
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the token
@@ -6423,7 +6423,7 @@ CK_RV SoftHSM::C_DeriveKey
 
 	// Check if the specified mechanism is allowed for the key
 	if (!isMechanismPermitted(key, pMechanism))
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Extract information from the template that is needed to create the object.
 	CK_OBJECT_CLASS objClass;
@@ -6527,7 +6527,7 @@ CK_RV SoftHSM::C_DeriveKey
 		return this->deriveSymmetric(hSession, pMechanism, hBaseKey, pTemplate, ulCount, phKey, keyType, isOnToken, isPrivate);
 	}
 
-	return CKR_KEY_TYPE_INCONSISTENT;//return CKR_ARGUMENTS_BAD;
+	return CKR_KEY_TYPE_INCONSISTENT;// return CKR_MECHANISM_INVALID;
 }
 
 // Seed the random number generator with new data
@@ -9792,7 +9792,7 @@ CK_RV SoftHSM::deriveDH
 	// Get the DH algorithm handler
 	AsymmetricAlgorithm* dh = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::DH);
 	if (dh == NULL)
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Get the keys
 	PrivateKey* privateKey = dh->newPrivateKey();
@@ -10126,7 +10126,7 @@ CK_RV SoftHSM::deriveECDH
 	// Get the ECDH algorithm handler
 	AsymmetricAlgorithm* ecdh = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::ECDH);
 	if (ecdh == NULL)
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Get the keys
 	PrivateKey* privateKey = ecdh->newPrivateKey();
@@ -10482,7 +10482,7 @@ CK_RV SoftHSM::deriveEDDSA
 	// Get the EDDSA algorithm handler
 	AsymmetricAlgorithm* eddsa = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::EDDSA);
 	if (eddsa == NULL)
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 
 	// Get the keys
 	PrivateKey* privateKey = eddsa->newPrivateKey();
@@ -10955,7 +10955,7 @@ CK_RV SoftHSM::deriveSymmetric
 			16);
 		break;
 	default:
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	// Check the key handle
@@ -10963,7 +10963,7 @@ CK_RV SoftHSM::deriveSymmetric
 	if (baseKey == NULL_PTR || !baseKey->isValid()) return CKR_OBJECT_HANDLE_INVALID;
 
 	SymmetricAlgorithm* cipher = CryptoFactory::i()->getSymmetricAlgorithm(algo);
-	if (cipher == NULL) return CKR_ARGUMENTS_BAD;
+	if (cipher == NULL) return CKR_MECHANISM_INVALID;
 
 	SymmetricKey* secretkey = new SymmetricKey();
 
@@ -10982,7 +10982,7 @@ CK_RV SoftHSM::deriveSymmetric
 	{
 		cipher->recycleKey(secretkey);
 		CryptoFactory::i()->recycleSymmetricAlgorithm(cipher);
-		return CKR_ARGUMENTS_BAD;
+		return CKR_MECHANISM_INVALID;
 	}
 
 	// Get the data
