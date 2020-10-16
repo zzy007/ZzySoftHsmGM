@@ -34,17 +34,17 @@
 #define _SOFTHSM_V2_OSSLCOMP_H
 
 #include "config.h"
-#include <gmssl/opensslv.h>
+#include <openssl/opensslv.h>
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 
-#include <gmssl/evp.h>
-#include <gmssl/hmac.h>
-#include <gmssl/dh.h>
-#include <gmssl/dsa.h>
-#include <gmssl/ecdsa.h>
-#include <gmssl/sm2.h>
-#include <gmssl/rsa.h>
+#include <openssl/evp.h>
+#include <openssl/hmac.h>
+#include <openssl/dh.h>
+#include <openssl/dsa.h>
+#include <openssl/ecdsa.h>
+#include <openssl/sm2.h>
+#include <openssl/rsa.h>
 
 // EVP digest routines
 EVP_MD_CTX *EVP_MD_CTX_new(void);

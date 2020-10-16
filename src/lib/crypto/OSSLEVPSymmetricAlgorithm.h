@@ -39,7 +39,7 @@
 #include <openssl/evp.h>
 #include <internal/conf.h>
 #else
-#include <gmssl/evp.h>
+// #include <gmssl/evp.h>
 #endif
 #include <string>
 #include "config.h"

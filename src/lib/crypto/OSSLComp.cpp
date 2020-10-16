@@ -32,7 +32,7 @@
 
 #include "config.h"
 #include "OSSLComp.h"
-#include <gmssl/opensslv.h>
+#include <openssl/opensslv.h>
 
 #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
 
