@@ -44,11 +44,7 @@
 #include "ObjectStoreToken.h"
 #include "OSPathSep.h"
 
-#if defined(WITH_OPENSSL)
 #include "OSSLCryptoFactory.h"
-#else
-#include "BotanCryptoFactory.h"
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -593,15 +589,6 @@ bool initSoftHSM()
 		fprintf(stderr, "ERROR: Could not initiate CryptoFactory.\n");
 		return false;
 	}
-
-#ifdef WITH_FIPS
-	// Check the FIPS status
-	if (!CryptoFactory::i()->getFipsSelfTestStatus())
-	{
-		fprintf(stderr, "ERROR: FIPS self test failed.\n");
-		return false;
-	}
-#endif
 
 	// Load the configuration
 	if (!Configuration::i()->reload(SimpleConfigLoader::i()))

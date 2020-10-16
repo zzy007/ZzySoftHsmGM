@@ -307,7 +307,7 @@ void InfoTests::testGetMechanismInfo()
 	CPPUNIT_ASSERT(rv == CKR_SLOT_ID_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_GetMechanismInfo(m_initializedTokenSlotID, CKM_VENDOR_DEFINED, &info) );
-	CPPUNIT_ASSERT(rv == CKR_SLOT_ID_INVALID);
+	CPPUNIT_ASSERT(rv == CKR_MECHANISM_INVALID);
 
 	for (unsigned int i = 0; i < ulMechCount; i++)
 	{
