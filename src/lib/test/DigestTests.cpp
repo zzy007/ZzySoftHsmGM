@@ -64,7 +64,7 @@ void DigestTests::testDigestInit()
 	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	rv = CRYPTOKI_F_PTR( C_DigestInit(hSession, &mechanism) );
-	CPPUNIT_ASSERT(rv == CKR_MECHANISM_INVALID);
+	CPPUNIT_ASSERT(rv == CKR_SESSION_HANDLE_INVALID);
 
 	mechanism.mechanism = CKM_SHA512;
 	rv = CRYPTOKI_F_PTR( C_DigestInit(hSession, &mechanism) );
