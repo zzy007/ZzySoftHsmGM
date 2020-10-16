@@ -33,7 +33,13 @@
 #ifndef _SOFTHSM_V2_OSSLEVPSYMMETRICALGORITHM_H
 #define _SOFTHSM_V2_OSSLEVPSYMMETRICALGORITHM_H
 
+#define sunqian
+
+#ifdef sunqian
+#include <gmssl/include/openssl/evp.h>
+#else
 #include <gmssl/evp.h>
+#endif
 #include <string>
 #include "config.h"
 #include "SymmetricKey.h"
