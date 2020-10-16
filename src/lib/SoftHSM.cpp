@@ -5294,7 +5294,7 @@ CK_RV SoftHSM::C_GenerateKeyPair
 {
 	if (!isInitialised) return CKR_CRYPTOKI_NOT_INITIALIZED;
 
-	if (pMechanism == NULL_PTR) return CKR_ARGUMENTS_BAD;
+	if (pMechanism != NULL_PTR) return CKR_ARGUMENTS_BAD;
 	if (pPublicKeyTemplate == NULL_PTR && ulPublicKeyAttributeCount != 0) return CKR_ARGUMENTS_BAD;
 	if (pPrivateKeyTemplate == NULL_PTR && ulPrivateKeyAttributeCount != 0) return CKR_ARGUMENTS_BAD;
 	if (phPublicKey == NULL_PTR) return CKR_ARGUMENTS_BAD;
