@@ -14,6 +14,6 @@ fi &&
 mkdir -p build &&
 cd build &&
 ../configure --prefix=${PREFIX} \
-	--with-crypto-backend=botan \
-	--with-botan=/usr/local \
+	--with-crypto-backend=openssl \
+	--with-openssl=/usr/local \
 	$@
