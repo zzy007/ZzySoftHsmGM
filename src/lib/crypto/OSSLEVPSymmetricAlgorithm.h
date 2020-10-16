@@ -36,7 +36,8 @@
 #define sunqian
 
 #ifdef sunqian
-#include <gmssl/include/openssl/evp.h>
+#include <openssl/evp.h>
+#include <internal/conf.h>
 #else
 #include <gmssl/evp.h>
 #endif
