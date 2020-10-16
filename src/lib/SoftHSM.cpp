@@ -90,9 +90,11 @@
 
 std::unique_ptr<MutexFactory> MutexFactory::instance(nullptr);
 std::unique_ptr<SecureMemoryRegistry> SecureMemoryRegistry::instance(nullptr);
-
+#if defined(WITH_OPENSSL)
 std::unique_ptr<OSSLCryptoFactory> OSSLCryptoFactory::instance(nullptr);
-
+#else
+std::unique_ptr<BotanCryptoFactory> BotanCryptoFactory::instance(nullptr);
+#endif
 std::unique_ptr<SoftHSM> SoftHSM::instance(nullptr);
 
 #else
@@ -100,7 +102,6 @@ std::unique_ptr<SoftHSM> SoftHSM::instance(nullptr);
 std::auto_ptr<MutexFactory> MutexFactory::instance(NULL);
 std::auto_ptr<SecureMemoryRegistry> SecureMemoryRegistry::instance(NULL);
 std::auto_ptr<OSSLCryptoFactory> OSSLCryptoFactory::instance(NULL);
-
 std::auto_ptr<SoftHSM> SoftHSM::instance(NULL);
 
 #endif
@@ -759,13 +760,11 @@ void SoftHSM::prepareSupportedMecahnisms(std::map<std::string, CK_MECHANISM_TYPE
 	t["CKM_DH_PKCS_KEY_PAIR_GEN"] = CKM_DH_PKCS_KEY_PAIR_GEN;
 	t["CKM_DH_PKCS_PARAMETER_GEN"] = CKM_DH_PKCS_PARAMETER_GEN;
 	t["CKM_DH_PKCS_DERIVE"] = CKM_DH_PKCS_DERIVE;
-#ifdef WITH_ECC
 	t["CKM_EC_KEY_PAIR_GEN"] = CKM_EC_KEY_PAIR_GEN;
 	t["CKM_ECDSA"] = CKM_ECDSA;
 	t["CKM_IBM_SM2_KEY_PAIR_GEN"] = CKM_IBM_SM2_KEY_PAIR_GEN;
 	t["CKM_IBM_SM2_SM3"] = CKM_IBM_SM2_SM3;
 	t["CKM_IBM_SM2"] = CKM_IBM_SM2;
-#endif
 #if defined(WITH_ECC) || defined(WITH_EDDSA)
 	t["CKM_ECDH1_DERIVE"] = CKM_ECDH1_DERIVE;
 #endif
@@ -873,6 +872,7 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 
 
 	unsigned long ecdhMinSize = 0, ecdhMaxSize = 0;
+	unsigned long sm2MinSize = 0, sm2MaxSize = 0;
 	unsigned long eddsaMinSize = 0, eddsaMaxSize = 0;
 
 	if (!isInitialised) return CKR_CRYPTOKI_NOT_INITIALIZED;
@@ -5294,7 +5294,8 @@ CK_RV SoftHSM::C_GenerateKeyPair
 {
 	if (!isInitialised) return CKR_CRYPTOKI_NOT_INITIALIZED;
 
-	if (pMechanism != NULL_PTR) return CKR_ARGUMENTS_BAD;
+	if (pMechanism == NULL_PTR) return CKR_ARGUMENTS_BAD;
+
 	if (pPublicKeyTemplate == NULL_PTR && ulPublicKeyAttributeCount != 0) return CKR_ARGUMENTS_BAD;
 	if (pPrivateKeyTemplate == NULL_PTR && ulPrivateKeyAttributeCount != 0) return CKR_ARGUMENTS_BAD;
 	if (phPublicKey == NULL_PTR) return CKR_ARGUMENTS_BAD;
@@ -5321,7 +5322,7 @@ CK_RV SoftHSM::C_GenerateKeyPair
 		keyType = CKK_EC;
 		break;
 	case CKM_IBM_SM2_KEY_PAIR_GEN:
-		return CKR_TEMPLATE_INCONSISTENT;
+		return CKR_ATTRIBUTE_VALUE_INVALID;
 		// pkcs11.h: #define CKK_IBM_SM2 (0x80050002UL)
 		keyType = CKK_IBM_SM2;
 		break;
@@ -11180,7 +11181,7 @@ CK_RV SoftHSM::CreateObject(CK_SESSION_HANDLE hSession, CK_ATTRIBUTE_PTR pTempla
 
 	// Extract information from the template that is needed to create the object.
 	CK_OBJECT_CLASS objClass = CKO_DATA;
-	CK_KEY_TYPE keyType = CKK_RSA;
+	CK_KEY_TYPE keyType = CKK_IBM_SM2; //CKK_RSA;
 	CK_CERTIFICATE_TYPE certType = CKC_X_509;
 	CK_BBOOL isOnToken = CK_FALSE;
 	CK_BBOOL isPrivate = CK_TRUE;

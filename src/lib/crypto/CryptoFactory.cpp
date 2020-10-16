@@ -35,7 +35,6 @@
 #include "config.h"
 #include "CryptoFactory.h"
 
-#if defined(WITH_OPENSSL)
 
 #include "OSSLCryptoFactory.h"
 
@@ -51,27 +50,6 @@ void CryptoFactory::reset()
 	OSSLCryptoFactory::reset();
 }
 
-#elif defined(WITH_BOTAN)
-
-#include "BotanCryptoFactory.h"
-
-// Return the one-and-only instance
-CryptoFactory* CryptoFactory::i()
-{
-	return BotanCryptoFactory::i();
-}
-
-// This will destroy the one-and-only instance.
-void CryptoFactory::reset()
-{
-	BotanCryptoFactory::reset();
-}
-
-#else
-
-#error "You must configure a cryptographic library to use"
-
-#endif
 
 // Recycle a symmetric algorithm instance -- override this function in the derived
 // class if you need to perform specific clean-up

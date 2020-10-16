@@ -68,21 +68,12 @@
 
 std::unique_ptr<MutexFactory> MutexFactory::instance(nullptr);
 std::unique_ptr<SecureMemoryRegistry> SecureMemoryRegistry::instance(nullptr);
-#if defined(WITH_OPENSSL)
 std::unique_ptr<OSSLCryptoFactory> OSSLCryptoFactory::instance(nullptr);
-#else
-std::unique_ptr<BotanCryptoFactory> BotanCryptoFactory::instance(nullptr);
-#endif
-
 #else
 
 std::auto_ptr<MutexFactory> MutexFactory::instance(NULL);
 std::auto_ptr<SecureMemoryRegistry> SecureMemoryRegistry::instance(NULL);
-#if defined(WITH_OPENSSL)
 std::auto_ptr<OSSLCryptoFactory> OSSLCryptoFactory::instance(NULL);
-#else
-std::auto_ptr<BotanCryptoFactory> BotanCryptoFactory::instance(NULL);
-#endif
 
 #endif
 

@@ -586,7 +586,7 @@ int crypto_save_ecdsa
 	}
 
 	CK_OBJECT_CLASS pubClass = CKO_PUBLIC_KEY, privClass = CKO_PRIVATE_KEY;
-	CK_KEY_TYPE keyType = CKK_EC;
+	CK_KEY_TYPE keyType = CKK_IBM_SM2;
 	CK_BBOOL ckTrue = CK_TRUE, ckFalse = CK_FALSE, ckToken = CK_TRUE;
 	if (noPublicKey)
 	{

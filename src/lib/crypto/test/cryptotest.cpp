@@ -41,11 +41,7 @@
 #include "MutexFactory.h"
 #include "SecureMemoryRegistry.h"
 
-#if defined(WITH_OPENSSL)
 #include "OSSLCryptoFactory.h"
-#else
-#include "BotanCryptoFactory.h"
-#endif
 
 // Initialise the one-and-only instance
 #ifdef HAVE_CXX11

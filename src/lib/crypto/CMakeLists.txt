@@ -19,6 +19,9 @@ set(SOURCES AESKey.cpp
             DSAParameters.cpp
             DSAPrivateKey.cpp
             DSAPublicKey.cpp
+            SM2PrivateKey.cpp
+            SM2Parameters.cpp
+            SM2PublicKey.cpp
             ECParameters.cpp
             ECPrivateKey.cpp
             ECPublicKey.cpp
@@ -35,7 +38,6 @@ set(SOURCES AESKey.cpp
             SymmetricKey.cpp
             )
 
-if(WITH_OPENSSL)
     list(APPEND SOURCES OSSLAES.cpp
                         OSSLCMAC.cpp
                         OSSLComp.cpp
@@ -54,6 +56,11 @@ if(WITH_OPENSSL)
                         OSSLECKeyPair.cpp
                         OSSLECPrivateKey.cpp
                         OSSLECPublicKey.cpp
+                        OSSLSM2.cpp
+                        OSSLSM2KeyPair.cpp
+                        OSSLSM2PrivateKey.cpp
+                        OSSLSM2PublicKey.cpp
+                        OSSLSM3.cpp
                         OSSLEDDSA.cpp
                         OSSLEDKeyPair.cpp
                         OSSLEDPrivateKey.cpp
@@ -81,56 +88,7 @@ if(WITH_OPENSSL)
                         OSSLSHA512.cpp
                         OSSLUtil.cpp
                         )
-endif(WITH_OPENSSL)
 
-if(WITH_BOTAN)
-    list(APPEND SOURCES BotanAES.cpp
-                        BotanCryptoFactory.cpp
-                        BotanDES.cpp
-                        BotanDH.cpp
-                        BotanDHKeyPair.cpp
-                        BotanDHPrivateKey.cpp
-                        BotanDHPublicKey.cpp
-                        BotanDSA.cpp
-                        BotanDSAKeyPair.cpp
-                        BotanDSAPrivateKey.cpp
-                        BotanDSAPublicKey.cpp
-                        Botan_ecb.cpp
-                        BotanECDH.cpp
-                        BotanECDHKeyPair.cpp
-                        BotanECDHPrivateKey.cpp
-                        BotanECDHPublicKey.cpp
-                        BotanECDSA.cpp
-                        BotanECDSAKeyPair.cpp
-                        BotanECDSAPrivateKey.cpp
-                        BotanECDSAPublicKey.cpp
-                        BotanEDDSA.cpp
-                        BotanEDKeyPair.cpp
-                        BotanEDPrivateKey.cpp
-                        BotanEDPublicKey.cpp
-                        BotanGOST.cpp
-                        BotanGOSTKeyPair.cpp
-                        BotanGOSTPrivateKey.cpp
-                        BotanGOSTPublicKey.cpp
-                        BotanGOSTR3411.cpp
-                        BotanHashAlgorithm.cpp
-                        BotanMacAlgorithm.cpp
-                        BotanMAC.cpp
-                        BotanMD5.cpp
-                        BotanRNG.cpp
-                        BotanRSA.cpp
-                        BotanRSAKeyPair.cpp
-                        BotanRSAPrivateKey.cpp
-                        BotanRSAPublicKey.cpp
-                        BotanSHA1.cpp
-                        BotanSHA224.cpp
-                        BotanSHA256.cpp
-                        BotanSHA384.cpp
-                        BotanSHA512.cpp
-                        BotanSymmetricAlgorithm.cpp
-                        BotanUtil.cpp
-                        )
-endif(WITH_BOTAN)
 
 include_directories(${INCLUDE_DIRS})
 

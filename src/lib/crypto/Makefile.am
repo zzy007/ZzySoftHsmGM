@@ -22,6 +22,9 @@ libsofthsm_crypto_la_SOURCES =	AESKey.cpp \
 				ECParameters.cpp \
 				ECPublicKey.cpp \
 				ECPrivateKey.cpp \
+				SM2Parameters.cpp \
+				SM2PublicKey.cpp \
+				SM2PrivateKey.cpp \
 				EDPublicKey.cpp \
 				EDPrivateKey.cpp \
 				GOSTPublicKey.cpp \
@@ -42,7 +45,6 @@ EXTRA_DIST =			$(srcdir)/CMakeLists.txt \
 				$(srcdir)/*.cpp
 
 # Compile with support of OpenSSL
-if WITH_OPENSSL
 libsofthsm_crypto_la_SOURCES +=	OSSLAES.cpp \
 				OSSLComp.cpp \
 				OSSLCryptoFactory.cpp \
@@ -60,6 +62,11 @@ libsofthsm_crypto_la_SOURCES +=	OSSLAES.cpp \
 				OSSLECKeyPair.cpp \
 				OSSLECPrivateKey.cpp \
 				OSSLECPublicKey.cpp \
+				OSSLSM2.cpp \
+				OSSLSM2KeyPair.cpp \
+				OSSLSM2PrivateKey.cpp \
+				OSSLSM2PublicKey.cpp \
+				OSSLSM3.cpp \
 				OSSLEDDSA.cpp \
 				OSSLEDKeyPair.cpp \
 				OSSLEDPrivateKey.cpp \
@@ -87,53 +94,3 @@ libsofthsm_crypto_la_SOURCES +=	OSSLAES.cpp \
 				OSSLSHA384.cpp \
 				OSSLSHA512.cpp \
 				OSSLUtil.cpp
-endif
-
-# Compile with support of Botan
-if WITH_BOTAN
-libsofthsm_crypto_la_SOURCES +=	BotanAES.cpp \
-				BotanCryptoFactory.cpp \
-				BotanDES.cpp \
-				BotanDH.cpp \
-				BotanDHKeyPair.cpp \
-				BotanDHPrivateKey.cpp \
-				BotanDHPublicKey.cpp \
-				BotanDSA.cpp \
-				BotanDSAKeyPair.cpp \
-				BotanDSAPrivateKey.cpp \
-				BotanDSAPublicKey.cpp \
-				BotanECDH.cpp \
-				BotanECDHKeyPair.cpp \
-				BotanECDHPrivateKey.cpp \
-				BotanECDHPublicKey.cpp \
-				BotanECDSA.cpp \
-				BotanECDSAKeyPair.cpp \
-				BotanECDSAPrivateKey.cpp \
-				BotanECDSAPublicKey.cpp \
-				BotanEDDSA.cpp \
-				BotanEDKeyPair.cpp \
-				BotanEDPrivateKey.cpp \
-				BotanEDPublicKey.cpp \
-				BotanGOST.cpp \
-				BotanGOSTKeyPair.cpp \
-				BotanGOSTPrivateKey.cpp \
-				BotanGOSTPublicKey.cpp \
-				BotanGOSTR3411.cpp \
-				BotanHashAlgorithm.cpp \
-				BotanMAC.cpp \
-				BotanMacAlgorithm.cpp \
-				BotanMD5.cpp \
-				BotanRNG.cpp \
-				BotanRSA.cpp \
-				BotanRSAKeyPair.cpp \
-				BotanRSAPrivateKey.cpp \
-				BotanRSAPublicKey.cpp \
-				BotanSHA1.cpp \
-				BotanSHA224.cpp \
-				BotanSHA256.cpp \
-				BotanSHA384.cpp \
-				BotanSHA512.cpp \
-				BotanSymmetricAlgorithm.cpp \
-				BotanUtil.cpp \
-				Botan_ecb.cpp
-endif
