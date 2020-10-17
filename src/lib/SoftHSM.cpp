@@ -4013,9 +4013,9 @@ static CK_RV AsymSign(Session* session, CK_BYTE_PTR pData, CK_ULONG ulDataLen, C
 	ByteString data;
 
 	// We must allow input length <= k and therfore need to prepend the data with zeroes.
-	if (mechanism == AsymMech::SM2) {
-		data.wipe(size - ulDataLen);
-	}
+	//if (mechanism == AsymMech::SM2) {
+	//	data.wipe(size - ulDataLen);
+	//}
 
 	data += ByteString(pData, ulDataLen);
 	ByteString signature;
