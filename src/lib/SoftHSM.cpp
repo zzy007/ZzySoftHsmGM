@@ -5309,24 +5309,18 @@ CK_RV SoftHSM::C_GenerateKeyPair
 	switch (pMechanism->mechanism)
 	{
 	case CKM_RSA_PKCS_KEY_PAIR_GEN:
-		printf("===> Function C_GenerateKeyPair, CKM_RSA_PKCS_KEY_PAIR_GEN\n");
 		keyType = CKK_RSA;
 		break;
 	case CKM_DSA_KEY_PAIR_GEN:
-	    printf("===> Function C_GenerateKeyPair, CKM_DSA_KEY_PAIR_GEN\n");
 		keyType = CKK_DSA;
 		break;
 	case CKM_DH_PKCS_KEY_PAIR_GEN:
-		printf("===> Function C_GenerateKeyPair, CKM_DH_PKCS_KEY_PAIR_GEN\n");
 		keyType = CKK_DH;
 		break;
 	case CKM_EC_KEY_PAIR_GEN:
-		printf("===> Function C_GenerateKeyPair, CKM_EC_KEY_PAIR_GEN\n");
 		keyType = CKK_EC;
 		break;
 	case CKM_IBM_SM2_KEY_PAIR_GEN:
-		printf("===> Function C_GenerateKeyPair, CKM_IBM_SM2_KEY_PAIR_GEN\n");
-		return CKR_ATTRIBUTE_VALUE_INVALID;
 		// pkcs11.h: #define CKK_IBM_SM2 (0x80050002UL)
 		keyType = CKK_IBM_SM2;
 		break;
