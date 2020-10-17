@@ -30,14 +30,13 @@
  OpenSSL Elliptic Curve private key class
  *****************************************************************************/
 
-#ifndef _SOFTHSM_V2_OSSLSM2PRIVATEKEY_H
 #define _SOFTHSM_V2_OSSLSM2PRIVATEKEY_H
 
 #include "config.h"
 #include "SM2PrivateKey.h"
-#include <gmssl/bn.h>
-#include <gmssl/ec.h>
-#include <gmssl/sm2.h>
+#include <openssl/bn.h>
+#include <openssl/ec.h>
+#include <openssl/sm2.h>
 
 class OSSLSM2PrivateKey : public SM2PrivateKey
 {
@@ -80,7 +79,7 @@ public:
 private:
 	// The internal OpenSSL representation
 	EC_KEY* eckey;
+	void createOSSLKey();
 };
 
-#endif // !_SOFTHSM_V2_OSSLECPRIVATEKEY_H
 

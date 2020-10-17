@@ -32,7 +32,7 @@
 
 #include "config.h"
 #include "OSSLSM3.h"
-#include <gmssl/evp.h>
+#include <openssl/evp.h>
 
 int OSSLSM3::getHashSize()
 {

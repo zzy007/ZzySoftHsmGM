@@ -35,7 +35,7 @@
 
 #include "config.h"
 #include "OSSLEVPMacAlgorithm.h"
-#include <gmssl/evp.h>
+#include <openssl/evp.h>
 
 class OSSLHMACMD5 : public OSSLEVPMacAlgorithm
 {

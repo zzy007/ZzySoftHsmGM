@@ -46,6 +46,8 @@
 #include "DSAPrivateKey.h"
 #include "ECPublicKey.h"
 #include "ECPrivateKey.h"
+#include "SM2PublicKey.h"
+#include "SM2PrivateKey.h"
 #include "EDPublicKey.h"
 #include "EDPrivateKey.h"
 #include "DHPublicKey.h"

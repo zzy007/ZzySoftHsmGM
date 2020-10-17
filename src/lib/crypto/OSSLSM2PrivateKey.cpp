@@ -34,8 +34,8 @@
 #include "log.h"
 #include "OSSLSM2PrivateKey.h"
 #include "OSSLUtil.h"
-#include <gmssl/bn.h>
-#include <gmssl/x509.h>
+#include <openssl/bn.h>
+#include <openssl/x509.h>
 
 // Constructors
 OSSLSM2PrivateKey::OSSLSM2PrivateKey()

@@ -39,12 +39,10 @@
 #include "OSSLComp.h"
 #include "OSSLUtil.h"
 #include <algorithm>
-#include <gmssl/sm2.h>
-#include <gmssl/ecdsa.h>
-#include <gmssl/pem.h>
-#include <gmssl/err.h>
-#include <gmssl/fips.h>
-#endif
+#include <openssl/sm2.h>
+#include <openssl/ecdsa.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
 #include <string.h>
 
 // Signing functions
@@ -456,4 +454,3 @@ bool OSSLECDSA::reconstructParameters(AsymmetricParameters** ppParams, ByteStrin
 
 	return true;
 }
-#endif

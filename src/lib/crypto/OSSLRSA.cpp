@@ -40,7 +40,7 @@
 #include <algorithm>
 #include <openssl/rsa.h>
 #include <openssl/pem.h>
-#include <openssl/err.h>
+#include <internal/err.h>
 
 // Constructor
 OSSLRSA::OSSLRSA()

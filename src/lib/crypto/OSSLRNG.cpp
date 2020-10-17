@@ -32,7 +32,7 @@
 
 #include "config.h"
 #include "OSSLRNG.h"
-#include <gmssl/rand.h>
+#include <openssl/rand.h>
 
 // Generate random data
 bool OSSLRNG::generateRandom(ByteString& data, const size_t len)

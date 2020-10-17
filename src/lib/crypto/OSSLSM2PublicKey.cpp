@@ -34,7 +34,7 @@
 #include "log.h"
 #include "OSSLSM2PublicKey.h"
 #include "OSSLUtil.h"
-#include <gmssl/bn.h>
+#include <openssl/bn.h>
 #include <string.h>
 
 // Constructors

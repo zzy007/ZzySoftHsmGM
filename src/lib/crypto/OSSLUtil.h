@@ -35,12 +35,9 @@
 
 #include "config.h"
 #include "ByteString.h"
-#include <gmssl/bn.h>
-#include <gmssl/ec.h>
-#include <gmssl/sm2.h>
-#ifdef WITH_EDDSA
-#include <gmssl/objects.h>
-#endif
+#include <openssl/bn.h>
+#include <openssl/ec.h>
+#include <openssl/sm2.h>
 
 namespace OSSL
 {

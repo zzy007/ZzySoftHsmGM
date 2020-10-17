@@ -34,8 +34,8 @@
 #include "log.h"
 #include "OSSLECPrivateKey.h"
 #include "OSSLUtil.h"
-#include <gmssl/bn.h>
-#include <gmssl/x509.h>
+#include <openssl/bn.h>
+#include <openssl/x509.h>
 
 // Constructors
 OSSLECPrivateKey::OSSLECPrivateKey()

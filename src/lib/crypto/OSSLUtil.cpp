@@ -34,9 +34,9 @@
 #include "log.h"
 #include "DerUtil.h"
 #include "OSSLUtil.h"
-#include <gmssl/asn1.h>
-#include <gmssl/evp.h>
-#include <gmssl/err.h>
+#include <openssl/asn1.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
 
 // Convert an OpenSSL BIGNUM to a ByteString
 ByteString OSSL::bn2ByteString(const BIGNUM* bn)

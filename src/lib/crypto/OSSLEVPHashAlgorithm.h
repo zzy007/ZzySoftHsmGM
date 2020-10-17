@@ -35,7 +35,7 @@
 
 #include "config.h"
 #include "HashAlgorithm.h"
-#include <gmssl/evp.h>
+#include <openssl/evp.h>
 
 class OSSLEVPHashAlgorithm : public HashAlgorithm
 {

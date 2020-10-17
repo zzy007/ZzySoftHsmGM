@@ -35,7 +35,7 @@
 
 #include "config.h"
 #include "OSSLEVPHashAlgorithm.h"
-#include <gmssl/evp.h>
+#include <openssl/evp.h>
 
 class OSSLSM3 : public OSSLEVPHashAlgorithm
 {

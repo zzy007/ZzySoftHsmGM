@@ -35,7 +35,7 @@
 #include "config.h"
 #include "OSSLEVPCMacAlgorithm.h"
 #include "OSSLComp.h"
-#include <gmssl/err.h>
+#include <openssl/err.h>
 
 // Destructor
 OSSLEVPCMacAlgorithm::~OSSLEVPCMacAlgorithm()

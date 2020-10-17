@@ -25,7 +25,7 @@
  */
 
 /*****************************************************************************
- OSSLECDSA.cpp
+ OSSLSM2.cpp
 
  OpenSSL ECDSA asymmetric algorithm implementation
  *****************************************************************************/
@@ -39,11 +39,10 @@
 #include "OSSLComp.h"
 #include "OSSLUtil.h"
 #include <algorithm>
-#include <gmssl/sm2.h>
-#include <gmssl/ecdsa.h>
-#include <gmssl/pem.h>
-#include <gmssl/err.h>
-#include <gmssl/fips.h>
+#include <openssl/sm2.h>
+#include <openssl/ecdsa.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
 #include <string.h>
 
 // Signing functions
@@ -248,7 +247,7 @@ bool OSSLSM2::decrypt(PrivateKey* /*privateKey*/, const ByteString& /*encryptedD
 }
 
 // Key factory
-// ppKeyPairÊÇ´«ÈëµÄ¿ÕÖµ£¬parametersÊÇÍÖÔ²ÇúÏß²ÎÊý£¬´Ë·½·¨½«°´ÕÕparametersÉú³ÉppKeyPair
+// ppKeyPairï¿½Ç´ï¿½ï¿½ï¿½Ä¿ï¿½Öµï¿½ï¿½parametersï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ß²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½parametersï¿½ï¿½ï¿½ï¿½ppKeyPair
 bool OSSLSM2::generateKeyPair(AsymmetricKeyPair** ppKeyPair, AsymmetricParameters* parameters, RNG* /*rng = NULL */)
 {
 	// Check parameters
@@ -265,14 +264,14 @@ bool OSSLSM2::generateKeyPair(AsymmetricKeyPair** ppKeyPair, AsymmetricParameter
 		return false;
 	}
 
-	SM2Parameters* params = (SM2Parameters*) parameters;
+	//SM2Parameters* params = (SM2Parameters*) parameters;
 
 	// Generate the key-pair
 	//EC_KEY* eckey = EC_KEY_new();
 	//from gmssl sm2.c:275
-	EC_KEY* eckey = EC_KEY_new_by_curve_name(1121)
+	EC_KEY* eckey = EC_KEY_new_by_curve_name(1121);
 	//if (eckey == NULL)
-	{
+	//{
 	//	ERROR_MSG("Failed to instantiate OpenSSL ECDSA object");
 
 	//	return false;
@@ -424,7 +423,8 @@ bool OSSLSM2::reconstructParameters(AsymmetricParameters** ppParams, ByteString&
 		return false;
 	}
 
-	ECParameters* params = new ECParameters();
+	SM2Parameters* params = new SM2Parameters();
+
 
 	if (!params->deserialise(serialisedData))
 	{

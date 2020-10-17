@@ -61,13 +61,13 @@
 
 #include <algorithm>
 #include <string.h>
-#include <gmssl/opensslv.h>
-#include <gmssl/ssl.h>
-#include <gmssl/crypto.h>
-#include <gmssl/err.h>
-#include <gmssl/rand.h>
+#include <openssl/opensslv.h>
+#include <openssl/ssl.h>
+#include <openssl/crypto.h>
+#include <openssl/err.h>
+#include <openssl/rand.h>
 #ifdef WITH_GOST
-#include <gmssl/objects.h>
+#include <opensl/objects.h>
 #endif
 
 #ifdef WITH_FIPS

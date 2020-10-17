@@ -45,13 +45,13 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include <gmssl/crypto.h>
-#include <gmssl/evp.h>
-#include <gmssl/hmac.h>
-#include <gmssl/dh.h>
-#include <gmssl/dsa.h>
-#include <gmssl/ecdsa.h>
-#include <gmssl/sm2.h>
+#include <openssl/crypto.h>
+#include <openssl/evp.h>
+#include <openssl/hmac.h>
+#include <openssl/dh.h>
+#include <openssl/dsa.h>
+#include <openssl/ecdsa.h>
+#include <openssl/sm2.h>
 #include <openssl/rsa.h>
 
 #include <string.h>

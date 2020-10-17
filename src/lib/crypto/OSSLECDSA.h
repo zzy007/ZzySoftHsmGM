@@ -35,7 +35,7 @@
 
 #include "config.h"
 #include "AsymmetricAlgorithm.h"
-#include <gmssl/sm2.h>
+#include <openssl/sm2.h>
 
 class OSSLECDSA : public AsymmetricAlgorithm
 {

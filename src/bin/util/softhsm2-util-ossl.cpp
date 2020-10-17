@@ -42,11 +42,11 @@
 #include <iostream>
 #include <fstream>
 
-#include <gmssl/pem.h>
-#include <gmssl/evp.h>
-#include <gmssl/err.h>
-#include <gmssl/pkcs12.h>
-#include <gmssl/objects.h>
+#include <openssl/pem.h>
+#include <openssl/evp.h>
+#include <internal/err.h>
+#include <openssl/pkcs12.h>
+#include <openssl/objects.h>
 
 // Init OpenSSL
 void crypto_init()

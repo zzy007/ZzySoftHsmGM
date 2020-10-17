@@ -41,7 +41,7 @@
 #include "MacAlgorithm.h"
 #include "RNG.h"
 #include <memory>
-#include <openssl/conf.h>
+#include <internal/conf.h>
 #include <openssl/engine.h>
 
 class OSSLCryptoFactory : public CryptoFactory

@@ -30,13 +30,12 @@
  Header file for OpenSSL implemented
  *****************************************************************************/
 
-#ifndef _SOFTHSM_V2_SOFTHSM2_UTIL_OSSL_H
 #define _SOFTHSM_V2_SOFTHSM2_UTIL_OSSL_H
 
-#include <gmssl/rsa.h>
-#include <gmssl/dsa.h>
-#include <gmssl/ec.h>
-#include <gmssl/sm2.h>
+#include <openssl/rsa.h>
+#include <openssl/dsa.h>
+#include <openssl/ec.h>
+#include <openssl/sm2.h>
 
 typedef struct rsa_key_material_t {
 	CK_ULONG sizeE;

@@ -36,7 +36,7 @@
 #include "OSSLEVPSymmetricAlgorithm.h"
 #include "OSSLUtil.h"
 #include "salloc.h"
-#include <gmssl/err.h>
+#include <openssl/err.h>
 
 // Constructor
 OSSLEVPSymmetricAlgorithm::OSSLEVPSymmetricAlgorithm()

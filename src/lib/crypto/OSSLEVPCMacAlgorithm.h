@@ -37,8 +37,8 @@
 #include "config.h"
 #include "SymmetricKey.h"
 #include "MacAlgorithm.h"
-#include <gmssl/evp.h>
-#include <gmssl/cmac.h>
+#include <openssl/evp.h>
+#include <openssl/cmac.h>
 
 class OSSLEVPCMacAlgorithm : public MacAlgorithm
 {

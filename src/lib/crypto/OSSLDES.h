@@ -33,7 +33,7 @@
 #ifndef _SOFTHSM_V2_OSSLDES_H
 #define _SOFTHSM_V2_OSSLDES_H
 
-#include <gmssl/evp.h>
+#include <openssl/evp.h>
 #include <string>
 #include "config.h"
 #include "OSSLEVPSymmetricAlgorithm.h"

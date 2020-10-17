@@ -35,8 +35,8 @@
 
 #include "config.h"
 #include "ECPrivateKey.h"
-#include <gmssl/bn.h>
-#include <gmssl/ec.h>
+#include <openssl/bn.h>
+#include <openssl/ec.h>
 
 class OSSLECPrivateKey : public ECPrivateKey
 {

@@ -866,12 +866,11 @@ CK_RV SoftHSM::C_GetMechanismInfo(CK_SLOT_ID slotID, CK_MECHANISM_TYPE type, CK_
 {
 	unsigned long rsaMinSize, rsaMaxSize;
 	unsigned long dsaMinSize, dsaMaxSize;
-	unsigned long dhMinSize, dhMaxSize;
 
 	unsigned long ecdsaMinSize, ecdsaMaxSize;
 
 
-	unsigned long ecdhMinSize = 0, ecdhMaxSize = 0;
+	// unsigned long ecdhMinSize = 0, ecdhMaxSize = 0;
 	unsigned long sm2MinSize = 0, sm2MaxSize = 0;
 	unsigned long eddsaMinSize = 0, eddsaMaxSize = 0;
 
@@ -2961,7 +2960,7 @@ CK_RV SoftHSM::AsymDecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMec
 	if (isRSA)
 	{
 		asymCrypto = CryptoFactory::i()->getAsymmetricAlgorithm(AsymAlgo::RSA);
-		if (asymCrypto == NULL) return CKR_HOST_MEMORY//return CKR_MECHANISM_INVALID;
+		if (asymCrypto == NULL) return CKR_HOST_MEMORY;//return CKR_MECHANISM_INVALID;
 
 			privateKey = asymCrypto->newPrivateKey();
 		if (privateKey == NULL)
@@ -3862,8 +3861,8 @@ CK_RV SoftHSM::AsymSignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechan
 	size_t paramLen = 0;
 	RSA_PKCS_PSS_PARAMS pssParam;
 	bool bAllowMultiPartOp;
-	bool isRSA = false;
-	bool isDSA = false;
+	// bool isRSA = false;
+	// bool isDSA = false;
 	bool isECDSA = false;
 	bool isSM2 = false;
 
@@ -5893,7 +5892,7 @@ CK_RV SoftHSM::C_WrapKey
 			rv = getECPrivateKey((ECPrivateKey*)privateKey, token, key);
 			break;
 		case CKK_IBM_SM2:
-			rv = getSM2PrivateKey((ECPrivateKey*)privateKey, token, key);
+			rv = getSM2PrivateKey((SM2PrivateKey*)privateKey, token, key);
 			break;
 		}
 		if (rv != CKR_OK)
