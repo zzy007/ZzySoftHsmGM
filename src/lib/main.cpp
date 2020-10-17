@@ -1027,8 +1027,6 @@ PKCS_API CK_RV C_GenerateKeyPair
 	CK_OBJECT_HANDLE_PTR phPrivateKey
 )
 {
-	//zzy test
-	return CKR_FUNCTION_FAILED;
 	try
 	{
 		return SoftHSM::i()->C_GenerateKeyPair(hSession, pMechanism, pPublicKeyTemplate, ulPublicKeyAttributeCount, pPrivateKeyTemplate, ulPrivateKeyAttributeCount, phPublicKey, phPrivateKey);
