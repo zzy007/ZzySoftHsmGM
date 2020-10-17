@@ -5291,6 +5291,8 @@ CK_RV SoftHSM::C_GenerateKeyPair
 	CK_OBJECT_HANDLE_PTR phPrivateKey
 )
 {
+	// zzy test
+	return CKR_ATTRIBUTE_VALUE_INVALID; 
 	if (!isInitialised) return CKR_CRYPTOKI_NOT_INITIALIZED;
 
 	if (pMechanism == NULL_PTR) return CKR_ARGUMENTS_BAD;
